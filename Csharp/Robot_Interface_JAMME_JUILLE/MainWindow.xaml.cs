@@ -24,7 +24,7 @@ namespace Robot_Interface_JAMME_JUILLE
     /// Logique d'interaction pour MainWindow.xaml
     /// </summary>
 
-    
+
     public partial class MainWindow : Window
     {
         ReliableSerialPort serialPort1;
@@ -39,9 +39,9 @@ namespace Robot_Interface_JAMME_JUILLE
 
         public MainWindow()
         {
-            
+
             InitializeComponent();
-            serialPort1 = new ReliableSerialPort("COM5", 115200, Parity.None, 8, StopBits.One);
+            serialPort1 = new ReliableSerialPort("COM6", 115200, Parity.None, 8, StopBits.One);
             serialPort1.DataReceived += SerialPort1_DataReceived;
             serialPort1.Open();
 
@@ -65,14 +65,14 @@ namespace Robot_Interface_JAMME_JUILLE
                 //string blabla;
                 //blabla = byteReceived.ToString("X");
                 //blabla += ;
-                //TextBoxReception.Text += "0x" + byteReceived.ToString("2X") + "(" + Convert.ToChar(byteReceived) + ")\n"; // "0x"+blabla+"";
+                //TextBoxReception.Text += Convert.ToChar(byteReceived) + "\n"; // "0x"+blabla+"";
                 //TextBoxReception.Text += byteReceived+"\n";
                 //TextBoxReception.Text += Convert.ToChar(byteReceived);
             }
-            
+
         }
-        
-        byte CalculateChecksum (int msgFunction, int msgPayLoadLength, byte[] msgPayLoad)
+
+        byte CalculateChecksum(int msgFunction, int msgPayLoadLength, byte[] msgPayLoad)
         {
             byte Checksum = 0;
             Checksum ^= (byte)(0xFE);
@@ -83,15 +83,15 @@ namespace Robot_Interface_JAMME_JUILLE
             for (int i = 0; i < msgPayLoadLength; i++)
             {
                 Checksum ^= (byte)msgPayLoad[i];
-            }            
+            }
             return Checksum;
         }
 
-        void UartEncodeAndSendMessage(int msgFunction , int msgPayloadLength , byte[] msgPayload)
+        void UartEncodeAndSendMessage(int msgFunction, int msgPayloadLength, byte[] msgPayload)
         {
             byte Checksum = 0;
-            
-            byte[] trame = new byte[msgPayloadLength+6];
+
+            byte[] trame = new byte[msgPayloadLength + 6];
             int pos = 0;
             trame[pos++] = (byte)(0xFE);
             trame[pos++] = (byte)(msgFunction >> 8);
@@ -100,10 +100,10 @@ namespace Robot_Interface_JAMME_JUILLE
             trame[pos++] = (byte)(msgPayloadLength >> 0);
             for (int i = 0; i < msgPayloadLength; i++)
             {
-                trame[pos++] = (byte) msgPayload[i];
+                trame[pos++] = (byte)msgPayload[i];
             }
             Checksum = CalculateChecksum(msgFunction, msgPayloadLength, msgPayload);
-            
+
             trame[pos++] = (byte)(Checksum);
             serialPort1.Write(trame, 0, trame.Length);
         }
@@ -163,7 +163,7 @@ namespace Robot_Interface_JAMME_JUILLE
 
                 }
             }
-            
+
             //TextBoxReception.Background = Brushes.RoyalBlue;
         }
 
@@ -190,8 +190,8 @@ namespace Robot_Interface_JAMME_JUILLE
              serialPort1.Write(byteList, 0, byteList.Length);*/
 
             byte[] msgPayload = Encoding.ASCII.GetBytes(TextBoxEmission.Text);
-            int msgFunction= 0x0080;
-            int msgPayloadLength= msgPayload.Length;
+            int msgFunction = 0x0080;
+            int msgPayloadLength = msgPayload.Length;
             UartEncodeAndSendMessage(msgFunction, msgPayloadLength, msgPayload);
             TextBoxEmission.Text = "";
         }
@@ -218,13 +218,16 @@ namespace Robot_Interface_JAMME_JUILLE
             switch (rcvState)
             {
                 case StateReception.Waiting:
-                    if(c== 0xFE)
+                    if (c == 0xFE)
                     {
                         rcvState = StateReception.FunctionMSB;
+                        msgDecodedPayloadLength = 0;
+                        msgDecodedFunction = 0;
+                        msgDecodedPayloadIndex = 0;
                     }
                     break;
                 case StateReception.FunctionMSB:
-                    msgDecodedFunction = (c<<8);
+                    msgDecodedFunction = (c << 8);
                     rcvState = StateReception.FunctionLSB;
                     break;
                 case StateReception.FunctionLSB:
@@ -232,7 +235,7 @@ namespace Robot_Interface_JAMME_JUILLE
                     rcvState = StateReception.PayloadLengthMSB;
                     break;
                 case StateReception.PayloadLengthMSB:
-                    msgDecodedPayloadLength = (c<<8);
+                    msgDecodedPayloadLength = (c << 8);
                     rcvState = StateReception.PayloadLengthLSB;
                     break;
                 case StateReception.PayloadLengthLSB:
@@ -247,15 +250,16 @@ namespace Robot_Interface_JAMME_JUILLE
                 case StateReception.Payload:
                     msgDecodedPayload[msgDecodedPayloadIndex] = c;
                     msgDecodedPayloadIndex++;
-                    if(msgDecodedPayloadIndex == msgDecodedPayloadLength)
+                    if (msgDecodedPayloadIndex == msgDecodedPayloadLength)
                     {
                         rcvState = StateReception.CheckSum;
-                    }                
-                break;
+                    }
+                    break;
                 case StateReception.CheckSum:
                     receivedChecksum = c;
                     calculatedChecksum = CalculateChecksum(msgDecodedFunction, msgDecodedPayloadLength, msgDecodedPayload);
-                    if (calculatedChecksum == receivedChecksum){
+                    if (calculatedChecksum == receivedChecksum)
+                    {
                         TextBoxReception.Text += "youpi\n";
                         ProcessDecodedMessage(msgDecodedFunction, msgDecodedPayloadLength, msgDecodedPayload);
                     }
@@ -267,7 +271,7 @@ namespace Robot_Interface_JAMME_JUILLE
                     break;
                 default:
                     rcvState = StateReception.Waiting;
-                break;
+                    break;
             }
         }
 
@@ -280,13 +284,13 @@ namespace Robot_Interface_JAMME_JUILLE
         }
         //FunctionId fid = FunctionId.text;
 
-        void ProcessDecodedMessage(int msgFunction,int msgPayloadLength, byte[] msgPayload)
+        void ProcessDecodedMessage(int msgFunction, int msgPayloadLength, byte[] msgPayload)
         {
             if (msgFunction == (int)FunctionId.text)
-            {                
-                TextBoxReception.Text += "0x" + msgFunction.ToString("X4 ") + "\n";
+            {
+                TextBoxReception.Text += "0x" + msgFunction.ToString("X4") + "\n";
                 TextBoxReception.Text += msgPayloadLength + "\n";
-                for (i = 0; i< msgPayloadLength; i++)
+                for (i = 0; i < msgPayloadLength; i++)
                 {
                     TextBoxReception.Text += Convert.ToChar(msgPayload[i]);
                 }
@@ -356,7 +360,7 @@ namespace Robot_Interface_JAMME_JUILLE
 
         private void Button_Click_3(object sender, RoutedEventArgs e)
         {
-            if(couleur_2 == 0)
+            if (couleur_2 == 0)
             {
                 Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#4CFF37");
 
@@ -398,7 +402,7 @@ namespace Robot_Interface_JAMME_JUILLE
 
                 couleur_2 = 1;
             }
-            else if(couleur_2 == 1)
+            else if (couleur_2 == 1)
             {
                 Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#3E3E42");
 

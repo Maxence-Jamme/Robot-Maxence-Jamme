@@ -12,6 +12,8 @@
 #include "UART.h"
 #include "CB_TX1.h" 
 #include "CB_RX1.h" 
+#include "UART_Protocol.h"
+int boucle_1 = 0;
 int main (void) {
     InitOscillator();
     InitIO();
@@ -22,7 +24,7 @@ int main (void) {
     InitTimer4();
     InitUART ();
     //PWMSetSpeed(-15, MOTEUR_DROIT); // 0 = Droite | 1 = Gauche |pourcentage detat bas de PWM 
-    //PWMSetSpeed(-15, MOTEUR_GAUCHE);  //  + = avance | - = recule | (batterie face ï¿½ nous)
+    //PWMSetSpeed(-15, MOTEUR_GAUCHE);  //  + = avance | - = recule | (batterie face ? nous)
     while(1){
         unsigned int * resultat;
         resultat = ADCGetResult();
@@ -43,14 +45,23 @@ int main (void) {
         }
         /*SendMessage( (unsigned char *) "Bonjour" , 7 ) ;
         fonction_led(LED_GD);
-        __delay32 (40000000);*/
+        __delay32 (40000000);
         int i;
         for (i=0; i< CB_RX1_GetDataSize(); i++)
         {
-            unsigned char c = CB_RX1_Get() ;
-            SendMessage(&c, 1) ;
-        }
-        __delay32(1000);
+            unsigned char c = CB_RX1_Get();
+            SendMessage(&c, 1);
+        }*/
+        
+        //if( boucle_1 % 10 == 0){
+        int msgFunction = 0x0080;
+        unsigned char msgPayload[] = "Bonjour";
+        int msgPayloadLength = sizeof(msgPayload)-1;
+        UartEncodeAndSendMessage(msgFunction,msgPayloadLength,msgPayload);
+            
+        //}
+        boucle_1 ++;
+        __delay32 (40000000);
     }
 }
 
@@ -175,7 +186,7 @@ int flag = 1 ;
 void SetNextRobotStateInAutomaticMode(){
     unsigned char positionObstacle = PAS_D_OBSTACLE;
 
-    //Dï¿½termination de la position des obstacles en fonction des tï¿½lï¿½mï¿½tres
+    //D?termination de la position des obstacles en fonction des t?l?m?tres
     if ( robotState.distanceTelemetreExtremeGauche < dist_4 ){ 
         positionObstacle = OSTACLE_LOIN_A_GAUCHE;
     }else if ( robotState.distanceTelemetreExtremeDroit < dist_4 ){ 
@@ -188,17 +199,17 @@ void SetNextRobotStateInAutomaticMode(){
         positionObstacle = OSTACLE_LOIN_A_DROITE;
     }else if(robotState.distanceTelemetreExtremeDroit > dist_3 && robotState.distanceTelemetreExtremeGauche < dist_3 && robotState.distanceTelemetreDroit > dist_1 && robotState.distanceTelemetreCentre > dist_2 && robotState.distanceTelemetreGauche > dist_1){
         positionObstacle = OSTACLE_LOIN_A_GAUCHE;
-    }else if ( robotState.distanceTelemetreDroit < dist_1 && robotState.distanceTelemetreCentre < dist_2 && robotState.distanceTelemetreGauche < dist_1){ //Obstacle ï¿½ droite et au milieu et ï¿½ gauche
+    }else if ( robotState.distanceTelemetreDroit < dist_1 && robotState.distanceTelemetreCentre < dist_2 && robotState.distanceTelemetreGauche < dist_1){ //Obstacle ? droite et au milieu et ? gauche
         positionObstacle = OSTACLE_A_DROITE_ET_EN_FACE_ET_A_DROITE;
-    }else if ( robotState.distanceTelemetreDroit < dist_1 && robotState.distanceTelemetreCentre > dist_2 && robotState.distanceTelemetreGauche < dist_1){ //Obstacle ï¿½ droite et ï¿½ gauche
+    }else if ( robotState.distanceTelemetreDroit < dist_1 && robotState.distanceTelemetreCentre > dist_2 && robotState.distanceTelemetreGauche < dist_1){ //Obstacle ? droite et ? gauche
         positionObstacle = OSTACLE_A_GAUCHE_ET_A_DROITE;
-    }else if ( robotState.distanceTelemetreDroit < dist_1 && robotState.distanceTelemetreCentre < dist_2 && robotState.distanceTelemetreGauche > dist_1){ //Obstacle ï¿½ droite et en face
+    }else if ( robotState.distanceTelemetreDroit < dist_1 && robotState.distanceTelemetreCentre < dist_2 && robotState.distanceTelemetreGauche > dist_1){ //Obstacle ? droite et en face
         positionObstacle = OSTACLE_A_DROITE_ET_EN_FACE;
-    }else if ( robotState.distanceTelemetreDroit > dist_1 && robotState.distanceTelemetreCentre < dist_2 && robotState.distanceTelemetreGauche < dist_1){ //Obstacle ï¿½ gauche et en face
+    }else if ( robotState.distanceTelemetreDroit > dist_1 && robotState.distanceTelemetreCentre < dist_2 && robotState.distanceTelemetreGauche < dist_1){ //Obstacle ? gauche et en face
         positionObstacle = OSTACLE_A_GAUCHE_ET_EN_FACE;
-    }else if ( robotState.distanceTelemetreDroit < dist_1 && robotState.distanceTelemetreCentre > dist_2 && robotState.distanceTelemetreGauche > dist_1){ //Obstacle ï¿½ droite
+    }else if ( robotState.distanceTelemetreDroit < dist_1 && robotState.distanceTelemetreCentre > dist_2 && robotState.distanceTelemetreGauche > dist_1){ //Obstacle ? droite
         positionObstacle = OBSTACLE_A_DROITE;
-    }else if(robotState.distanceTelemetreDroit > dist_1 && robotState.distanceTelemetreCentre > dist_2 && robotState.distanceTelemetreGauche < dist_1){ //Obstacle ï¿½ gauche
+    }else if(robotState.distanceTelemetreDroit > dist_1 && robotState.distanceTelemetreCentre > dist_2 && robotState.distanceTelemetreGauche < dist_1){ //Obstacle ? gauche
         positionObstacle = OBSTACLE_A_GAUCHE;
     }else if(robotState.distanceTelemetreCentre < dist_2){ //Obstacle en face
         positionObstacle = OBSTACLE_EN_FACE;
@@ -268,7 +279,7 @@ void SetNextRobotStateInAutomaticMode(){
 //        //Capteurs : 0 0 0 0 0  ->  Tout droit   21
 //        positionObstacle = PAS_D_OBSTACLE;
 //    }else{
-//        //Capteurs : On Ã  Droite et Ã  Gauche necessite un DEMI-TOUR par la D ou par la G.
+//        //Capteurs : On à Droite et à Gauche necessite un DEMI-TOUR par la D ou par la G.
 //        positionObstacle = OBSTACLE_PARTOUT;
 //    }
     
@@ -335,7 +346,7 @@ void SetNextRobotStateInAutomaticMode(){
             nextStateRobot = STATE_DEMI_TOUR_DROITE;
         }
     }
-    //Si l?on n?est pas dans la transition de l?ï¿½tape en cours
+    //Si l?on n?est pas dans la transition de l??tape en cours
     if (nextStateRobot != stateRobot - 1){
         stateRobot = nextStateRobot;  
     }
