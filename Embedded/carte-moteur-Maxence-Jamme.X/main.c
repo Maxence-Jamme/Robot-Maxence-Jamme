@@ -45,7 +45,7 @@ int main (void) {
             
             //envoie des valeurs des telemetres
             //unsigned char msgPayload[] = (char)robotState.distanceTelemetreDroit + (char)robotState.distanceTelemetreCentre + (char)robotState.distanceTelemetreGauche;
-            unsigned char msgPayload [ ] = { (char)robotState.distanceTelemetreDroit ,  (char)robotState.distanceTelemetreCentre, (char)robotState.distanceTelemetreGauche} ;
+            unsigned char msgPayload [] = { (char)robotState.distanceTelemetreDroit ,  (char)robotState.distanceTelemetreCentre, (char)robotState.distanceTelemetreGauche} ;
             int msgPayloadLength = sizeof(msgPayload)+1;
             UartEncodeAndSendMessage(0x0030,msgPayloadLength,msgPayload);
         }
@@ -62,7 +62,7 @@ int main (void) {
             //UartDecodeMessage(&c);
         }
         
-        //if( boucle_1 % 10 == 0){
+        if( boucle_1 % 10 == 0){
         
         /*   ENVOIE MSG CSHARP
          
@@ -74,9 +74,10 @@ int main (void) {
          */
         
         
-            
-        //}
+            boucle_1 = 0;
+        }
         boucle_1 ++;
+        __delay32(1000);
         //__delay32 (40000000);
     }
 }
