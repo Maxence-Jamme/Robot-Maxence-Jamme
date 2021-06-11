@@ -45,6 +45,7 @@ int msgDecodedPayloadLength = 0;
 unsigned char msgDecodedPayload[128];
 int msgDecodedPayloadIndex = 0;
 int rcvState = 0;
+unsigned char calculatedChecksum = 0;
 void UartDecodeMessage(unsigned char c){
 //Fonction prenant en entrée un octet et servant à reconstituer les trames
     switch (rcvState)
@@ -88,18 +89,17 @@ void UartDecodeMessage(unsigned char c){
             }                
         break;
         case StateReceptionCheckSum:            
-            /*unsigned char calculatedChecksum = 0;
             calculatedChecksum = c;
             if (calculatedChecksum == c){ //isoké
                 //TextBoxReception.Text += "youpi\n";
                 //ProcessDecodedMessage(msgDecodedFunction, msgDecodedPayloadLength, msgDecodedPayload);
-                SendMessage( (unsigned char *) "1234567" , 7 ) ;
+                SendMessage( (unsigned char *) "1234567" , 7 );
             }
             else
             {       //pas OK
                 //TextBoxReceptionText += "snif";
                 SendMessage( (unsigned char *) "7654321" , 7 ) ;
-            }*/
+            }
             rcvState = StateReceptionWaiting;
             break;
         default:

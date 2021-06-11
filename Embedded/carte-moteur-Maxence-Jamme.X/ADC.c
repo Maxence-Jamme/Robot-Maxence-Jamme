@@ -3,7 +3,7 @@
 //#include "main.h"
 
 unsigned char ADCResultIndex = 0;
-static unsigned int ADCResult[4];
+static unsigned int ADCResult[5];
 unsigned char ADCConversionFinishedFlag;
 
 /****************************************************************************************************/
@@ -75,6 +75,8 @@ IFS0bits.AD1IF = 0;
 ADCResult[0] = ADC1BUF0;// Read the AN-scan input 1 conversion result
 ADCResult[1] = ADC1BUF1;// Read the AN3 conversion result
 ADCResult[2] = ADC1BUF2;// Read the AN5 conversion result
+ADCResult[3] = ADC1BUF3;
+ADCResult[4] = ADC1BUF4;
 ADCConversionFinishedFlag = 1;
 }
 

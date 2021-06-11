@@ -65,7 +65,8 @@ namespace Robot_Interface_JAMME_JUILLE
                 //string blabla;
                 //blabla = byteReceived.ToString("X");
                 //blabla += ;
-                //TextBoxReception.Text += Convert.ToChar(byteReceived) + "\n"; // "0x"+blabla+"";
+                //TextTest.Text += byteReceived.ToString("X");
+                //TextTest.Text += Convert.ToChar(byteReceived) + " "; // "0x"+blabla+"";
                 //TextBoxReception.Text += byteReceived+"\n";
                 //TextBoxReception.Text += Convert.ToChar(byteReceived);
             }
@@ -260,7 +261,7 @@ namespace Robot_Interface_JAMME_JUILLE
                     calculatedChecksum = CalculateChecksum(msgDecodedFunction, msgDecodedPayloadLength, msgDecodedPayload);
                     if (calculatedChecksum == receivedChecksum)
                     {
-                        TextBoxReception.Text += "youpi\n";
+                       // TextBoxReception.Text += "youpi\n";
                         ProcessDecodedMessage(msgDecodedFunction, msgDecodedPayloadLength, msgDecodedPayload);
                     }
                     else
@@ -295,6 +296,33 @@ namespace Robot_Interface_JAMME_JUILLE
                     TextBoxReception.Text += Convert.ToChar(msgPayload[i]);
                 }
                 TextBoxReception.Text += "\n";
+            }
+            if (msgFunction == (int)FunctionId.telem)
+            {
+                //TextBoxReception.Text += "0x" + msgFunction.ToString("X4") + "\n";
+                //TextBoxReception.Text += msgPayloadLength + "\n";
+                for (i = 0; i < msgPayloadLength; i++)
+                {
+                    switch (i)
+                    {
+                        case 0:
+                            textBox1.Text ="";
+                            textBox1.Text += msgPayload[0];
+                            break;
+                        case 1:
+                            textBox2.Text = "";
+                            textBox2.Text += msgPayload[1];
+                            break;
+                        case 2:
+                            textBox3.Text = "";
+                            textBox3.Text += msgPayload[2];
+                            break;
+                    }
+                }
+                //textBox1.Text += Convert.ToChar(msgPayload[0]);
+                //textBox2.Text += Convert.ToChar(msgPayload[1]);
+                //textBox3.Text += Convert.ToChar(msgPayload[2]);
+                //TextBoxReception.Text += "\n";
             }
         }
 

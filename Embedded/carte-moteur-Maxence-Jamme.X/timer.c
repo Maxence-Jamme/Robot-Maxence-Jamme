@@ -20,7 +20,7 @@ TMR2 = 0x00; // Clear 32-bit Timer (lsw)
 float f23;
 PR3 = 0x4C4; // Load 32-bit period value (msw)
 PR2 = 0xB400; // Load 32-bit period value (lsw)
-f23 = 4000000 / (T2CONbits.TCKPS * (PR3 * 65536 + PR2));
+f23 = 40000000 / (T2CONbits.TCKPS * (PR3 * 65536 + PR2));
 IPC2bits.T3IP = 0x01; // Set Timer3 Interrupt Priority Level
 IFS0bits.T3IF = 0; // Clear Timer3 Interrupt Flag
 IEC0bits.T3IE = 1; // Enable Timer3 interrupt

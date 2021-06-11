@@ -42,26 +42,42 @@ int main (void) {
             volts = ((float) result[0])*3.3/4096*3.2;
             robotState.distanceTelemetreExtremeGauche= 34/volts-5;
             
+            
+            //envoie des valeurs des telemetres
+            //unsigned char msgPayload[] = (char)robotState.distanceTelemetreDroit + (char)robotState.distanceTelemetreCentre + (char)robotState.distanceTelemetreGauche;
+            unsigned char msgPayload [ ] = { (char)robotState.distanceTelemetreDroit ,  (char)robotState.distanceTelemetreCentre, (char)robotState.distanceTelemetreGauche} ;
+            int msgPayloadLength = sizeof(msgPayload)+1;
+            UartEncodeAndSendMessage(0x0030,msgPayloadLength,msgPayload);
         }
         /*SendMessage( (unsigned char *) "Bonjour" , 7 ) ;
         fonction_led(LED_GD);
-        __delay32 (40000000);
+        __delay32 (40000000);*/
+        
         int i;
+        
         for (i=0; i< CB_RX1_GetDataSize(); i++)
         {
             unsigned char c = CB_RX1_Get();
             SendMessage(&c, 1);
-        }*/
+            //UartDecodeMessage(&c);
+        }
         
         //if( boucle_1 % 10 == 0){
-        int msgFunction = 0x0080;
-        unsigned char msgPayload[] = "Bonjour";
-        int msgPayloadLength = sizeof(msgPayload)-1;
-        UartEncodeAndSendMessage(msgFunction,msgPayloadLength,msgPayload);
+        
+        /*   ENVOIE MSG CSHARP
+         
+            int msgFunction = 0x0080;
+            unsigned char msgPayload[] = "Bonjour";
+            int msgPayloadLength = sizeof(msgPayload)-1;
+            UartEncodeAndSendMessage(msgFunction,msgPayloadLength,msgPayload);
+         
+         */
+        
+        
             
         //}
         boucle_1 ++;
-        __delay32 (40000000);
+        //__delay32 (40000000);
     }
 }
 
