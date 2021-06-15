@@ -58,8 +58,8 @@ int main (void) {
         for (i=0; i< CB_RX1_GetDataSize(); i++)
         {
             unsigned char c = CB_RX1_Get();
-            SendMessage(&c, 1);
-            //UartDecodeMessage(&c);
+            //SendMessage(&c, 1);
+            UartDecodeMessage(&c);
         }
         
         if( boucle_1 % 10 == 0){
@@ -190,6 +190,7 @@ void OperatingSystemLoop(void){
             stateRobot = STATE_ATTENTE;
         break;
     }
+    
 }
 
 unsigned char nextStateRobot=0;
@@ -366,8 +367,17 @@ void SetNextRobotStateInAutomaticMode(){
     //Si l?on n?est pas dans la transition de l??tape en cours
     if (nextStateRobot != stateRobot - 1){
         stateRobot = nextStateRobot;  
+        unsigned char msgPayload [5];
+        int pos = 0;
+        msgPayload[pos++] = stateRobot;
+        msgPayload[pos++] = (char)(timestamp >> 24);
+        msgPayload[pos++] = (char)(timestamp >> 16);
+        msgPayload[pos++] = (char)(timestamp >> 8);
+        msgPayload[pos++] = (char)(timestamp >> 0);
+        pos++;
+        UartEncodeAndSendMessage(0x0050,pos,msgPayload);
+        //timestamp = 0;
     }
-
 }
 
 void fonction_led(int x){

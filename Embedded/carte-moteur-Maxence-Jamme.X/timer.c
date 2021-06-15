@@ -70,7 +70,7 @@ void SetFreqTimer1(float freq){
 //Initialisation d?un timer 16 bits
 void InitTimer1(void)
 {
-SetFreqTimer1(50);
+
 //Timer1 pour horodater les mesures (1ms)
 T1CONbits.TON = 0; // Disable Timer
 //T1CONbits.TCKPS = 0b01; //Prescaler
@@ -82,6 +82,7 @@ T1CONbits.TCS = 0; //clock source = internal clock
 //float f = 346;  //100HZ
 //PR1 = 40000000/(T1CONbits.TCKPS*f);
 ////PR1 = 0x1388; 
+SetFreqTimer1(50);
 
 IFS0bits.T1IF = 0; // Clear Timer Interrupt Flag
 IEC0bits.T1IE = 1; // Enable Timer interrupt
@@ -119,11 +120,11 @@ void SetFreqTimer4(float freq){
 }
 
 void InitTimer4(void){
-    SetFreqTimer4(1000);
+    
     T4CONbits.TON = 0; // Disable Timer
 
     T4CONbits.TCS = 0; //clock source = internal clock
-
+    SetFreqTimer4(1000);
     IFS1bits.T4IF = 0; // Clear Timer Interrupt Flag
     IEC1bits.T4IE = 1; // Enable Timer interrupt
     T4CONbits.TON = 1; // Enable Timer

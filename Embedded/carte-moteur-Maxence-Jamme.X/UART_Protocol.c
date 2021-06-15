@@ -93,7 +93,8 @@ void UartDecodeMessage(unsigned char c){
             if (calculatedChecksum == c){ //isoké
                 //TextBoxReception.Text += "youpi\n";
                 //ProcessDecodedMessage(msgDecodedFunction, msgDecodedPayloadLength, msgDecodedPayload);
-                SendMessage( (unsigned char *) "1234567" , 7 );
+                //SendMessage( (unsigned char *) "1234567" , 7 );
+                UartEncodeAndSendMessage(msgDecodedFunction,msgDecodedPayloadLength,msgDecodedPayload);
             }
             else
             {       //pas OK

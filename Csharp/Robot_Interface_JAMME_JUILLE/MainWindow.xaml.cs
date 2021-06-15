@@ -40,7 +40,7 @@ namespace Robot_Interface_JAMME_JUILLE
         public MainWindow()
         {
             InitializeComponent();
-            serialPort1 = new ReliableSerialPort("COM4", 115200, Parity.None, 8, StopBits.One);
+            serialPort1 = new ReliableSerialPort("COM8", 115200, Parity.None, 8, StopBits.One);
             serialPort1.DataReceived += SerialPort1_DataReceived;
             serialPort1.Open();
 
@@ -267,7 +267,8 @@ namespace Robot_Interface_JAMME_JUILLE
                     }
                     else
                     {
-                        TextBoxReception.Text += "snif";
+                        TextBoxReception.Text += "snif\n";
+                        TextBoxReception.Text += msgDecodedFunction.ToString() + " " + msgDecodedPayloadLength.ToString() +" "+  msgDecodedPayload.ToString();
                     }
                     rcvState = StateReception.Waiting;
                     break;
@@ -283,8 +284,36 @@ namespace Robot_Interface_JAMME_JUILLE
             led = 0x0020,
             telem = 0x0030,
             vitesse = 0x0040,
+            etape = 0x0050,
         }
-        //FunctionId fid = FunctionId.text;
+        public enum StateRobot
+        {
+            STATE_ATTENTE = 0,
+            STATE_ATTENTE_EN_COURS = 1,
+            STATE_AVANCE = 2,
+            STATE_AVANCE_EN_COURS = 3,
+            STATE_TOURNE_GAUCHE = 4,
+            STATE_TOURNE_GAUCHE_EN_COURS = 5,
+            STATE_TOURNE_DROITE = 6,
+            STATE_TOURNE_DROITE_EN_COURS = 7,
+            STATE_TOURNE_SUR_PLACE_GAUCHE = 8,
+            STATE_TOURNE_SUR_PLACE_GAUCHE_EN_COURS = 9,
+            STATE_TOURNE_SUR_PLACE_DROITE = 10,
+            STATE_TOURNE_SUR_PLACE_DROITE_EN_COURS = 11,
+            STATE_ARRET = 12,
+            STATE_ARRET_EN_COURS = 13,
+            STATE_RECULE = 14,
+            STATE_RECULE_EN_COURS = 15,
+            STATE_TOURNE_PETIT_GAUCHE = 16,
+            STATE_TOURNE_PETIT_GAUCHE_EN_COURS = 17,
+            STATE_TOURNE_PETIT_DROITE = 18,
+            STATE_TOURNE_PETIT_DROITE_EN_COURS = 19,
+            STATE_DEMI_TOUR_DROITE = 20,
+            STATE_DEMI_TOUR_DROITE_EN_COURS = 21,
+            STATE_DEMI_TOUR_GAUCHE_EN_COURS = 22,
+            STATE_DEMI_TOUR_GAUCHE = 23
+        }
+
 
         void ProcessDecodedMessage(int msgFunction, int msgPayloadLength, byte[] msgPayload)
         {
@@ -320,10 +349,18 @@ namespace Robot_Interface_JAMME_JUILLE
                             break;
                     }
                 }
-                //textBox1.Text += Convert.ToChar(msgPayload[0]);
-                //textBox2.Text += Convert.ToChar(msgPayload[1]);
-                //textBox3.Text += Convert.ToChar(msgPayload[2]);
+                //TextBoxReception.Text += Convert.ToChar(msgPayload[0]);
+                //TextBoxReception.Text += Convert.ToChar(msgPayload[1]);
+                //TextBoxReception.Text += Convert.ToChar(msgPayload[2]);
                 //TextBoxReception.Text += "\n";
+            }
+            if (msgFunction == (int)FunctionId.etape)
+            {
+
+                
+                int instant = (((int)msgPayload[1]) << 24) + (((int)msgPayload[2]) << 16) + (((int)msgPayload[3]) << 8) + ((int)msgPayload[4]);
+                TextBoxetatrobot.Text = "Robot State: " + ((StateRobot)(msgPayload[0])).ToString() +" − " + instant.ToString() + " ms ";
+                
             }
         }
 
@@ -450,6 +487,11 @@ namespace Robot_Interface_JAMME_JUILLE
                 TextBoxReception.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#75757E");
                 TextBoxReception.Foreground = (SolidColorBrush)new BrushConverter().ConvertFromString("#F0F0F0");
 
+                GB4.Foreground = (SolidColorBrush)new BrushConverter().ConvertFromString("#F1F1F1");
+                GB4.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#75757E");
+                TextBoxetatrobot.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#75757E");
+                TextBoxetatrobot.Foreground = (SolidColorBrush)new BrushConverter().ConvertFromString("#F0F0F0");
+
                 GB3.Foreground = (SolidColorBrush)new BrushConverter().ConvertFromString("#F1F1F1");
                 GB3.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#75757E");
                 TextTest.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#75757E");
@@ -497,6 +539,11 @@ namespace Robot_Interface_JAMME_JUILLE
                 GB2.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#c9c9c9");
                 TextBoxReception.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#c9c9c9");
                 TextBoxReception.Foreground = (SolidColorBrush)new BrushConverter().ConvertFromString("#000000");
+
+                GB4.Foreground = (SolidColorBrush)new BrushConverter().ConvertFromString("#000000");
+                GB4.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#c9c9c9");
+                TextBoxetatrobot.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#c9c9c9");
+                TextBoxetatrobot.Foreground = (SolidColorBrush)new BrushConverter().ConvertFromString("#000000");
 
                 GB3.Foreground = (SolidColorBrush)new BrushConverter().ConvertFromString("#000000");
                 GB3.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#c9c9c9");

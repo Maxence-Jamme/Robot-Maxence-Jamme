@@ -16,8 +16,11 @@
             <RowDefinition Height="1*"/>
         </Grid.RowDefinitions>
         <!--GRILLE 1 LIGNE 1 COLONE 1-->
-        <GroupBox x:Name="GB1" Header="Emission" BorderBrush="White" Foreground="Black" OpacityMask="White" Background="#FFC9C9C9" Grid.Column="0" Grid.Row="0" Margin="10">
+        <GroupBox x:Name="GB1" Header="Emission" BorderBrush="White" Foreground="Black" OpacityMask="White" Background="#FFC9C9C9" Grid.Column="0" Grid.Row="0" Margin="10,10,10,90">
             <TextBox x:Name="TextBoxEmission" HorizontalAlignment="Stretch" Margin="0" TextWrapping="Wrap" VerticalAlignment="Stretch" Width="auto" Height="auto" Foreground="Black" AcceptsReturn="True" Background="{x:Null}" SelectionBrush="{x:Null}" KeyUp="TextBoxEmission_KeyUp"/>
+        </GroupBox>
+        <GroupBox x:Name="GB4" Header="Etat du robot" Foreground="Black" OpacityMask="White" Background="#FFC9C9C9" HorizontalAlignment="Left" Height="75" Margin="10,165,0,0" VerticalAlignment="Top" Width="376">
+            <TextBox x:Name="TextBoxetatrobot"  HorizontalAlignment="Stretch" Width="auto" Height="auto" Margin="0" TextWrapping="Wrap" VerticalAlignment="Stretch" Background="{x:Null}" IsReadOnly="True"/>
         </GroupBox>
         <!--GRILLE 1 LIGNE 1 COLONE 2-->
         <GroupBox x:Name="GB2" Header="Réception" Background="#FFC9C9C9" Grid.Column="1" Grid.Row="0" Margin="10">
@@ -79,7 +82,7 @@
 
             <!--GRILLE 2 LIGNE 3 COLONE 1-->
             <Button x:Name="BT4" Content="test" Grid.Column="0" Height="35" Margin="10" Grid.Row="2" VerticalAlignment="Top" Width="75" Click="Button_Click_2"/>
-            
+
             <!--GRILLE 2 LIGNE 3 COLONE 2-->
             <Button x:Name="BT5" Content="COLOR" Grid.Column="1" Height="35" Margin="10" Grid.Row="2" VerticalAlignment="Top" Width="75" Click="Button_Click_3"/>
 
@@ -88,5 +91,6 @@
                 <TextBox x:Name="TextTest" HorizontalAlignment="Stretch" Width="auto" Height="auto" Margin="0" TextWrapping="Wrap" VerticalAlignment="Stretch" Background="{x:Null}" IsReadOnly="True" MouseEnter="TextTest_MouseEnter"/>
             </GroupBox>
         </Grid>
+        
     </Grid>
 </Window>
