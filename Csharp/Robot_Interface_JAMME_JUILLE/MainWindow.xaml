@@ -42,8 +42,8 @@
             <GroupBox x:Name="groupBox" Header="LED" HorizontalAlignment="Stretch" Height="100" Margin="5" Grid.Row="0" VerticalAlignment="Top" Width="97" Grid.Column="0">
                 <StackPanel>
                     <CheckBox x:Name="checkBox" Content="LED 1" Margin="0,0,0,10" Click="checkBox_Click"/>
-                    <CheckBox x:Name="checkBox1" Content="LED 2" Margin="0,0,0,10" Click="checkBox1_Click"/>
-                    <CheckBox x:Name="checkBox2" Content="LED 3" Margin="0,0,0,10" Click="checkBox2_Click"/>
+                    <CheckBox x:Name="checkBox2" Content="LED 2" Margin="0,0,0,10" Click="checkBox2_Click"/>
+                    <CheckBox x:Name="checkBox1" Content="LED 3" Margin="0,0,0,10" Click="checkBox1_Click"/>
                 </StackPanel>
             </GroupBox>
             <!--GRILLE 2 LIGNE 1 COLONE 2-->

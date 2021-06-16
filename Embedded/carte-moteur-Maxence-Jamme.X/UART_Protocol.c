@@ -2,6 +2,7 @@
 #include "UART_Protocol.h"
 #include "CB_TX1.h"
 #include "main.h"
+#include "IO.h"
 
 unsigned char UartCalculateChecksum(int msgFunction,int msgPayloadLength, unsigned char * msgPayload){
 //Fonction prenant entrée la trame et sa longueur pour calculer le checksum
@@ -77,8 +78,7 @@ void UartDecodeMessage(unsigned char c){
             {
                 rcvState = StateReceptionWaiting;
             }
-            rcvState = StateReceptionPayload;                    
-            //msgDecodedPayload = new byte[msgDecodedPayloadLength];
+            rcvState = StateReceptionPayload;
             break;
         case StateReceptionPayload:
             msgDecodedPayload[msgDecodedPayloadIndex] = c;
@@ -94,7 +94,8 @@ void UartDecodeMessage(unsigned char c){
                 //TextBoxReception.Text += "youpi\n";
                 //ProcessDecodedMessage(msgDecodedFunction, msgDecodedPayloadLength, msgDecodedPayload);
                 //SendMessage( (unsigned char *) "1234567" , 7 );
-                UartEncodeAndSendMessage(msgDecodedFunction,msgDecodedPayloadLength,msgDecodedPayload);
+                //UartEncodeAndSendMessage(msgDecodedFunction,msgDecodedPayloadLength,msgDecodedPayload);
+                UartProcessDecodedMessage(msgDecodedFunction,msgDecodedPayloadLength,msgDecodedPayload);
             }
             else
             {       //pas OK
@@ -109,12 +110,48 @@ void UartDecodeMessage(unsigned char c){
     }
 }
 
-void UartProcessDecodedMessage(unsigned char function,unsigned char payloadLength, unsigned char* payload){
+void UartProcessDecodedMessage(unsigned char msgFunction,unsigned char msgpayloadLength, unsigned char* msgPayload){
 //Fonction appelée après le décodage pour exécuter l?action
 //correspondant au message reçu
 
+    switch (msgFunction){
+        case SET_ROBOT_STATE:
+            SetRobotState(msgPayload[0]);
+        break;
+        case SET_ROBOT_MANUAL_CONTROL:
+            SetRobotAutoControlState(msgPayload[0]);
+        break;
+        case Function_Led:
+            if(msgPayload[0]==0x49 && msgPayload[1]==0x31){
+                LED_ORANGE = 1;
+            }                
+            if(msgPayload[0]==0x4F && msgPayload[1]==0x31){
+                LED_ORANGE = 0;
+            }
+            if(msgPayload[0]==0x49 && msgPayload[1]==0x32){
+                LED_BLANCHE = 1;
+            }                
+            if(msgPayload[0]==0x4F && msgPayload[1]==0x32){
+                LED_BLANCHE = 0;
+            }
+            if(msgPayload[0]==0x49 && msgPayload[1]==0x33){
+                LED_BLEUE = 1;
+            }                
+            if(msgPayload[0]==0x4F && msgPayload[1]==0x33){
+                LED_BLEUE = 0;
+            }
+        break;
+        default:
+        break;    
+    }
+}
+void SetRobotState (unsigned char c){
+    
 }
 
+void SetRobotAutoControlState (unsigned char c){
+    
+}
 //*************************************************************************/
 //Fonctions correspondant aux messages
 //*************************************************************************/

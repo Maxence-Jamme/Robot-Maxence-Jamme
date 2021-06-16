@@ -40,7 +40,7 @@ namespace Robot_Interface_JAMME_JUILLE
         public MainWindow()
         {
             InitializeComponent();
-            serialPort1 = new ReliableSerialPort("COM8", 115200, Parity.None, 8, StopBits.One);
+            serialPort1 = new ReliableSerialPort("COM3", 115200, Parity.None, 8, StopBits.One);
             serialPort1.DataReceived += SerialPort1_DataReceived;
             serialPort1.Open();
 
@@ -215,6 +215,7 @@ namespace Robot_Interface_JAMME_JUILLE
         int msgDecodedPayloadIndex = 0;
         byte receivedChecksum = 0;
         byte calculatedChecksum = 0;
+        int nb_snif = 0;
         private void DecodeMessage(byte c)
         {
             switch (rcvState)
@@ -268,7 +269,9 @@ namespace Robot_Interface_JAMME_JUILLE
                     else
                     {
                         TextBoxReception.Text += "snif\n";
-                        TextBoxReception.Text += msgDecodedFunction.ToString() + " " + msgDecodedPayloadLength.ToString() +" "+  msgDecodedPayload.ToString();
+                        nb_snif++;
+                        TextTest.Text = nb_snif.ToString();
+                        TextBoxReception.Text += msgDecodedFunction.ToString() + " " + msgDecodedPayloadLength.ToString() +" "+  msgDecodedPayload + "\n";
                     }
                     rcvState = StateReception.Waiting;
                     break;
@@ -337,15 +340,15 @@ namespace Robot_Interface_JAMME_JUILLE
                     {
                         case 0:
                             textBox1.Text ="";
-                            textBox1.Text += msgPayload[0];
+                            textBox1.Text += msgPayload[0] + " cm";
                             break;
                         case 1:
                             textBox2.Text = "";
-                            textBox2.Text += msgPayload[1];
+                            textBox2.Text += msgPayload[1] + " cm";
                             break;
                         case 2:
                             textBox3.Text = "";
-                            textBox3.Text += msgPayload[2];
+                            textBox3.Text += msgPayload[2] + " cm";
                             break;
                     }
                 }
@@ -355,63 +358,117 @@ namespace Robot_Interface_JAMME_JUILLE
                 //TextBoxReception.Text += "\n";
             }
             if (msgFunction == (int)FunctionId.etape)
-            {
-
-                
+            {                
                 int instant = (((int)msgPayload[1]) << 24) + (((int)msgPayload[2]) << 16) + (((int)msgPayload[3]) << 8) + ((int)msgPayload[4]);
                 TextBoxetatrobot.Text = "Robot State: " + ((StateRobot)(msgPayload[0])).ToString() +" − " + instant.ToString() + " ms ";
                 
+            }
+            if (msgFunction == (int)FunctionId.led)
+            {
+                //TextBoxReception.Text += Convert.ToChar(msgFunction) + " " + Convert.ToChar(msgPayloadLength) + " ";
+                TextBoxReception.Text += "isoké ";
+                for (i = 0; i < msgPayloadLength; i++)
+                {
+                    switch (i)
+                    {
+                        case 0:
+
+                            TextBoxReception.Text += Convert.ToChar(msgPayload[0]);
+                            break;
+                        case 1:
+
+                            TextBoxReception.Text += Convert.ToChar(msgPayload[1]);
+                            break;
+                        case 2:
+
+                            TextBoxReception.Text += Convert.ToChar(msgPayload[2]);
+                            break;                        
+                    }
+                    if (msgPayload[1] == 0x31)
+                    {
+                        checkBox2.IsChecked = true;
+                    }
+                    else
+                    {
+                        checkBox1.IsChecked = true;
+                    }
+                        
+                }
+                /*switch (msgPayload[0])
+                {
+                    case 1:
+                        TextBoxReception.Text += Convert.ToChar(msgPayload[0]);
+                        checkBox.IsChecked = !checkBox.IsChecked;
+                        break;                    
+                }*/
             }
         }
 
         private void checkBox_Click(object sender, RoutedEventArgs e)
         {
             byte[] msgPayload;
-            int msgFunction = (int)FunctionId.led;
             if (checkBox.IsChecked == true)
             {
                 //send on
-                TextTest.Text += "ON1";
-                msgPayload = Encoding.ASCII.GetBytes("1");
+                TextTest.Text += "I1";
+                msgPayload = Encoding.ASCII.GetBytes("I1");
+                
             }
             else
             {
                 //send off
-                TextTest.Text += "OFF1";
-                msgPayload = Encoding.ASCII.GetBytes("2");
+                TextTest.Text += "O1";
+                msgPayload = Encoding.ASCII.GetBytes("O1");
+                
             }
+            int msgFunction = (int)FunctionId.led;
             int msgPayloadLength = msgPayload.Length;
             UartEncodeAndSendMessage(msgFunction, msgPayloadLength, msgPayload);
+
         }
 
         private void checkBox1_Click(object sender, RoutedEventArgs e)
         {
-            int msgFunction = (int)FunctionId.led;
+            byte[] msgPayload;
             if (checkBox1.IsChecked == true)
             {
                 //send on
-                TextTest.Text += "ON2";
+                TextTest.Text += "I2";
+                msgPayload = Encoding.ASCII.GetBytes("I2");
+
             }
             else
             {
                 //send off
-                TextTest.Text += "OFF2";
+                TextTest.Text += "O2";
+                msgPayload = Encoding.ASCII.GetBytes("O2");
+
             }
+            int msgFunction = (int)FunctionId.led;
+            int msgPayloadLength = msgPayload.Length;
+            UartEncodeAndSendMessage(msgFunction, msgPayloadLength, msgPayload);
         }
 
         private void checkBox2_Click(object sender, RoutedEventArgs e)
         {
-            int msgFunction = (int)FunctionId.led;
+            byte[] msgPayload;
             if (checkBox2.IsChecked == true)
             {
                 //send on
-                TextTest.Text += "ON3";
+                TextTest.Text += "I3";
+                msgPayload = Encoding.ASCII.GetBytes("I3");
+
             }
             else
             {
                 //send off
-                TextTest.Text += "OFF3";
+                TextTest.Text += "O3";
+                msgPayload = Encoding.ASCII.GetBytes("O3");
+
             }
+            int msgFunction = (int)FunctionId.led;
+            int msgPayloadLength = msgPayload.Length;
+            UartEncodeAndSendMessage(msgFunction, msgPayloadLength, msgPayload);
         }
 
         private void Button_Click_2(object sender, RoutedEventArgs e)
@@ -582,5 +639,6 @@ namespace Robot_Interface_JAMME_JUILLE
                 couleur_2 = 0;
             }
         }
+
     }
 }

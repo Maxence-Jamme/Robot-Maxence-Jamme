@@ -44,40 +44,29 @@ int main (void) {
             
             
             //envoie des valeurs des telemetres
-            //unsigned char msgPayload[] = (char)robotState.distanceTelemetreDroit + (char)robotState.distanceTelemetreCentre + (char)robotState.distanceTelemetreGauche;
             unsigned char msgPayload [] = { (char)robotState.distanceTelemetreDroit ,  (char)robotState.distanceTelemetreCentre, (char)robotState.distanceTelemetreGauche} ;
             int msgPayloadLength = sizeof(msgPayload)+1;
             UartEncodeAndSendMessage(0x0030,msgPayloadLength,msgPayload);
         }
-        /*SendMessage( (unsigned char *) "Bonjour" , 7 ) ;
-        fonction_led(LED_GD);
-        __delay32 (40000000);*/
         
-        int i;
-        
-        for (i=0; i< CB_RX1_GetDataSize(); i++)
-        {
-            unsigned char c = CB_RX1_Get();
-            //SendMessage(&c, 1);
-            UartDecodeMessage(&c);
+        if(CB_RX1_IsDataAvailable){
+            int i;
+            for (i=0; i< CB_RX1_GetDataSize(); i++)
+            {
+                unsigned char c = CB_RX1_Get();
+                //SendMessage(&c, 1);
+                UartDecodeMessage(c);
+            }
         }
         
+        
         if( boucle_1 % 10 == 0){
-        
-        /*   ENVOIE MSG CSHARP
-         
-            int msgFunction = 0x0080;
-            unsigned char msgPayload[] = "Bonjour";
-            int msgPayloadLength = sizeof(msgPayload)-1;
-            UartEncodeAndSendMessage(msgFunction,msgPayloadLength,msgPayload);
-         
-         */
-        
-        
+            //LED_BLANCHE = !LED_BLANCHE;
+            //LED_BLEUE = !LED_BLEUE;
             boucle_1 = 0;
         }
         boucle_1 ++;
-        __delay32(1000);
+        //__delay32(1000);
         //__delay32 (40000000);
     }
 }
@@ -85,7 +74,7 @@ int main (void) {
 unsigned char stateRobot;
 int temps_demi_tour = 1000;
 int fonce = 0;
-void OperatingSystemLoop(void){
+void OperatingSystemLoop(void){ //MACHINE A ETAT
     switch (stateRobot){
         case STATE_ATTENTE:
             timestamp = 0;
@@ -244,119 +233,61 @@ void SetNextRobotStateInAutomaticMode(){
             fonce = 2;
         }
     }
-    
-
-
-//    // codage : | -> capteur detecte   ET   0 -> capteur ne detecte rien
-//    if(robotState.distanceTelemetreExtremeGauche < dist_3 && robotState.distanceTelemetreGauche < dist_2 && robotState.distanceTelemetreCentre < dist_1 && robotState.distanceTelemetreDroit < dist_2 && robotState.distanceTelemetreExtremeDroit < dist_3){
-//        //Capteurs : | | | | |  ->  Demi tour dans le dernier sens effectuer    32
-//        positionObstacle = OBSTACLE_PARTOUT;
-//    }else if(robotState.distanceTelemetreExtremeGauche > dist_3 && robotState.distanceTelemetreGauche < dist_2 && robotState.distanceTelemetreCentre < dist_1 && robotState.distanceTelemetreDroit < dist_2 && robotState.distanceTelemetreExtremeDroit < dist_3){
-//        //Capteurs : 0 | | | |  ->  Tourne vers la gauche    16
-//        positionObstacle = OBSTACLE_A_DROITE;
-//    }else if(robotState.distanceTelemetreExtremeGauche < dist_3 && robotState.distanceTelemetreGauche < dist_2 && robotState.distanceTelemetreCentre < dist_1 && robotState.distanceTelemetreDroit < dist_2 && robotState.distanceTelemetreExtremeDroit > dist_3){
-//        //Capteurs : | | | | 0  ->  Tourne vers la droite    31
-//        positionObstacle = OBSTACLE_A_GAUCHE;
-//    }else if(robotState.distanceTelemetreExtremeGauche > dist_3 && robotState.distanceTelemetreGauche > dist_2 && robotState.distanceTelemetreCentre < dist_1 && robotState.distanceTelemetreDroit < dist_2 && robotState.distanceTelemetreExtremeDroit < dist_3){
-//        //Capteurs : 0 0 | | |  ->  Tourne vers la gauche    8
-//        positionObstacle = OBSTACLE_A_DROITE;
-//    }else if(robotState.distanceTelemetreExtremeGauche < dist_3 && robotState.distanceTelemetreGauche < dist_2 && robotState.distanceTelemetreCentre < dist_1 && robotState.distanceTelemetreDroit > dist_2 && robotState.distanceTelemetreExtremeDroit > dist_3){
-//        //Capteurs : | | | 0 0  ->  Tourne vers la droite    29
-//        positionObstacle = OBSTACLE_A_GAUCHE;
-//    }else if(robotState.distanceTelemetreExtremeGauche > dist_3 && robotState.distanceTelemetreGauche > dist_2 && robotState.distanceTelemetreCentre > dist_1 && robotState.distanceTelemetreDroit < dist_2 && robotState.distanceTelemetreExtremeDroit < dist_3){
-//        //Capteurs : 0 0 0 | |  ->  Tourne vers la gauche    4
-//        positionObstacle = OBSTACLE_A_DROITE;
-//    }else if(robotState.distanceTelemetreExtremeGauche < dist_3 && robotState.distanceTelemetreGauche < dist_2 && robotState.distanceTelemetreCentre > dist_1 && robotState.distanceTelemetreDroit > dist_2 && robotState.distanceTelemetreExtremeDroit > dist_3){
-//        //Capteurs : | | 0 0 0  ->  Tourne vers la droite    25
-//        positionObstacle = OBSTACLE_A_GAUCHE;
-//    }else if(robotState.distanceTelemetreExtremeGauche > dist_3 && robotState.distanceTelemetreGauche > dist_2 && robotState.distanceTelemetreCentre > dist_1 && robotState.distanceTelemetreDroit > dist_2 && robotState.distanceTelemetreExtremeDroit < dist_3){
-//        //Capteurs : 0 0 0 0 |  ->  Tourne vers la gauche    2
-//        positionObstacle = OBSTACLE_A_DROITE;
-//    }else if(robotState.distanceTelemetreExtremeGauche < dist_3 && robotState.distanceTelemetreGauche > dist_2 && robotState.distanceTelemetreCentre > dist_1 && robotState.distanceTelemetreDroit > dist_2 && robotState.distanceTelemetreExtremeDroit > dist_3){
-//        //Capteurs : | 0 0 0 0  ->  Tourne vers la droite    17
-//        positionObstacle = OBSTACLE_A_GAUCHE;
-//    }else if(robotState.distanceTelemetreExtremeGauche > dist_3 && robotState.distanceTelemetreGauche > dist_2 && robotState.distanceTelemetreCentre > dist_1 && robotState.distanceTelemetreDroit < dist_2 && robotState.distanceTelemetreExtremeDroit > dist_3){
-//        //Capteurs : 0 0 0 | 0  ->  Tourne vers la gauche    3
-//        positionObstacle = OBSTACLE_A_DROITE;
-//    }else if(robotState.distanceTelemetreExtremeGauche > dist_3 && robotState.distanceTelemetreGauche < dist_2 && robotState.distanceTelemetreCentre > dist_1 && robotState.distanceTelemetreDroit > dist_2 && robotState.distanceTelemetreExtremeDroit > dist_3){
-//        //Capteurs : 0 | 0 0 0  ->  Tourne vers la droite    9
-//        positionObstacle = OBSTACLE_A_GAUCHE;
-//    }else if(robotState.distanceTelemetreExtremeGauche > dist_3 && robotState.distanceTelemetreGauche > dist_2 && robotState.distanceTelemetreCentre < dist_1 && robotState.distanceTelemetreDroit < dist_2 && robotState.distanceTelemetreExtremeDroit > dist_3){
-//        //Capteurs : 0 0 | | 0  ->  Tourne vers la gauche    7
-//        positionObstacle = OSTACLE_A_DROITE_ET_EN_FACE;
-//    }else if(robotState.distanceTelemetreExtremeGauche > dist_3 && robotState.distanceTelemetreGauche < dist_2 && robotState.distanceTelemetreCentre < dist_1 && robotState.distanceTelemetreDroit > dist_2 && robotState.distanceTelemetreExtremeDroit > dist_3){
-//        //Capteurs : 0 | | 0 0  ->  Tourne vers la droite    13
-//        positionObstacle = OSTACLE_A_GAUCHE_ET_EN_FACE;
-//    }else if(robotState.distanceTelemetreExtremeGauche > dist_3 && robotState.distanceTelemetreGauche > dist_2 && robotState.distanceTelemetreCentre < dist_1 && robotState.distanceTelemetreDroit > dist_2 && robotState.distanceTelemetreExtremeDroit < dist_3){
-//        //Capteurs : 0 0 | 0 |  ->  Tourne vers la gauche    6
-//        positionObstacle = OBSTACLE_A_DROITE;
-//    }else if(robotState.distanceTelemetreExtremeGauche < dist_3 && robotState.distanceTelemetreGauche > dist_2 && robotState.distanceTelemetreCentre < dist_1 && robotState.distanceTelemetreDroit > dist_2 && robotState.distanceTelemetreExtremeDroit > dist_3){
-//        //Capteurs : | 0 | 0 0  ->  Tourne vers la droite    21
-//        positionObstacle = OBSTACLE_A_GAUCHE;
-//    }else if(robotState.distanceTelemetreExtremeGauche < dist_3 && robotState.distanceTelemetreGauche > dist_2 && robotState.distanceTelemetreCentre < dist_1 && robotState.distanceTelemetreDroit > dist_2 && robotState.distanceTelemetreExtremeDroit > dist_3){
-//        //Capteurs : 0 0 0 0 0  ->  Tout droit   21
-//        positionObstacle = PAS_D_OBSTACLE;
-//    }else{
-//        //Capteurs : On à Droite et à Gauche necessite un DEMI-TOUR par la D ou par la G.
-//        positionObstacle = OBSTACLE_PARTOUT;
-//    }
-    
-
-
+    // PATIE ACTION ------------------------------------------------------------
     //Determination de l etat a venir du robot
     if (positionObstacle == PAS_D_OBSTACLE){
         nextStateRobot = STATE_AVANCE;
-        fonction_led(LED_OFF);
+        //fonction_led(LED_OFF);
     }else if (positionObstacle == OBSTACLE_A_DROITE){
         nextStateRobot = STATE_TOURNE_GAUCHE;
         old_dir = 0;
-        fonction_led(LED_D);
+        //fonction_led(LED_D);
     }else if (positionObstacle == OBSTACLE_A_GAUCHE){
         nextStateRobot = STATE_TOURNE_DROITE;
         old_dir = 1;
-        LED_ORANGE = 1;
-        fonction_led(LED_G);
+        //LED_ORANGE = 1;
+        //fonction_led(LED_G);
     }else if (positionObstacle == OBSTACLE_EN_FACE){
         if(old_dir==0) {
             nextStateRobot = STATE_TOURNE_SUR_PLACE_GAUCHE;
         }else{
             nextStateRobot = STATE_TOURNE_SUR_PLACE_DROITE;
         }        
-        fonction_led(LED_M);
+        //fonction_led(LED_M);
     }else if (positionObstacle == OSTACLE_A_DROITE_ET_EN_FACE){
         nextStateRobot = STATE_TOURNE_SUR_PLACE_GAUCHE;
         old_dir = 0;
-        fonction_led(LED_DM);
+        //fonction_led(LED_DM);
     }else if (positionObstacle == OSTACLE_A_GAUCHE_ET_EN_FACE){
         nextStateRobot = STATE_TOURNE_SUR_PLACE_DROITE;
         old_dir = 1;
-        fonction_led(LED_GM);
+        //fonction_led(LED_GM);
     }else if (positionObstacle == OSTACLE_A_GAUCHE_ET_A_DROITE){
         nextStateRobot = STATE_TOURNE_SUR_PLACE_GAUCHE;
-        fonction_led(LED_GD);
+        ///fonction_led(LED_GD);
     }else if (positionObstacle == OSTACLE_A_DROITE_ET_EN_FACE_ET_A_DROITE){
         if(old_dir==0) {
             nextStateRobot = STATE_TOURNE_SUR_PLACE_GAUCHE;
         }else{
             nextStateRobot = STATE_TOURNE_SUR_PLACE_DROITE;
         } 
-        fonction_led(LED_GMD);
+        //fonction_led(LED_GMD);
     }else if (positionObstacle == OSTACLE_A_EXTREME_DROITE){
         nextStateRobot = STATE_TOURNE_SUR_PLACE_GAUCHE;
-        fonction_led(LED_GMD);
+        //fonction_led(LED_GMD);
     }else if (positionObstacle == OSTACLE_LOIN_A_DROITE){
         nextStateRobot = STATE_TOURNE_PETIT_GAUCHE;
-        fonction_led(LED_GMD);
+        //fonction_led(LED_GMD);
     }else if (positionObstacle == OSTACLE_LOIN_A_GAUCHE){
         nextStateRobot = STATE_TOURNE_PETIT_DROITE;
-        fonction_led(LED_GD);
+        //fonction_led(LED_GD);
     }else if (positionObstacle == OSTACLE_LOIN_EN_FACE){
         if(old_dir==0) {
             nextStateRobot = STATE_TOURNE_PETIT_GAUCHE;
         }else{
             nextStateRobot = STATE_TOURNE_PETIT_DROITE;
         }
-        fonction_led(LED_GD);
+        //fonction_led(LED_GD);
     }else if (positionObstacle == OBSTACLE_PARTOUT){        
         if(old_dir==0) {
             nextStateRobot = STATE_DEMI_TOUR_GAUCHE;
@@ -432,3 +363,61 @@ void fonction_led(int x){
         break;
     }
 }
+
+
+    
+
+
+//    // codage : | -> capteur detecte   ET   0 -> capteur ne detecte rien
+//    if(robotState.distanceTelemetreExtremeGauche < dist_3 && robotState.distanceTelemetreGauche < dist_2 && robotState.distanceTelemetreCentre < dist_1 && robotState.distanceTelemetreDroit < dist_2 && robotState.distanceTelemetreExtremeDroit < dist_3){
+//        //Capteurs : | | | | |  ->  Demi tour dans le dernier sens effectuer    32
+//        positionObstacle = OBSTACLE_PARTOUT;
+//    }else if(robotState.distanceTelemetreExtremeGauche > dist_3 && robotState.distanceTelemetreGauche < dist_2 && robotState.distanceTelemetreCentre < dist_1 && robotState.distanceTelemetreDroit < dist_2 && robotState.distanceTelemetreExtremeDroit < dist_3){
+//        //Capteurs : 0 | | | |  ->  Tourne vers la gauche    16
+//        positionObstacle = OBSTACLE_A_DROITE;
+//    }else if(robotState.distanceTelemetreExtremeGauche < dist_3 && robotState.distanceTelemetreGauche < dist_2 && robotState.distanceTelemetreCentre < dist_1 && robotState.distanceTelemetreDroit < dist_2 && robotState.distanceTelemetreExtremeDroit > dist_3){
+//        //Capteurs : | | | | 0  ->  Tourne vers la droite    31
+//        positionObstacle = OBSTACLE_A_GAUCHE;
+//    }else if(robotState.distanceTelemetreExtremeGauche > dist_3 && robotState.distanceTelemetreGauche > dist_2 && robotState.distanceTelemetreCentre < dist_1 && robotState.distanceTelemetreDroit < dist_2 && robotState.distanceTelemetreExtremeDroit < dist_3){
+//        //Capteurs : 0 0 | | |  ->  Tourne vers la gauche    8
+//        positionObstacle = OBSTACLE_A_DROITE;
+//    }else if(robotState.distanceTelemetreExtremeGauche < dist_3 && robotState.distanceTelemetreGauche < dist_2 && robotState.distanceTelemetreCentre < dist_1 && robotState.distanceTelemetreDroit > dist_2 && robotState.distanceTelemetreExtremeDroit > dist_3){
+//        //Capteurs : | | | 0 0  ->  Tourne vers la droite    29
+//        positionObstacle = OBSTACLE_A_GAUCHE;
+//    }else if(robotState.distanceTelemetreExtremeGauche > dist_3 && robotState.distanceTelemetreGauche > dist_2 && robotState.distanceTelemetreCentre > dist_1 && robotState.distanceTelemetreDroit < dist_2 && robotState.distanceTelemetreExtremeDroit < dist_3){
+//        //Capteurs : 0 0 0 | |  ->  Tourne vers la gauche    4
+//        positionObstacle = OBSTACLE_A_DROITE;
+//    }else if(robotState.distanceTelemetreExtremeGauche < dist_3 && robotState.distanceTelemetreGauche < dist_2 && robotState.distanceTelemetreCentre > dist_1 && robotState.distanceTelemetreDroit > dist_2 && robotState.distanceTelemetreExtremeDroit > dist_3){
+//        //Capteurs : | | 0 0 0  ->  Tourne vers la droite    25
+//        positionObstacle = OBSTACLE_A_GAUCHE;
+//    }else if(robotState.distanceTelemetreExtremeGauche > dist_3 && robotState.distanceTelemetreGauche > dist_2 && robotState.distanceTelemetreCentre > dist_1 && robotState.distanceTelemetreDroit > dist_2 && robotState.distanceTelemetreExtremeDroit < dist_3){
+//        //Capteurs : 0 0 0 0 |  ->  Tourne vers la gauche    2
+//        positionObstacle = OBSTACLE_A_DROITE;
+//    }else if(robotState.distanceTelemetreExtremeGauche < dist_3 && robotState.distanceTelemetreGauche > dist_2 && robotState.distanceTelemetreCentre > dist_1 && robotState.distanceTelemetreDroit > dist_2 && robotState.distanceTelemetreExtremeDroit > dist_3){
+//        //Capteurs : | 0 0 0 0  ->  Tourne vers la droite    17
+//        positionObstacle = OBSTACLE_A_GAUCHE;
+//    }else if(robotState.distanceTelemetreExtremeGauche > dist_3 && robotState.distanceTelemetreGauche > dist_2 && robotState.distanceTelemetreCentre > dist_1 && robotState.distanceTelemetreDroit < dist_2 && robotState.distanceTelemetreExtremeDroit > dist_3){
+//        //Capteurs : 0 0 0 | 0  ->  Tourne vers la gauche    3
+//        positionObstacle = OBSTACLE_A_DROITE;
+//    }else if(robotState.distanceTelemetreExtremeGauche > dist_3 && robotState.distanceTelemetreGauche < dist_2 && robotState.distanceTelemetreCentre > dist_1 && robotState.distanceTelemetreDroit > dist_2 && robotState.distanceTelemetreExtremeDroit > dist_3){
+//        //Capteurs : 0 | 0 0 0  ->  Tourne vers la droite    9
+//        positionObstacle = OBSTACLE_A_GAUCHE;
+//    }else if(robotState.distanceTelemetreExtremeGauche > dist_3 && robotState.distanceTelemetreGauche > dist_2 && robotState.distanceTelemetreCentre < dist_1 && robotState.distanceTelemetreDroit < dist_2 && robotState.distanceTelemetreExtremeDroit > dist_3){
+//        //Capteurs : 0 0 | | 0  ->  Tourne vers la gauche    7
+//        positionObstacle = OSTACLE_A_DROITE_ET_EN_FACE;
+//    }else if(robotState.distanceTelemetreExtremeGauche > dist_3 && robotState.distanceTelemetreGauche < dist_2 && robotState.distanceTelemetreCentre < dist_1 && robotState.distanceTelemetreDroit > dist_2 && robotState.distanceTelemetreExtremeDroit > dist_3){
+//        //Capteurs : 0 | | 0 0  ->  Tourne vers la droite    13
+//        positionObstacle = OSTACLE_A_GAUCHE_ET_EN_FACE;
+//    }else if(robotState.distanceTelemetreExtremeGauche > dist_3 && robotState.distanceTelemetreGauche > dist_2 && robotState.distanceTelemetreCentre < dist_1 && robotState.distanceTelemetreDroit > dist_2 && robotState.distanceTelemetreExtremeDroit < dist_3){
+//        //Capteurs : 0 0 | 0 |  ->  Tourne vers la gauche    6
+//        positionObstacle = OBSTACLE_A_DROITE;
+//    }else if(robotState.distanceTelemetreExtremeGauche < dist_3 && robotState.distanceTelemetreGauche > dist_2 && robotState.distanceTelemetreCentre < dist_1 && robotState.distanceTelemetreDroit > dist_2 && robotState.distanceTelemetreExtremeDroit > dist_3){
+//        //Capteurs : | 0 | 0 0  ->  Tourne vers la droite    21
+//        positionObstacle = OBSTACLE_A_GAUCHE;
+//    }else if(robotState.distanceTelemetreExtremeGauche < dist_3 && robotState.distanceTelemetreGauche > dist_2 && robotState.distanceTelemetreCentre < dist_1 && robotState.distanceTelemetreDroit > dist_2 && robotState.distanceTelemetreExtremeDroit > dist_3){
+//        //Capteurs : 0 0 0 0 0  ->  Tout droit   21
+//        positionObstacle = PAS_D_OBSTACLE;
+//    }else{
+//        //Capteurs : On à Droite et à Gauche necessite un DEMI-TOUR par la D ou par la G.
+//        positionObstacle = OBSTACLE_PARTOUT;
+//    }
