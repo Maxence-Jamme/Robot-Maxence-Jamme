@@ -34,13 +34,14 @@ namespace Robot_Interface_JAMME_JUILLE
         int i;
         int couleur;
         int couleur_2 = 1;
+        bool autoControlActivated = true;
         Robot robot = new Robot();
 
 
         public MainWindow()
         {
             InitializeComponent();
-            serialPort1 = new ReliableSerialPort("COM3", 115200, Parity.None, 8, StopBits.One);
+            serialPort1 = new ReliableSerialPort("COM4", 115200, Parity.None, 8, StopBits.One);
             serialPort1.DataReceived += SerialPort1_DataReceived;
             serialPort1.Open();
 
@@ -187,15 +188,21 @@ namespace Robot_Interface_JAMME_JUILLE
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
-
-            /*byte[] byteList = new byte[20];
-             for (int i = 0; i < 20; i++)
-             {
-                 byteList[i] = (byte)(2 * i);
-             }
-             serialPort1.Write(byteList, 0, byteList.Length);*/
-            SendMessage();
-
+            byte[] msgPayload;
+            int msgFunction = (int)FunctionId.state_robot;
+            if (autoControlActivated)
+            {
+                msgPayload = Encoding.ASCII.GetBytes("0");
+                BT3.Content = "Etat : Manuel";
+            }
+            else
+            {
+                msgPayload = Encoding.ASCII.GetBytes("1");
+                BT3.Content = "Etat : Automatique";
+            }
+            autoControlActivated = !autoControlActivated;
+            int msgPayloadLength = msgPayload.Length;
+            UartEncodeAndSendMessage(msgFunction, msgPayloadLength, msgPayload);
         }
         public enum StateReception
         {
@@ -288,6 +295,7 @@ namespace Robot_Interface_JAMME_JUILLE
             telem = 0x0030,
             vitesse = 0x0040,
             etape = 0x0050,
+            state_robot = 0x0051,
         }
         public enum StateRobot
         {
@@ -433,14 +441,14 @@ namespace Robot_Interface_JAMME_JUILLE
             if (checkBox1.IsChecked == true)
             {
                 //send on
-                TextTest.Text += "I2";
+                TextTest.Text += "I3";
                 msgPayload = Encoding.ASCII.GetBytes("I2");
 
             }
             else
             {
                 //send off
-                TextTest.Text += "O2";
+                TextTest.Text += "O3";
                 msgPayload = Encoding.ASCII.GetBytes("O2");
 
             }
@@ -455,14 +463,14 @@ namespace Robot_Interface_JAMME_JUILLE
             if (checkBox2.IsChecked == true)
             {
                 //send on
-                TextTest.Text += "I3";
+                TextTest.Text += "I2";
                 msgPayload = Encoding.ASCII.GetBytes("I3");
 
             }
             else
             {
                 //send off
-                TextTest.Text += "O3";
+                TextTest.Text += "O2";
                 msgPayload = Encoding.ASCII.GetBytes("O3");
 
             }

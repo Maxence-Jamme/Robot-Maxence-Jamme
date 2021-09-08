@@ -59,6 +59,9 @@
 #define LED_GMD 7
 #define LED_OFF 8
 
+extern int autoControlActivated;
+extern unsigned char stateRobot;
+
 void OperatingSystemLoop(void);
 
 

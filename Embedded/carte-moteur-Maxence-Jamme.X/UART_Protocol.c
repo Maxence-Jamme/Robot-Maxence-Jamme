@@ -90,17 +90,12 @@ void UartDecodeMessage(unsigned char c){
         break;
         case StateReceptionCheckSum:            
             calculatedChecksum = c;
-            if (calculatedChecksum == c){ //isoké
-                //TextBoxReception.Text += "youpi\n";
-                //ProcessDecodedMessage(msgDecodedFunction, msgDecodedPayloadLength, msgDecodedPayload);
-                //SendMessage( (unsigned char *) "1234567" , 7 );
-                //UartEncodeAndSendMessage(msgDecodedFunction,msgDecodedPayloadLength,msgDecodedPayload);
+            if (calculatedChecksum == c){
                 UartProcessDecodedMessage(msgDecodedFunction,msgDecodedPayloadLength,msgDecodedPayload);
             }
             else
-            {       //pas OK
-                //TextBoxReceptionText += "snif";
-                SendMessage( (unsigned char *) "7654321" , 7 ) ;
+            {       
+                //SendMessage( (unsigned char *) "7654321" , 7 ) ;
             }
             rcvState = StateReceptionWaiting;
             break;
@@ -122,7 +117,7 @@ void UartProcessDecodedMessage(unsigned char msgFunction,unsigned char msgpayloa
             SetRobotAutoControlState(msgPayload[0]);
         break;
         case Function_Led:
-            if(msgPayload[0]==0x49 && msgPayload[1]==0x31){
+            if(msgPayload[0]==0x49 && msgPayload[1]==0x31){ // 0x49=I 0x31=1
                 LED_ORANGE = 1;
             }                
             if(msgPayload[0]==0x4F && msgPayload[1]==0x31){
@@ -146,7 +141,14 @@ void UartProcessDecodedMessage(unsigned char msgFunction,unsigned char msgpayloa
     }
 }
 void SetRobotState (unsigned char c){
-    
+    if(c == 0x30){
+        LED_BLEUE = 1;
+        autoControlActivated = 0;
+    }else{
+        LED_BLEUE = 0;
+        autoControlActivated = 1;
+        stateRobot = STATE_AVANCE;
+    }
 }
 
 void SetRobotAutoControlState (unsigned char c){

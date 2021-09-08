@@ -13,7 +13,11 @@
 #include "CB_TX1.h" 
 #include "CB_RX1.h" 
 #include "UART_Protocol.h"
+
+
 int boucle_1 = 0;
+int autoControlActivated = 1;
+
 int main (void) {
     InitOscillator();
     InitIO();
@@ -49,7 +53,7 @@ int main (void) {
             UartEncodeAndSendMessage(0x0030,msgPayloadLength,msgPayload);
         }
         
-        if(CB_RX1_IsDataAvailable){
+        if(CB_RX1_IsDataAvailable()){
             int i;
             for (i=0; i< CB_RX1_GetDataSize(); i++)
             {
@@ -94,7 +98,12 @@ void OperatingSystemLoop(void){ //MACHINE A ETAT
         break;
         
         case STATE_AVANCE_EN_COURS:
-            SetNextRobotStateInAutomaticMode();
+            if(autoControlActivated == 1)
+                SetNextRobotStateInAutomaticMode();
+            else {
+                PWMSetSpeedConsigne(0, MOTEUR_DROIT);
+                PWMSetSpeedConsigne(0, MOTEUR_GAUCHE);
+            }
         break;
 
         case STATE_TOURNE_GAUCHE:
@@ -103,7 +112,12 @@ void OperatingSystemLoop(void){ //MACHINE A ETAT
             stateRobot = STATE_TOURNE_GAUCHE_EN_COURS;
         break;
         case STATE_TOURNE_GAUCHE_EN_COURS:
-            SetNextRobotStateInAutomaticMode();
+            if(autoControlActivated == 1)
+                SetNextRobotStateInAutomaticMode();
+            else {
+                PWMSetSpeedConsigne(0, MOTEUR_DROIT);
+                PWMSetSpeedConsigne(0, MOTEUR_GAUCHE);
+            }
         break;
 
         case STATE_TOURNE_DROITE:
@@ -112,7 +126,12 @@ void OperatingSystemLoop(void){ //MACHINE A ETAT
             stateRobot = STATE_TOURNE_DROITE_EN_COURS;
         break;
         case STATE_TOURNE_DROITE_EN_COURS:
-            SetNextRobotStateInAutomaticMode();
+            if(autoControlActivated == 1)
+                SetNextRobotStateInAutomaticMode();
+            else {
+                PWMSetSpeedConsigne(0, MOTEUR_DROIT);
+                PWMSetSpeedConsigne(0, MOTEUR_GAUCHE);
+            }
         break;  
 
         case STATE_TOURNE_SUR_PLACE_GAUCHE:
@@ -121,7 +140,12 @@ void OperatingSystemLoop(void){ //MACHINE A ETAT
             stateRobot = STATE_TOURNE_SUR_PLACE_GAUCHE_EN_COURS;
         break;
         case STATE_TOURNE_SUR_PLACE_GAUCHE_EN_COURS:
-            SetNextRobotStateInAutomaticMode();
+            if(autoControlActivated == 1)
+                SetNextRobotStateInAutomaticMode();
+            else {
+                PWMSetSpeedConsigne(0, MOTEUR_DROIT);
+                PWMSetSpeedConsigne(0, MOTEUR_GAUCHE);
+            }
         break;
 
         case STATE_TOURNE_SUR_PLACE_DROITE:
@@ -130,7 +154,12 @@ void OperatingSystemLoop(void){ //MACHINE A ETAT
             stateRobot = STATE_TOURNE_SUR_PLACE_DROITE_EN_COURS;
         break;
         case STATE_TOURNE_SUR_PLACE_DROITE_EN_COURS:
-            SetNextRobotStateInAutomaticMode();
+            if(autoControlActivated == 1)
+                SetNextRobotStateInAutomaticMode();
+            else {
+                PWMSetSpeedConsigne(0, MOTEUR_DROIT);
+                PWMSetSpeedConsigne(0, MOTEUR_GAUCHE);
+            }
         break;
 
         case STATE_TOURNE_PETIT_GAUCHE:
@@ -139,7 +168,12 @@ void OperatingSystemLoop(void){ //MACHINE A ETAT
             stateRobot = STATE_TOURNE_PETIT_GAUCHE_EN_COURS;
         break;
         case STATE_TOURNE_PETIT_GAUCHE_EN_COURS:
-            SetNextRobotStateInAutomaticMode();
+            if(autoControlActivated == 1)
+                SetNextRobotStateInAutomaticMode();
+            else {
+                PWMSetSpeedConsigne(0, MOTEUR_DROIT);
+                PWMSetSpeedConsigne(0, MOTEUR_GAUCHE);
+            }
         break;  
         
         case STATE_TOURNE_PETIT_DROITE:
@@ -148,7 +182,12 @@ void OperatingSystemLoop(void){ //MACHINE A ETAT
             stateRobot = STATE_TOURNE_PETIT_DROITE_EN_COURS;
         break;
         case STATE_TOURNE_PETIT_DROITE_EN_COURS:
-            SetNextRobotStateInAutomaticMode();
+            if(autoControlActivated == 1)
+                SetNextRobotStateInAutomaticMode();
+            else {
+                PWMSetSpeedConsigne(0, MOTEUR_DROIT);
+                PWMSetSpeedConsigne(0, MOTEUR_GAUCHE);
+            }
         break;
 
         case STATE_DEMI_TOUR_DROITE:
@@ -159,8 +198,15 @@ void OperatingSystemLoop(void){ //MACHINE A ETAT
         break;
         case STATE_DEMI_TOUR_DROITE_EN_COURS:
             if (timestamp > temps_demi_tour)
-                SetNextRobotStateInAutomaticMode();
-                break;
+            {
+                if(autoControlActivated == 1)
+                    SetNextRobotStateInAutomaticMode();
+                else {
+                    PWMSetSpeedConsigne(0, MOTEUR_DROIT);
+                    PWMSetSpeedConsigne(0, MOTEUR_GAUCHE);
+                }
+            }
+            break;
         break;
 
         case STATE_DEMI_TOUR_GAUCHE:
@@ -171,8 +217,16 @@ void OperatingSystemLoop(void){ //MACHINE A ETAT
         break;
         case STATE_DEMI_TOUR_GAUCHE_EN_COURS:
             if (timestamp > temps_demi_tour)
-                SetNextRobotStateInAutomaticMode();
-                break;
+            {
+                if(autoControlActivated == 1)
+                    SetNextRobotStateInAutomaticMode();
+                else 
+                {
+                    PWMSetSpeedConsigne(0, MOTEUR_DROIT);
+                    PWMSetSpeedConsigne(0, MOTEUR_GAUCHE);
+                }
+            }
+            break;
         break;
 
         default :
@@ -190,9 +244,9 @@ int dist_3 = 5;
 int dist_4 = 25;
 int old_dir = 0;    //permet de savoir le dernier sens vers lequel a tourner le robot
 int flag = 1 ;
+
 void SetNextRobotStateInAutomaticMode(){
     unsigned char positionObstacle = PAS_D_OBSTACLE;
-
     //D?termination de la position des obstacles en fonction des t?l?m?tres
     if ( robotState.distanceTelemetreExtremeGauche < dist_4 ){ 
         positionObstacle = OSTACLE_LOIN_A_GAUCHE;

@@ -32,5 +32,9 @@ void UartProcessDecodedMessage(unsigned char function,unsigned char payloadLengt
 #define Function_Vitesse 0x0040
 #define Function_Etape 0x0050
 
+
+void SetRobotState (unsigned char c);
+void SetRobotAutoControlState (unsigned char c);
+
 #endif	/* UART_PROTOCOL_H */
 
