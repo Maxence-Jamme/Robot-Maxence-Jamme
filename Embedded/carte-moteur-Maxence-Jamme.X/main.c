@@ -73,6 +73,9 @@ int main (void) {
         boucle_1 ++;
         //__delay32(1000);
         //__delay32 (40000000);
+        
+        InitQEI1();
+        InitQEI2();
     }
 }
 
