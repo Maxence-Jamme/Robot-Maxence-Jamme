@@ -17,6 +17,7 @@
 
 int boucle_1 = 0;
 int autoControlActivated = 1;
+int manuel_var = 0;
 
 int main (void) {
     InitOscillator();
@@ -101,8 +102,7 @@ void OperatingSystemLoop(void){ //MACHINE A ETAT
             if(autoControlActivated == 1)
                 SetNextRobotStateInAutomaticMode();
             else {
-                PWMSetSpeedConsigne(0, MOTEUR_DROIT);
-                PWMSetSpeedConsigne(0, MOTEUR_GAUCHE);
+                stateRobot = STATE_ARRET;
             }
         break;
 
@@ -115,8 +115,7 @@ void OperatingSystemLoop(void){ //MACHINE A ETAT
             if(autoControlActivated == 1)
                 SetNextRobotStateInAutomaticMode();
             else {
-                PWMSetSpeedConsigne(0, MOTEUR_DROIT);
-                PWMSetSpeedConsigne(0, MOTEUR_GAUCHE);
+                stateRobot = STATE_ARRET;
             }
         break;
 
@@ -129,8 +128,7 @@ void OperatingSystemLoop(void){ //MACHINE A ETAT
             if(autoControlActivated == 1)
                 SetNextRobotStateInAutomaticMode();
             else {
-                PWMSetSpeedConsigne(0, MOTEUR_DROIT);
-                PWMSetSpeedConsigne(0, MOTEUR_GAUCHE);
+                stateRobot = STATE_ARRET;
             }
         break;  
 
@@ -143,8 +141,7 @@ void OperatingSystemLoop(void){ //MACHINE A ETAT
             if(autoControlActivated == 1)
                 SetNextRobotStateInAutomaticMode();
             else {
-                PWMSetSpeedConsigne(0, MOTEUR_DROIT);
-                PWMSetSpeedConsigne(0, MOTEUR_GAUCHE);
+                stateRobot = STATE_ARRET;
             }
         break;
 
@@ -157,8 +154,7 @@ void OperatingSystemLoop(void){ //MACHINE A ETAT
             if(autoControlActivated == 1)
                 SetNextRobotStateInAutomaticMode();
             else {
-                PWMSetSpeedConsigne(0, MOTEUR_DROIT);
-                PWMSetSpeedConsigne(0, MOTEUR_GAUCHE);
+                stateRobot = STATE_ARRET;
             }
         break;
 
@@ -171,8 +167,7 @@ void OperatingSystemLoop(void){ //MACHINE A ETAT
             if(autoControlActivated == 1)
                 SetNextRobotStateInAutomaticMode();
             else {
-                PWMSetSpeedConsigne(0, MOTEUR_DROIT);
-                PWMSetSpeedConsigne(0, MOTEUR_GAUCHE);
+                stateRobot = STATE_ARRET;
             }
         break;  
         
@@ -185,8 +180,7 @@ void OperatingSystemLoop(void){ //MACHINE A ETAT
             if(autoControlActivated == 1)
                 SetNextRobotStateInAutomaticMode();
             else {
-                PWMSetSpeedConsigne(0, MOTEUR_DROIT);
-                PWMSetSpeedConsigne(0, MOTEUR_GAUCHE);
+                stateRobot = STATE_ARRET;
             }
         break;
 
@@ -202,8 +196,7 @@ void OperatingSystemLoop(void){ //MACHINE A ETAT
                 if(autoControlActivated == 1)
                     SetNextRobotStateInAutomaticMode();
                 else {
-                    PWMSetSpeedConsigne(0, MOTEUR_DROIT);
-                    PWMSetSpeedConsigne(0, MOTEUR_GAUCHE);
+                    stateRobot = STATE_ARRET;
                 }
             }
             break;
@@ -222,13 +215,20 @@ void OperatingSystemLoop(void){ //MACHINE A ETAT
                     SetNextRobotStateInAutomaticMode();
                 else 
                 {
-                    PWMSetSpeedConsigne(0, MOTEUR_DROIT);
-                    PWMSetSpeedConsigne(0, MOTEUR_GAUCHE);
+                    stateRobot = STATE_ARRET;
                 }
             }
             break;
         break;
-
+        case STATE_ARRET:
+            if(autoControlActivated == 0 && manuel_var == 0){
+                PWMSetSpeedConsigne(0, MOTEUR_DROIT);
+                PWMSetSpeedConsigne(0, MOTEUR_GAUCHE);
+                manuel_var = 1;
+                return;
+            }
+            
+        break;
         default :
             stateRobot = STATE_ATTENTE;
         break;
@@ -247,6 +247,7 @@ int flag = 1 ;
 
 void SetNextRobotStateInAutomaticMode(){
     unsigned char positionObstacle = PAS_D_OBSTACLE;
+    manuel_var = 0;
     //D?termination de la position des obstacles en fonction des t?l?m?tres
     if ( robotState.distanceTelemetreExtremeGauche < dist_4 ){ 
         positionObstacle = OSTACLE_LOIN_A_GAUCHE;

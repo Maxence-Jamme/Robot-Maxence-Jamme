@@ -17,6 +17,9 @@ using System.Windows.Shapes;
 using System.Windows.Threading;
 using System.Threading.Tasks;
 using System.Threading;
+using MouseKeyboardActivityMonitor.WinApi;
+using MouseKeyboardActivityMonitor;
+using System.Windows.Forms;
 
 namespace Robot_Interface_JAMME_JUILLE
 {
@@ -31,6 +34,8 @@ namespace Robot_Interface_JAMME_JUILLE
         AsyncCallback SerialPort1_DataRecived;
         DispatcherTimer timerAffichage;
 
+        private readonly KeyboardHookListener m_KeyboardHookManager;
+
         int i;
         int couleur;
         int couleur_2 = 1;
@@ -41,7 +46,7 @@ namespace Robot_Interface_JAMME_JUILLE
         public MainWindow()
         {
             InitializeComponent();
-            serialPort1 = new ReliableSerialPort("COM4", 115200, Parity.None, 8, StopBits.One);
+            serialPort1 = new ReliableSerialPort("COM10", 115200, Parity.None, 8, StopBits.One);
             serialPort1.DataReceived += SerialPort1_DataReceived;
             serialPort1.Open();
 
@@ -50,9 +55,42 @@ namespace Robot_Interface_JAMME_JUILLE
             timerAffichage.Tick += TimerAffichage_Tick;
             timerAffichage.Start();
             Switch_color();
+
+            m_KeyboardHookManager = new KeyboardHookListener( new GlobalHooker() ) ;
+            m_KeyboardHookManager.Enabled = true;
+            m_KeyboardHookManager.KeyDown += M_KeyboardHookManager_KeyDown;// += HookManager_KeyDown;
         }
 
-        private void TimerAffichage_Tick(object sender, EventArgs e)        // peut etre faut à voir
+        private void M_KeyboardHookManager_KeyDown(object sender, System.Windows.Forms.KeyEventArgs e)
+        {           
+            if(autoControlActivated == false ){
+                switch (e.KeyCode)
+                {
+                    case Keys.Left:
+                        UartEncodeAndSendMessage(0x0052, 1, new byte[] {( byte ) StateRobot.STATE_TOURNE_SUR_PLACE_GAUCHE}) ;
+                    break;
+
+                    case Keys.Right:
+                        UartEncodeAndSendMessage(0x0052, 1, new byte[] {( byte ) StateRobot.STATE_TOURNE_SUR_PLACE_DROITE });
+                    break;
+
+                    case Keys.Up:
+                        UartEncodeAndSendMessage(0x0052, 1, new byte[]{ ( byte ) StateRobot.STATE_AVANCE });
+                    break;
+
+                    case Keys.Down:
+                        UartEncodeAndSendMessage(0x0052, 1, new byte[]{ ( byte ) StateRobot.STATE_ARRET });
+                    break;
+
+                    case Keys.PageDown:
+                        UartEncodeAndSendMessage(0x0052, 1, new byte[]{ ( byte ) StateRobot.STATE_RECULE });
+                    break;
+            }
+        }
+    }
+
+
+    private void TimerAffichage_Tick(object sender, EventArgs e)        // peut etre faut à voir
         {
             /*if (robot.receivedText != "")
             {
@@ -135,7 +173,7 @@ namespace Robot_Interface_JAMME_JUILLE
             SendMessage();
         }
 
-        private void TextBoxEmission_KeyUp(object sender, KeyEventArgs e)
+        private void TextBoxEmission_KeyUp(object sender, System.Windows.Input.KeyEventArgs e)
 
         {
             if (e.Key == Key.Enter)
@@ -149,7 +187,7 @@ namespace Robot_Interface_JAMME_JUILLE
             TextBoxReception.Text = "";
         }
 
-        private void Button_MouseEnter(object sender, MouseEventArgs e)
+        private void Button_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
         {
             if (couleur_2 == 1)
             {
@@ -174,7 +212,7 @@ namespace Robot_Interface_JAMME_JUILLE
             //TextBoxReception.Background = Brushes.RoyalBlue;
         }
 
-        private void Button_MouseLeave(object sender, MouseEventArgs e)
+        private void Button_MouseLeave(object sender, System.Windows.Input.MouseEventArgs e)
         {
             if (couleur_2 == 1)
             {
@@ -485,7 +523,7 @@ namespace Robot_Interface_JAMME_JUILLE
             //checkBox.IsChecked = !checkBox.IsChecked;
         }
 
-        private void TextTest_MouseEnter(object sender, MouseEventArgs e)
+        private void TextTest_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
         {
             TextTest.Text = "";
         }
@@ -647,6 +685,8 @@ namespace Robot_Interface_JAMME_JUILLE
                 couleur_2 = 0;
             }
         }
+
+        
 
     }
 }

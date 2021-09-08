@@ -3,6 +3,7 @@
 #include "CB_TX1.h"
 #include "main.h"
 #include "IO.h"
+#include "PWM.h"
 
 unsigned char UartCalculateChecksum(int msgFunction,int msgPayloadLength, unsigned char * msgPayload){
 //Fonction prenant entrée la trame et sa longueur pour calculer le checksum
@@ -152,7 +153,31 @@ void SetRobotState (unsigned char c){
 }
 
 void SetRobotAutoControlState (unsigned char c){
-    
+    switch(c){
+        case 8:
+            LED_ORANGE = 1;
+            PWMSetSpeedConsigne(-15, MOTEUR_DROIT);
+            PWMSetSpeedConsigne(15, MOTEUR_GAUCHE);
+        break;
+        case 10:
+            LED_ORANGE = 0;
+            PWMSetSpeedConsigne(15, MOTEUR_DROIT);
+            PWMSetSpeedConsigne(-15, MOTEUR_GAUCHE);
+        break;
+        case 2:
+            PWMSetSpeedConsigne(-20, MOTEUR_DROIT);
+            PWMSetSpeedConsigne(-20, MOTEUR_GAUCHE);
+        break;
+        case 12:
+            PWMSetSpeedConsigne(0, MOTEUR_DROIT);
+            PWMSetSpeedConsigne(0, MOTEUR_GAUCHE);
+        break;
+        case 14:
+            PWMSetSpeedConsigne(20, MOTEUR_DROIT);
+            PWMSetSpeedConsigne(20, MOTEUR_GAUCHE);
+        break;    
+        LED_BLANCHE = 1;
+    }
 }
 //*************************************************************************/
 //Fonctions correspondant aux messages
