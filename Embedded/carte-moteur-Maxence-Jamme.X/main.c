@@ -4,6 +4,7 @@
 #include <libpic30.h> 
 #include "ChipConfig.h"
 #include "IO.h"
+#include "ToolBox.h"
 #include "timer.h"
 #include "PWM.h"
 #include "ADC.h"
@@ -51,7 +52,12 @@ int main (void) {
             //envoie des valeurs des telemetres
             unsigned char msgPayload [] = { (char)robotState.distanceTelemetreDroit ,  (char)robotState.distanceTelemetreCentre, (char)robotState.distanceTelemetreGauche} ;
             int msgPayloadLength = sizeof(msgPayload)+1;
-            UartEncodeAndSendMessage(0x0030,msgPayloadLength,msgPayload);
+            UartEncodeAndSendMessage(0x0030, msgPayloadLength, msgPayload);
+            
+            //envoie des vitesses des moteurs
+            unsigned char msgPayloadV [] = {(char)Abs(robotState.vitesseDroiteConsigne), (char)Abs(robotState.vitesseGaucheConsigne)};
+            int msgPayloadLengthV = sizeof(msgPayloadV)+1;
+            UartEncodeAndSendMessage(0x0040, msgPayloadLengthV, msgPayloadV);
         }
         
         if(CB_RX1_IsDataAvailable()){
@@ -74,8 +80,8 @@ int main (void) {
         //__delay32(1000);
         //__delay32 (40000000);
         
-        InitQEI1();
-        InitQEI2();
+        //InitQEI1();
+        //InitQEI2();
     }
 }
 
@@ -96,8 +102,8 @@ void OperatingSystemLoop(void){ //MACHINE A ETAT
                 break;
 
         case STATE_AVANCE:
-            PWMSetSpeedConsigne(fonce, MOTEUR_DROIT);
-            PWMSetSpeedConsigne(fonce, MOTEUR_GAUCHE);
+            PWMSetSpeedConsigne(-fonce, MOTEUR_DROIT);
+            PWMSetSpeedConsigne(-fonce, MOTEUR_GAUCHE);
             stateRobot = STATE_AVANCE_EN_COURS;
         break;
         
@@ -282,14 +288,11 @@ void SetNextRobotStateInAutomaticMode(){
         positionObstacle = PAS_D_OBSTACLE;
         flag = 1;
     }
-    if(flag ==0){
+    if(flag == 0){
         fonce = 0;
     }else{
-        fonce = fonce + 2;
+        fonce = 35;
         flag = 0;
-        if(fonce>25){
-            fonce = 2;
-        }
     }
     // PATIE ACTION ------------------------------------------------------------
     //Determination de l etat a venir du robot

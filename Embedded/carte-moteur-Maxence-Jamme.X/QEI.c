@@ -1,6 +1,6 @@
 #include "main.h"
 #define DISTROUES 281.2
-
+/*
 void InitQEI1 (){
 QEI1IOCbits .SWPAB = 1 ; //QEAx and QEBx a r e swapped
 QEI1GECL = 0xFFFF;
@@ -52,3 +52,4 @@ void QEIUpdateData (){
     if (robotState.angleRadianFromOdometry < ?PI )
         robotState.angleRadianFromOdometry += 2?PI ;
 }
+*/

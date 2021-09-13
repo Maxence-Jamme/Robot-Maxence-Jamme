@@ -2,10 +2,11 @@ build/default/debug/main.o:  \
 main.c  \
 ChipConfig.h  \
 IO.h  \
+ToolBox.h  \
 timer.h  \
-PWM.h  \
+ PWM.h  \
 ADC.h  \
- Robot.h  \
+Robot.h  \
 main.h  \
 UART.h  \
 CB_TX1.h  \

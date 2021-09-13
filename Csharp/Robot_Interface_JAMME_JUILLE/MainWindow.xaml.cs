@@ -78,11 +78,11 @@ namespace Robot_Interface_JAMME_JUILLE
                         UartEncodeAndSendMessage(0x0052, 1, new byte[]{ ( byte ) StateRobot.STATE_AVANCE });
                     break;
 
-                    case Keys.Down:
+                    case Keys.PageDown:
                         UartEncodeAndSendMessage(0x0052, 1, new byte[]{ ( byte ) StateRobot.STATE_ARRET });
                     break;
 
-                    case Keys.PageDown:
+                    case Keys.Down:
                         UartEncodeAndSendMessage(0x0052, 1, new byte[]{ ( byte ) StateRobot.STATE_RECULE });
                     break;
             }
@@ -313,10 +313,10 @@ namespace Robot_Interface_JAMME_JUILLE
                     }
                     else
                     {
-                        TextBoxReception.Text += "snif\n";
+                        
                         nb_snif++;
                         TextTest.Text = nb_snif.ToString();
-                        TextBoxReception.Text += msgDecodedFunction.ToString() + " " + msgDecodedPayloadLength.ToString() +" "+  msgDecodedPayload + "\n";
+                        //TextBoxReception.Text += msgDecodedFunction.ToString() + " " + msgDecodedPayloadLength.ToString() +" "+  msgDecodedPayload + "\n";
                     }
                     rcvState = StateReception.Waiting;
                     break;
@@ -368,13 +368,13 @@ namespace Robot_Interface_JAMME_JUILLE
         {
             if (msgFunction == (int)FunctionId.text)
             {
-                TextBoxReception.Text += "0x" + msgFunction.ToString("X4") + "\n";
-                TextBoxReception.Text += msgPayloadLength + "\n";
+                //TextBoxReception.Text += "0x" + msgFunction.ToString("X4") + "\n";
+                //TextBoxReception.Text += msgPayloadLength + "\n";
                 for (i = 0; i < msgPayloadLength; i++)
                 {
                     TextBoxReception.Text += Convert.ToChar(msgPayload[i]);
                 }
-                TextBoxReception.Text += "\n";
+                TextBoxReception.Text += "\n";                                            
             }
             if (msgFunction == (int)FunctionId.telem)
             {
@@ -396,6 +396,27 @@ namespace Robot_Interface_JAMME_JUILLE
                             textBox3.Text = "";
                             textBox3.Text += msgPayload[2] + " cm";
                             break;
+                    }
+                }
+                //TextBoxReception.Text += Convert.ToChar(msgPayload[0]);
+                //TextBoxReception.Text += Convert.ToChar(msgPayload[1]);
+                //TextBoxReception.Text += Convert.ToChar(msgPayload[2]);
+                //TextBoxReception.Text += "\n";
+            }
+            if (msgFunction == (int)FunctionId.vitesse)
+            {
+               for (i = 0; i < msgPayloadLength; i++)
+                {
+                    switch (i)
+                    {
+                        case 0:
+                            textBox.Text = "";
+                            textBox.Text += msgPayload[0] + " %";
+                            break;
+                        case 1:
+                            textBox4.Text = "";
+                            textBox4.Text += msgPayload[1] + " %";
+                            break;                        
                     }
                 }
                 //TextBoxReception.Text += Convert.ToChar(msgPayload[0]);
@@ -532,6 +553,45 @@ namespace Robot_Interface_JAMME_JUILLE
         {
             Switch_color();
         }
+        private void CH_Click(object sender, RoutedEventArgs e)
+        {
+            if (autoControlActivated == false)
+            {
+                UartEncodeAndSendMessage(0x0052, 1, new byte[] { (byte)StateRobot.STATE_AVANCE });
+            }
+        }
+        private void CG_Click(object sender, RoutedEventArgs e)
+        {
+            if (autoControlActivated == false)
+            {
+                UartEncodeAndSendMessage(0x0052, 1, new byte[] { (byte)StateRobot.STATE_TOURNE_SUR_PLACE_GAUCHE });
+            }
+        }
+
+        private void CB_Click(object sender, RoutedEventArgs e)
+        {
+            if (autoControlActivated == false)
+            {
+                UartEncodeAndSendMessage(0x0052, 1, new byte[] { (byte)StateRobot.STATE_RECULE });
+            }
+        }
+
+        private void CD_Click(object sender, RoutedEventArgs e)
+        {
+            if (autoControlActivated == false)
+            {
+                UartEncodeAndSendMessage(0x0052, 1, new byte[] { (byte)StateRobot.STATE_TOURNE_SUR_PLACE_DROITE });
+            }
+        }
+
+        private void CS_Click(object sender, RoutedEventArgs e)
+        {
+            if (autoControlActivated == false)
+            {
+                UartEncodeAndSendMessage(0x0052, 1, new byte[] { (byte)StateRobot.STATE_ARRET });
+            }
+        }
+
         private void Switch_color()
         {
             if (couleur_2 == 0)
@@ -598,6 +658,8 @@ namespace Robot_Interface_JAMME_JUILLE
                 GB3.Foreground = (SolidColorBrush)new BrushConverter().ConvertFromString("#F1F1F1");
                 GB3.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#75757E");
                 TextTest.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#75757E");
+
+                GBC.Foreground = (SolidColorBrush)new BrushConverter().ConvertFromString("#F1F1F1");
 
                 BT1.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#858585");
                 BT2.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#858585");
@@ -685,8 +747,6 @@ namespace Robot_Interface_JAMME_JUILLE
                 couleur_2 = 0;
             }
         }
-
-        
 
     }
 }

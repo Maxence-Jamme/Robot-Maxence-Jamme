@@ -116,6 +116,9 @@ void UartProcessDecodedMessage(unsigned char msgFunction,unsigned char msgpayloa
         break;
         case SET_ROBOT_MANUAL_CONTROL:
             SetRobotAutoControlState(msgPayload[0]);
+        break;        
+        case Function_Text:
+            UartEncodeAndSendMessage(Function_Text, msgpayloadLength, msgPayload);
         break;
         case Function_Led:
             if(msgPayload[0]==0x49 && msgPayload[1]==0x31){ // 0x49=I 0x31=1
