@@ -4,9 +4,11 @@
 #include "PWM.h"
 #include "ADC.h"
 #include "main.h"
+#include "QEI.h"
 
 
 unsigned long timestamp;
+int couldown = 0;
 
 //Initialisation d?un timer 32 bits
 void InitTimer23(void) {
@@ -90,12 +92,16 @@ T1CONbits.TON = 1; // Enable Timer
 }
 
 //Interruption du timer 1
-void __attribute__((interrupt, no_auto_psv)) _T1Interrupt(void)
-{
-IFS0bits.T1IF = 0;
-//LED_BLANCHE = !LED_BLANCHE;
-PWMUpdateSpeed();
-ADC1StartConversionSequence();
+void __attribute__((interrupt, no_auto_psv)) _T1Interrupt(void){
+    IFS0bits.T1IF = 0;
+    //LED_BLANCHE = !LED_BLANCHE;
+    PWMUpdateSpeed();
+    ADC1StartConversionSequence();
+    QEIUpdateData();
+    if (couldown % 10 == 0){
+        SendPositionData();
+    }
+    couldown ++;
 }
 
 

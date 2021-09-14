@@ -73,6 +73,34 @@
 
             <!--GRILLE 2 LIGNE 2 COLONE 1-->
             <Button x:Name="BT1" Content="Envoyer" Grid.Column="0" Margin="10" Grid.Row="1" VerticalAlignment="Top" Height="35" Click="buttonEnvoyer_Click"/>
+            <GroupBox x:Name="Odometrie" Header="Odométie" Grid.Column="0" Grid.Row="1" Margin="5, 60, -20, 15">
+                <StackPanel>
+                    <Grid Grid.Column="2" Grid.Row="5">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="1*"/>
+                            <RowDefinition Height="1*"/>
+                            <RowDefinition Height="1*"/>
+                            <RowDefinition Height="1*"/>
+                            <RowDefinition Height="1*"/>
+                        </Grid.RowDefinitions>
+                        <TextBlock x:Name="TBckVitLin" Text="Vitesse Liéaire :" HorizontalAlignment="Left" Margin="4, 10, 0, 5" Grid.Column="0" Grid.Row="0"/>
+                        <TextBlock x:Name="TBckVitAng" Text="Vitesse Angulaire :" HorizontalAlignment="Left" Margin="4, 5, 0, 5" Grid.Column="0" Grid.Row="1"/>
+                        <TextBlock x:Name="TBckVitD" Text="Vitesse Moteur Droit :" HorizontalAlignment="Left" Margin="4, 5, 0, 5" Grid.Column="0" Grid.Row="2"/>
+                        <TextBlock x:Name="TBckVitG" Text="Vitesse Moteur Gauche :" HorizontalAlignment="Left" Margin="4, 5, 0, 5" Grid.Column="0" Grid.Row="3"/>
+                        <TextBlock x:Name="TBckAngle" Text="Angle :" HorizontalAlignment="Left" Margin="4, 5, 0, 5" Grid.Column="0" Grid.Row="4"/>
+
+                        <TextBox x:Name="TBoxVitLin" Height="16" Margin="10, 10, 15, 5" IsReadOnly="True" Grid.Column="1" Grid.Row="0"/>
+                        <TextBox x:Name="TBoxVitAng" Height="16" Margin="10, 10, 15, 5" IsReadOnly="True" Grid.Column="1" Grid.Row="1"/>
+                        <TextBox x:Name="TBoxVitD" Height="16" Margin="10, 10, 15, 5" IsReadOnly="True" Grid.Column="1" Grid.Row="2"/>
+                        <TextBox x:Name="TBoxVitG" Height="16" Margin="10, 10, 15, 5" IsReadOnly="True" Grid.Column="1" Grid.Row="3"/>
+                        <TextBox x:Name="TBoxAngle" Height="16" Margin="10, 10, 15, 5" IsReadOnly="True" Grid.Column="1" Grid.Row="4"/>
+                    </Grid>
+                </StackPanel>
+            </GroupBox>
 
             <!--GRILLE 2 LIGNE 2 COLONE 2-->
             <Button x:Name="BT2" Content="Clear" Grid.Column="1" Margin="10" Grid.Row="1" VerticalAlignment="Top" Height="35" Click="Button_Click" MouseEnter="Button_MouseEnter" MouseLeave="Button_MouseLeave"/>
@@ -99,7 +127,6 @@
                         <Button x:Name="CS" Content="O"  Width="35" Height="35" FontFamily="sans-serif" FontSize="17px" Grid.Column="1" Grid.Row="1" Margin="10" Click="CS_Click"/>
                     </Grid>
                 </StackPanel>
-
             </GroupBox>
             <!--GRILLE 2 LIGNE 3 COLONE 1-->
             <Button x:Name="BT4" Content="test" Grid.Column="0" Height="35" Margin="10" Grid.Row="2" VerticalAlignment="Top" Width="75" Click="Button_Click_2"/>

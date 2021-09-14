@@ -46,7 +46,7 @@ namespace Robot_Interface_JAMME_JUILLE
         public MainWindow()
         {
             InitializeComponent();
-            serialPort1 = new ReliableSerialPort("COM10", 115200, Parity.None, 8, StopBits.One);
+            serialPort1 = new ReliableSerialPort("COM8", 115200, Parity.None, 8, StopBits.One);
             serialPort1.DataReceived += SerialPort1_DataReceived;
             serialPort1.Open();
 
@@ -334,7 +334,9 @@ namespace Robot_Interface_JAMME_JUILLE
             vitesse = 0x0040,
             etape = 0x0050,
             state_robot = 0x0051,
+            position_data = 0x0061,
         }
+
         public enum StateRobot
         {
             STATE_ATTENTE = 0,
@@ -362,7 +364,6 @@ namespace Robot_Interface_JAMME_JUILLE
             STATE_DEMI_TOUR_GAUCHE_EN_COURS = 22,
             STATE_DEMI_TOUR_GAUCHE = 23
         }
-
 
         void ProcessDecodedMessage(int msgFunction, int msgPayloadLength, byte[] msgPayload)
         {
@@ -469,6 +470,11 @@ namespace Robot_Interface_JAMME_JUILLE
                         break;                    
                 }*/
             }
+
+            /*if(msgFunction == (int)FunctionId.position_data)
+            {
+
+            }*/
         }
 
         private void checkBox_Click(object sender, RoutedEventArgs e)
@@ -660,6 +666,13 @@ namespace Robot_Interface_JAMME_JUILLE
                 TextTest.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#75757E");
 
                 GBC.Foreground = (SolidColorBrush)new BrushConverter().ConvertFromString("#F1F1F1");
+
+                Odometrie.Foreground = (SolidColorBrush)new BrushConverter().ConvertFromString("#F1F1F1");
+                TBckVitLin.Foreground = (SolidColorBrush)new BrushConverter().ConvertFromString("#F1F1F1");
+                TBckVitAng.Foreground = (SolidColorBrush)new BrushConverter().ConvertFromString("#F1F1F1");
+                TBckVitD.Foreground = (SolidColorBrush)new BrushConverter().ConvertFromString("#F1F1F1");
+                TBckVitG.Foreground = (SolidColorBrush)new BrushConverter().ConvertFromString("#F1F1F1");
+                TBckAngle.Foreground = (SolidColorBrush)new BrushConverter().ConvertFromString("#F1F1F1");
 
                 BT1.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#858585");
                 BT2.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#858585");

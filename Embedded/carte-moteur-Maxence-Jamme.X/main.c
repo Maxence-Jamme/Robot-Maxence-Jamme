@@ -14,6 +14,7 @@
 #include "CB_TX1.h" 
 #include "CB_RX1.h" 
 #include "UART_Protocol.h"
+#include "QEI.h"
 
 
 int boucle_1 = 0;
@@ -28,9 +29,13 @@ int main (void) {
     InitPWM();
     InitADC1();
     InitTimer4();
-    InitUART ();
+    InitUART();
+    InitQEI1();
+    InitQEI2();
+    
     //PWMSetSpeed(-15, MOTEUR_DROIT); // 0 = Droite | 1 = Gauche |pourcentage detat bas de PWM 
     //PWMSetSpeed(-15, MOTEUR_GAUCHE);  //  + = avance | - = recule | (batterie face ? nous)
+    
     while(1){
         unsigned int * resultat;
         resultat = ADCGetResult();
@@ -47,7 +52,6 @@ int main (void) {
             robotState.distanceTelemetreGauche = 34/volts-5;
             volts = ((float) result[0])*3.3/4096*3.2;
             robotState.distanceTelemetreExtremeGauche= 34/volts-5;
-            
             
             //envoie des valeurs des telemetres
             unsigned char msgPayload [] = { (char)robotState.distanceTelemetreDroit ,  (char)robotState.distanceTelemetreCentre, (char)robotState.distanceTelemetreGauche} ;
@@ -79,9 +83,6 @@ int main (void) {
         boucle_1 ++;
         //__delay32(1000);
         //__delay32 (40000000);
-        
-        //InitQEI1();
-        //InitQEI2();
     }
 }
 
