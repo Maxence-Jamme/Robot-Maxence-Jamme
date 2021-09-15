@@ -36,3 +36,5 @@ D:\Doucuments\GitHub\Robot-Maxence-Jamme\Csharp\Robot_Interface_JAMME_JUILLE\obj
 C:\Github\Robot-Maxence-Jamme\Csharp\Robot_Interface_JAMME_JUILLE\bin\Debug\MouseKeyboardActivityMonitor.dll
 C:\Github\Robot-Maxence-Jamme\Csharp\Robot_Interface_JAMME_JUILLE\bin\Debug\MouseKeyboardActivityMonitor.pdb
 C:\Github\Robot-Maxence-Jamme\Csharp\Robot_Interface_JAMME_JUILLE\bin\Debug\MouseKeyboardActivityMonitor.xml
+C:\Github\Robot-Maxence-Jamme\Csharp\Robot_Interface_JAMME_JUILLE\bin\Debug\Utilities.dll
+C:\Github\Robot-Maxence-Jamme\Csharp\Robot_Interface_JAMME_JUILLE\bin\Debug\Utilities.pdb

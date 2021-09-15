@@ -13,6 +13,11 @@ namespace Robot_Interface_JAMME_JUILLE
         public float distanceTelemetreDroit;
         public float distanceTelemetreCentre; 
         public float distanceTelemetreGauche;
+        public float positionXOdo;
+        public float positionYOdo;
+        public float AngleRadOdo;
+        public float vLinéaireOdo;
+        public float vAngulaireOdo;
         public Robot ( )
         {
             

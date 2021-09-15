@@ -128,16 +128,16 @@ void UartProcessDecodedMessage(unsigned char msgFunction,unsigned char msgpayloa
                 LED_ORANGE = 0;
             }
             if(msgPayload[0]==0x49 && msgPayload[1]==0x32){
-                LED_BLANCHE = 1;
-            }                
-            if(msgPayload[0]==0x4F && msgPayload[1]==0x32){
-                LED_BLANCHE = 0;
-            }
-            if(msgPayload[0]==0x49 && msgPayload[1]==0x33){
                 LED_BLEUE = 1;
             }                
-            if(msgPayload[0]==0x4F && msgPayload[1]==0x33){
+            if(msgPayload[0]==0x4F && msgPayload[1]==0x32){
                 LED_BLEUE = 0;
+            }
+            if(msgPayload[0]==0x49 && msgPayload[1]==0x33){
+                LED_BLANCHE = 1;
+            }                
+            if(msgPayload[0]==0x4F && msgPayload[1]==0x33){
+                LED_BLANCHE = 0;
             }
         break;
         default:
@@ -145,11 +145,18 @@ void UartProcessDecodedMessage(unsigned char msgFunction,unsigned char msgpayloa
     }
 }
 void SetRobotState (unsigned char c){
+    unsigned char msgPayloadLed [] = {0, 0};
     if(c == 0x30){
         LED_BLEUE = 1;
+        msgPayloadLed[0]=0x49;
+        msgPayloadLed[1]=0x32;
+        UartEncodeAndSendMessage(Function_Led, 2, msgPayloadLed);
         autoControlActivated = 0;
     }else{
         LED_BLEUE = 0;
+        msgPayloadLed[0]=0x4F;
+        msgPayloadLed[1]=0x32;
+        UartEncodeAndSendMessage(Function_Led, 2, msgPayloadLed);
         autoControlActivated = 1;
         stateRobot = STATE_AVANCE;
     }
@@ -158,12 +165,12 @@ void SetRobotState (unsigned char c){
 void SetRobotAutoControlState (unsigned char c){
     switch(c){
         case 8:
-            LED_ORANGE = 1;
+            LED_ORANGE = 1;            
             PWMSetSpeedConsigne(-15, MOTEUR_DROIT);
             PWMSetSpeedConsigne(15, MOTEUR_GAUCHE);
         break;
         case 10:
-            LED_ORANGE = 0;
+            LED_ORANGE = 0;            
             PWMSetSpeedConsigne(15, MOTEUR_DROIT);
             PWMSetSpeedConsigne(-15, MOTEUR_GAUCHE);
         break;
@@ -179,7 +186,6 @@ void SetRobotAutoControlState (unsigned char c){
             PWMSetSpeedConsigne(20, MOTEUR_DROIT);
             PWMSetSpeedConsigne(20, MOTEUR_GAUCHE);
         break;    
-        LED_BLANCHE = 1;
     }
 }
 //*************************************************************************/

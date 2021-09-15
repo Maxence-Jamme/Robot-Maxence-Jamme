@@ -20,6 +20,8 @@ using System.Threading;
 using MouseKeyboardActivityMonitor.WinApi;
 using MouseKeyboardActivityMonitor;
 using System.Windows.Forms;
+using Utilities;
+
 
 namespace Robot_Interface_JAMME_JUILLE
 {
@@ -46,7 +48,7 @@ namespace Robot_Interface_JAMME_JUILLE
         public MainWindow()
         {
             InitializeComponent();
-            serialPort1 = new ReliableSerialPort("COM8", 115200, Parity.None, 8, StopBits.One);
+            serialPort1 = new ReliableSerialPort("COM10", 115200, Parity.None, 8, StopBits.One);
             serialPort1.DataReceived += SerialPort1_DataReceived;
             serialPort1.Open();
 
@@ -67,24 +69,29 @@ namespace Robot_Interface_JAMME_JUILLE
                 switch (e.KeyCode)
                 {
                     case Keys.Left:
-                        UartEncodeAndSendMessage(0x0052, 1, new byte[] {( byte ) StateRobot.STATE_TOURNE_SUR_PLACE_GAUCHE}) ;
-                    break;
+                        UartEncodeAndSendMessage(0x0052, 1, new byte[] {( byte ) StateRobot.STATE_TOURNE_SUR_PLACE_GAUCHE});
+                        TextBoxetatrobot.Text = "Robot State : Tourne à gauche";
+                        break;
 
                     case Keys.Right:
                         UartEncodeAndSendMessage(0x0052, 1, new byte[] {( byte ) StateRobot.STATE_TOURNE_SUR_PLACE_DROITE });
-                    break;
+                        TextBoxetatrobot.Text = "Robot State : Tourne à droite";
+                        break;
 
                     case Keys.Up:
                         UartEncodeAndSendMessage(0x0052, 1, new byte[]{ ( byte ) StateRobot.STATE_AVANCE });
-                    break;
+                        TextBoxetatrobot.Text = "Robot State : Avance";
+                        break;
 
                     case Keys.PageDown:
                         UartEncodeAndSendMessage(0x0052, 1, new byte[]{ ( byte ) StateRobot.STATE_ARRET });
-                    break;
+                        TextBoxetatrobot.Text = "Robot State : Arret";
+                        break;
 
                     case Keys.Down:
                         UartEncodeAndSendMessage(0x0052, 1, new byte[]{ ( byte ) StateRobot.STATE_RECULE });
-                    break;
+                        TextBoxetatrobot.Text = "Robot State : Recule";
+                        break;
             }
         }
     }
@@ -97,18 +104,18 @@ namespace Robot_Interface_JAMME_JUILLE
                 TextBoxReception.Text = TextBoxReception.Text + "Reçu=" + robot.receivedText;
                 robot.receivedText = "";
             }*/
-            while (robot.byteListReceived.Count != 0)
-            {
-                byte byteReceived = robot.byteListReceived.Dequeue();
-                DecodeMessage(byteReceived);
-                //string blabla;
-                //blabla = byteReceived.ToString("X");
-                //blabla += ;
-                //TextTest.Text += byteReceived.ToString("X");
-                //TextTest.Text += Convert.ToChar(byteReceived) + " "; // "0x"+blabla+"";
-                //TextBoxReception.Text += byteReceived+"\n";
-                //TextBoxReception.Text += Convert.ToChar(byteReceived);
-            }
+            //while (robot.byteListReceived.Count != 0)
+            //{
+            //    byte byteReceived = robot.byteListReceived.Dequeue();
+            //    DecodeMessage(byteReceived);
+            //    //string blabla;
+            //    //blabla = byteReceived.ToString("X");
+            //    //blabla += ;
+            //    //TextTest.Text += byteReceived.ToString("X");
+            //    //TextTest.Text += Convert.ToChar(byteReceived) + " "; // "0x"+blabla+"";
+            //    //TextBoxReception.Text += byteReceived+"\n";
+            //    //TextBoxReception.Text += Convert.ToChar(byteReceived);
+            //}
 
         }
 
@@ -126,7 +133,6 @@ namespace Robot_Interface_JAMME_JUILLE
             }
             return Checksum;
         }
-
         void UartEncodeAndSendMessage(int msgFunction, int msgPayloadLength, byte[] msgPayload)
         {
             byte Checksum = 0;
@@ -153,7 +159,8 @@ namespace Robot_Interface_JAMME_JUILLE
             //robot.receivedText += Encoding.UTF8.GetString(e.Data, 0, e.Data.Length);
             for (i = 0; i < e.Data.Length; i++)
             {
-                robot.byteListReceived.Enqueue(e.Data[i]);
+                DecodeMessage(e.Data[i]);
+                //robot.byteListReceived.Enqueue(e.Data[i]);
             }
 
         }
@@ -241,6 +248,15 @@ namespace Robot_Interface_JAMME_JUILLE
             autoControlActivated = !autoControlActivated;
             int msgPayloadLength = msgPayload.Length;
             UartEncodeAndSendMessage(msgFunction, msgPayloadLength, msgPayload);
+            if (autoControlActivated == false)
+            {
+                TextBoxetatrobot.Text = "Robot State : Manuel";
+            }
+            else
+            {
+                TextBoxetatrobot.Text = "Robot State : Automatique";
+            }
+                
         }
         public enum StateReception
         {
@@ -308,14 +324,14 @@ namespace Robot_Interface_JAMME_JUILLE
                     calculatedChecksum = CalculateChecksum(msgDecodedFunction, msgDecodedPayloadLength, msgDecodedPayload);
                     if (calculatedChecksum == receivedChecksum)
                     {
-                       // TextBoxReception.Text += "youpi\n";
-                        ProcessDecodedMessage(msgDecodedFunction, msgDecodedPayloadLength, msgDecodedPayload);
+                        // TextBoxReception.Text += "youpi\n";
+                        Dispatcher.Invoke(delegate { ProcessDecodedMessage(msgDecodedFunction, msgDecodedPayloadLength, msgDecodedPayload); });                        
                     }
                     else
                     {
                         
                         nb_snif++;
-                        TextTest.Text = nb_snif.ToString();
+                        Dispatcher.Invoke(delegate { TextTest.Text = nb_snif.ToString(); });
                         //TextBoxReception.Text += msgDecodedFunction.ToString() + " " + msgDecodedPayloadLength.ToString() +" "+  msgDecodedPayload + "\n";
                     }
                     rcvState = StateReception.Waiting;
@@ -369,175 +385,127 @@ namespace Robot_Interface_JAMME_JUILLE
         {
             if (msgFunction == (int)FunctionId.text)
             {
-                //TextBoxReception.Text += "0x" + msgFunction.ToString("X4") + "\n";
-                //TextBoxReception.Text += msgPayloadLength + "\n";
                 for (i = 0; i < msgPayloadLength; i++)
                 {
                     TextBoxReception.Text += Convert.ToChar(msgPayload[i]);
                 }
-                TextBoxReception.Text += "\n";                                            
+                TextBoxReception.Text += "\n";
             }
             if (msgFunction == (int)FunctionId.telem)
             {
-                //TextBoxReception.Text += "0x" + msgFunction.ToString("X4") + "\n";
-                //TextBoxReception.Text += msgPayloadLength + "\n";
-                for (i = 0; i < msgPayloadLength; i++)
-                {
-                    switch (i)
-                    {
-                        case 0:
-                            textBox1.Text ="";
-                            textBox1.Text += msgPayload[0] + " cm";
-                            break;
-                        case 1:
-                            textBox2.Text = "";
-                            textBox2.Text += msgPayload[1] + " cm";
-                            break;
-                        case 2:
-                            textBox3.Text = "";
-                            textBox3.Text += msgPayload[2] + " cm";
-                            break;
-                    }
-                }
-                //TextBoxReception.Text += Convert.ToChar(msgPayload[0]);
-                //TextBoxReception.Text += Convert.ToChar(msgPayload[1]);
-                //TextBoxReception.Text += Convert.ToChar(msgPayload[2]);
-                //TextBoxReception.Text += "\n";
+               TBoxD.Text = msgPayload[0] + " cm";
+                TBoxC.Text = msgPayload[1] + " cm";
+                TBoxG.Text = msgPayload[2] + " cm";
+                TBoxExG.Text = msgPayload[3] + " cm";
+                TBoxExD.Text = msgPayload[4] + " cm";
             }
             if (msgFunction == (int)FunctionId.vitesse)
             {
-               for (i = 0; i < msgPayloadLength; i++)
-                {
-                    switch (i)
-                    {
-                        case 0:
-                            textBox.Text = "";
-                            textBox.Text += msgPayload[0] + " %";
-                            break;
-                        case 1:
-                            textBox4.Text = "";
-                            textBox4.Text += msgPayload[1] + " %";
-                            break;                        
-                    }
-                }
-                //TextBoxReception.Text += Convert.ToChar(msgPayload[0]);
-                //TextBoxReception.Text += Convert.ToChar(msgPayload[1]);
-                //TextBoxReception.Text += Convert.ToChar(msgPayload[2]);
-                //TextBoxReception.Text += "\n";
+                TBoxMotG.Text = msgPayload[0] + " %";
+                TBoxMotD.Text = msgPayload[1] + " %";
             }
             if (msgFunction == (int)FunctionId.etape)
-            {                
+            {
                 int instant = (((int)msgPayload[1]) << 24) + (((int)msgPayload[2]) << 16) + (((int)msgPayload[3]) << 8) + ((int)msgPayload[4]);
-                TextBoxetatrobot.Text = "Robot State: " + ((StateRobot)(msgPayload[0])).ToString() +" − " + instant.ToString() + " ms ";
-                
+                TextBoxetatrobot.Text = "Robot State : " + ((StateRobot)(msgPayload[0])).ToString() + " − " + instant.ToString() + " ms";
             }
             if (msgFunction == (int)FunctionId.led)
             {
-                //TextBoxReception.Text += Convert.ToChar(msgFunction) + " " + Convert.ToChar(msgPayloadLength) + " ";
-                TextBoxReception.Text += "isoké ";
-                for (i = 0; i < msgPayloadLength; i++)
+                if (msgPayload[0] == 0x49 && msgPayload[1] == 0x31)
                 {
-                    switch (i)
-                    {
-                        case 0:
-
-                            TextBoxReception.Text += Convert.ToChar(msgPayload[0]);
-                            break;
-                        case 1:
-
-                            TextBoxReception.Text += Convert.ToChar(msgPayload[1]);
-                            break;
-                        case 2:
-
-                            TextBoxReception.Text += Convert.ToChar(msgPayload[2]);
-                            break;                        
-                    }
-                    if (msgPayload[1] == 0x31)
-                    {
-                        checkBox2.IsChecked = true;
-                    }
-                    else
-                    {
-                        checkBox1.IsChecked = true;
-                    }
-                        
+                    checkBoxLED1.IsChecked = true;
                 }
-                /*switch (msgPayload[0])
+                if (msgPayload[0] == 0x4F && msgPayload[1] == 0x31)
                 {
-                    case 1:
-                        TextBoxReception.Text += Convert.ToChar(msgPayload[0]);
-                        checkBox.IsChecked = !checkBox.IsChecked;
-                        break;                    
-                }*/
+                    checkBoxLED1.IsChecked = false;
+                }
+                if (msgPayload[0] == 0x49 && msgPayload[1] == 0x32)
+                {
+                    checkBoxLED2.IsChecked = true;
+                }
+                if (msgPayload[0] == 0x4F && msgPayload[1] == 0x32)
+                {
+                    checkBoxLED2.IsChecked = false;
+                }
+                if (msgPayload[0] == 0x49 && msgPayload[1] == 0x33)
+                {
+                    checkBoxLED3.IsChecked = true;
+                }
+                if (msgPayload[0] == 0x4F && msgPayload[1] == 0x33)
+                {
+                    checkBoxLED3.IsChecked = false;
+                }
+            }
+            if (msgFunction == (int)FunctionId.position_data)
+            {
+                byte[] tab = msgPayload.GetRange(4, 4);
+                robot.positionXOdo = tab.GetFloat();
+                tab = msgPayload.GetRange(8, 4);
+                robot.positionYOdo = tab.GetFloat();
+                tab = msgPayload.GetRange(12, 4);
+                robot.AngleRadOdo = tab.GetFloat();
+                tab = msgPayload.GetRange(16, 4);
+                robot.vLinéaireOdo = tab.GetFloat();
+                tab = msgPayload.GetRange(20, 4);
+                robot.vAngulaireOdo = tab.GetFloat();
+                TBoxPosX.Text = (robot.positionXOdo).ToString();
+                TBoxPosY.Text = (robot.positionYOdo).ToString();
+                TBoxAngle.Text = (robot.AngleRadOdo * (180d / Math.PI)).ToString();
+                TBoxVitLin.Text = robot.vLinéaireOdo.ToString();
+                TBoxVitAng.Text = robot.vAngulaireOdo.ToString();
             }
 
-            /*if(msgFunction == (int)FunctionId.position_data)
-            {
 
-            }*/
         }
 
-        private void checkBox_Click(object sender, RoutedEventArgs e)
+        private void checkBox1_Click(object sender, RoutedEventArgs e)      // ORANGE
         {
             byte[] msgPayload;
-            if (checkBox.IsChecked == true)
+            if (checkBoxLED1.IsChecked == true)
             {
-                //send on
                 TextTest.Text += "I1";
                 msgPayload = Encoding.ASCII.GetBytes("I1");
-                
             }
             else
             {
-                //send off
                 TextTest.Text += "O1";
                 msgPayload = Encoding.ASCII.GetBytes("O1");
-                
-            }
-            int msgFunction = (int)FunctionId.led;
-            int msgPayloadLength = msgPayload.Length;
-            UartEncodeAndSendMessage(msgFunction, msgPayloadLength, msgPayload);
-
-        }
-
-        private void checkBox1_Click(object sender, RoutedEventArgs e)
-        {
-            byte[] msgPayload;
-            if (checkBox1.IsChecked == true)
-            {
-                //send on
-                TextTest.Text += "I3";
-                msgPayload = Encoding.ASCII.GetBytes("I2");
-
-            }
-            else
-            {
-                //send off
-                TextTest.Text += "O3";
-                msgPayload = Encoding.ASCII.GetBytes("O2");
-
             }
             int msgFunction = (int)FunctionId.led;
             int msgPayloadLength = msgPayload.Length;
             UartEncodeAndSendMessage(msgFunction, msgPayloadLength, msgPayload);
         }
 
-        private void checkBox2_Click(object sender, RoutedEventArgs e)
+        private void checkBox2_Click(object sender, RoutedEventArgs e)      // BLEU
         {
             byte[] msgPayload;
-            if (checkBox2.IsChecked == true)
+            if (checkBoxLED2.IsChecked == true)
             {
-                //send on
                 TextTest.Text += "I2";
-                msgPayload = Encoding.ASCII.GetBytes("I3");
-
+                msgPayload = Encoding.ASCII.GetBytes("I2");
             }
             else
             {
-                //send off
                 TextTest.Text += "O2";
-                msgPayload = Encoding.ASCII.GetBytes("O3");
+                msgPayload = Encoding.ASCII.GetBytes("O2");
+            }
+            int msgFunction = (int)FunctionId.led;
+            int msgPayloadLength = msgPayload.Length;
+            UartEncodeAndSendMessage(msgFunction, msgPayloadLength, msgPayload);
+        }
 
+        private void checkBox3_Click(object sender, RoutedEventArgs e)      // BLANC
+        {
+            byte[] msgPayload;
+            if (checkBoxLED3.IsChecked == true)
+            {
+                TextTest.Text += "I3";
+                msgPayload = Encoding.ASCII.GetBytes("I3");
+            }
+            else
+            {
+                TextTest.Text += "O3";
+                msgPayload = Encoding.ASCII.GetBytes("O3");
             }
             int msgFunction = (int)FunctionId.led;
             int msgPayloadLength = msgPayload.Length;
@@ -564,6 +532,7 @@ namespace Robot_Interface_JAMME_JUILLE
             if (autoControlActivated == false)
             {
                 UartEncodeAndSendMessage(0x0052, 1, new byte[] { (byte)StateRobot.STATE_AVANCE });
+                TextBoxetatrobot.Text = "Robot State : Avance";
             }
         }
         private void CG_Click(object sender, RoutedEventArgs e)
@@ -571,6 +540,7 @@ namespace Robot_Interface_JAMME_JUILLE
             if (autoControlActivated == false)
             {
                 UartEncodeAndSendMessage(0x0052, 1, new byte[] { (byte)StateRobot.STATE_TOURNE_SUR_PLACE_GAUCHE });
+                TextBoxetatrobot.Text = "Robot State : Tourne à gauche";
             }
         }
 
@@ -579,6 +549,7 @@ namespace Robot_Interface_JAMME_JUILLE
             if (autoControlActivated == false)
             {
                 UartEncodeAndSendMessage(0x0052, 1, new byte[] { (byte)StateRobot.STATE_RECULE });
+                TextBoxetatrobot.Text = "Robot State : Recule";
             }
         }
 
@@ -587,6 +558,7 @@ namespace Robot_Interface_JAMME_JUILLE
             if (autoControlActivated == false)
             {
                 UartEncodeAndSendMessage(0x0052, 1, new byte[] { (byte)StateRobot.STATE_TOURNE_SUR_PLACE_DROITE });
+                TextBoxetatrobot.Text = "Robot State : Tourne à droite";
             }
         }
 
@@ -595,6 +567,7 @@ namespace Robot_Interface_JAMME_JUILLE
             if (autoControlActivated == false)
             {
                 UartEncodeAndSendMessage(0x0052, 1, new byte[] { (byte)StateRobot.STATE_ARRET });
+                TextBoxetatrobot.Text = "Robot State : Arret";
             }
         }
 
@@ -627,18 +600,18 @@ namespace Robot_Interface_JAMME_JUILLE
                 BT4.Foreground = (SolidColorBrush)new BrushConverter().ConvertFromString("#000C3B");
                 BT5.Foreground = (SolidColorBrush)new BrushConverter().ConvertFromString("#CE0D0D");
 
-                checkBox.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#43A08B");
-                checkBox1.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#FFC322");
-                checkBox2.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#120754");
-                checkBox.Foreground = (SolidColorBrush)new BrushConverter().ConvertFromString("#C914A3");
-                checkBox1.Foreground = (SolidColorBrush)new BrushConverter().ConvertFromString("#50CCF4");
-                checkBox2.Foreground = (SolidColorBrush)new BrushConverter().ConvertFromString("#344730");
+                checkBoxLED3.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#43A08B");
+                checkBoxLED1.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#FFC322");
+                checkBoxLED2.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#120754");
+                checkBoxLED3.Foreground = (SolidColorBrush)new BrushConverter().ConvertFromString("#C914A3");
+                checkBoxLED1.Foreground = (SolidColorBrush)new BrushConverter().ConvertFromString("#50CCF4");
+                checkBoxLED2.Foreground = (SolidColorBrush)new BrushConverter().ConvertFromString("#344730");
 
-                textBox.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#2F4285");
-                textBox1.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#901C02");
-                textBox2.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#2BA612");
-                textBox3.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#6A4D00");
-                textBox4.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#6712A6");
+                TBoxMotD.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#2F4285");
+                TBoxD.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#901C02");
+                TBoxC.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#2BA612");
+                TBoxG.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#6A4D00");
+                TBoxMotG.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#6712A6");
 
                 couleur_2 = 1;
             }
@@ -670,9 +643,15 @@ namespace Robot_Interface_JAMME_JUILLE
                 Odometrie.Foreground = (SolidColorBrush)new BrushConverter().ConvertFromString("#F1F1F1");
                 TBckVitLin.Foreground = (SolidColorBrush)new BrushConverter().ConvertFromString("#F1F1F1");
                 TBckVitAng.Foreground = (SolidColorBrush)new BrushConverter().ConvertFromString("#F1F1F1");
-                TBckVitD.Foreground = (SolidColorBrush)new BrushConverter().ConvertFromString("#F1F1F1");
-                TBckVitG.Foreground = (SolidColorBrush)new BrushConverter().ConvertFromString("#F1F1F1");
+                TBckPosX.Foreground = (SolidColorBrush)new BrushConverter().ConvertFromString("#F1F1F1");
+                TBckPosY.Foreground = (SolidColorBrush)new BrushConverter().ConvertFromString("#F1F1F1");
                 TBckAngle.Foreground = (SolidColorBrush)new BrushConverter().ConvertFromString("#F1F1F1");
+
+                TBoxVitLin.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#C8C8C8");
+                TBoxVitAng.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#C8C8C8");
+                TBoxPosX.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#C8C8C8");
+                TBoxPosY.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#C8C8C8");
+                TBoxAngle.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#C8C8C8");
 
                 BT1.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#858585");
                 BT2.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#858585");
@@ -689,18 +668,20 @@ namespace Robot_Interface_JAMME_JUILLE
                 groupBox1.Foreground = (SolidColorBrush)new BrushConverter().ConvertFromString("#F1F1F1");
                 groupBox2.Foreground = (SolidColorBrush)new BrushConverter().ConvertFromString("#F1F1F1");
 
-                checkBox.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#FFFFFF");
-                checkBox1.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#FFFFFF");
-                checkBox2.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#FFFFFF");
-                checkBox.Foreground = (SolidColorBrush)new BrushConverter().ConvertFromString("#FF9B00");
-                checkBox1.Foreground = (SolidColorBrush)new BrushConverter().ConvertFromString("#FFFFFF");
-                checkBox2.Foreground = (SolidColorBrush)new BrushConverter().ConvertFromString("#476AD1");
+                checkBoxLED3.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#FFFFFF");
+                checkBoxLED1.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#FFFFFF");
+                checkBoxLED2.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#FFFFFF");
+                checkBoxLED3.Foreground = (SolidColorBrush)new BrushConverter().ConvertFromString("#FFFFFF");
+                checkBoxLED1.Foreground = (SolidColorBrush)new BrushConverter().ConvertFromString("#FF9B00");
+                checkBoxLED2.Foreground = (SolidColorBrush)new BrushConverter().ConvertFromString("#476AD1");
 
-                textBox.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#C8C8C8");
-                textBox1.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#C8C8C8");
-                textBox2.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#C8C8C8");
-                textBox3.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#C8C8C8");
-                textBox4.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#C8C8C8");
+                TBoxMotD.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#C8C8C8");
+                TBoxD.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#C8C8C8");
+                TBoxC.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#C8C8C8");
+                TBoxG.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#C8C8C8");
+                TBoxMotG.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#C8C8C8");
+                TBoxExD.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#C8C8C8");
+                TBoxExG.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#C8C8C8");
 
                 couleur_2 = 2;
             }
@@ -722,10 +703,19 @@ namespace Robot_Interface_JAMME_JUILLE
                 GB4.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#c9c9c9");
                 TextBoxetatrobot.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#c9c9c9");
                 TextBoxetatrobot.Foreground = (SolidColorBrush)new BrushConverter().ConvertFromString("#000000");
-
+  
                 GB3.Foreground = (SolidColorBrush)new BrushConverter().ConvertFromString("#000000");
                 GB3.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#c9c9c9");
                 TextTest.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#c9c9c9");
+
+                GBC.Foreground = (SolidColorBrush)new BrushConverter().ConvertFromString("#000000");
+
+                Odometrie.Foreground = (SolidColorBrush)new BrushConverter().ConvertFromString("#000000");
+                TBckVitLin.Foreground = (SolidColorBrush)new BrushConverter().ConvertFromString("#000000");
+                TBckVitAng.Foreground = (SolidColorBrush)new BrushConverter().ConvertFromString("#000000");
+                TBckPosX.Foreground = (SolidColorBrush)new BrushConverter().ConvertFromString("#000000");
+                TBckPosY.Foreground = (SolidColorBrush)new BrushConverter().ConvertFromString("#000000");
+                TBckAngle.Foreground = (SolidColorBrush)new BrushConverter().ConvertFromString("#000000");
 
                 BT1.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#DDDDDD");
                 BT2.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#DDDDDD");
@@ -742,24 +732,29 @@ namespace Robot_Interface_JAMME_JUILLE
                 groupBox1.Foreground = (SolidColorBrush)new BrushConverter().ConvertFromString("#000000");
                 groupBox2.Foreground = (SolidColorBrush)new BrushConverter().ConvertFromString("#000000");
 
-                checkBox.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#FFFFFF");
-                checkBox1.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#FFFFFF");
-                checkBox2.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#FFFFFF");
-                checkBox.Foreground = (SolidColorBrush)new BrushConverter().ConvertFromString("#000000");
-                checkBox1.Foreground = (SolidColorBrush)new BrushConverter().ConvertFromString("#000000");
-                checkBox2.Foreground = (SolidColorBrush)new BrushConverter().ConvertFromString("#000000");
+                checkBoxLED3.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#FFFFFF");
+                checkBoxLED1.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#FFFFFF");
+                checkBoxLED2.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#FFFFFF");
+                checkBoxLED3.Foreground = (SolidColorBrush)new BrushConverter().ConvertFromString("#000000");
+                checkBoxLED1.Foreground = (SolidColorBrush)new BrushConverter().ConvertFromString("#000000");
+                checkBoxLED2.Foreground = (SolidColorBrush)new BrushConverter().ConvertFromString("#000000");
 
-                textBox.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#FFFFFF");
-                textBox1.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#FFFFFF");
-                textBox2.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#FFFFFF");
-                textBox3.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#FFFFFF");
-                textBox4.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#FFFFFF");
+                TBoxMotD.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#FFFFFF");
+                TBoxD.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#FFFFFF");
+                TBoxC.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#FFFFFF");
+                TBoxG.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#FFFFFF");
+                TBoxMotD.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#FFFFFF");
+                TBoxExD.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#FFFFFF");
+                TBoxExG.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#FFFFFF");
 
+                TBoxVitLin.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#FFFFFF");
+                TBoxVitAng.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#FFFFFF");
+                TBoxPosX.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#FFFFFF");
+                TBoxPosY.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#FFFFFF");
+                TBoxAngle.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#FFFFFF");
 
-
-                couleur_2 = 0;
+                couleur_2 = 1;      // ici c'est 0
             }
         }
-
     }
 }

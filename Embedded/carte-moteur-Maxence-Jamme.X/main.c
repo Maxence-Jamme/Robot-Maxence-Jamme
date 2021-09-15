@@ -54,7 +54,7 @@ int main (void) {
             robotState.distanceTelemetreExtremeGauche= 34/volts-5;
             
             //envoie des valeurs des telemetres
-            unsigned char msgPayload [] = { (char)robotState.distanceTelemetreDroit ,  (char)robotState.distanceTelemetreCentre, (char)robotState.distanceTelemetreGauche} ;
+            unsigned char msgPayload [] = { (char)robotState.distanceTelemetreGauche ,  (char)robotState.distanceTelemetreCentre, (char)robotState.distanceTelemetreDroit, (char)robotState.distanceTelemetreExtremeDroit, (char)robotState.distanceTelemetreExtremeGauche } ;
             int msgPayloadLength = sizeof(msgPayload)+1;
             UartEncodeAndSendMessage(0x0030, msgPayloadLength, msgPayload);
             
@@ -292,7 +292,7 @@ void SetNextRobotStateInAutomaticMode(){
     if(flag == 0){
         fonce = 0;
     }else{
-        fonce = 35;
+        fonce = 20;
         flag = 0;
     }
     // PATIE ACTION ------------------------------------------------------------

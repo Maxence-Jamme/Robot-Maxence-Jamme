@@ -5,11 +5,13 @@
         <group>
             <file>file:/C:/Github/Robot-Maxence-Jamme/Embedded/carte-moteur-Maxence-Jamme.X/PWM.c</file>
             <file>file:/C:/Github/Robot-Maxence-Jamme/Embedded/carte-moteur-Maxence-Jamme.X/timer.c</file>
+            <file>file:/C:/Github/Robot-Maxence-Jamme/Embedded/carte-moteur-Maxence-Jamme.X/IO.h</file>
             <file>file:/C:/Github/Robot-Maxence-Jamme/Embedded/carte-moteur-Maxence-Jamme.X/UART.h</file>
             <file>file:/C:/Github/Robot-Maxence-Jamme/Embedded/carte-moteur-Maxence-Jamme.X/Robot.h</file>
             <file>file:/C:/Github/Robot-Maxence-Jamme/Embedded/carte-moteur-Maxence-Jamme.X/main.c</file>
             <file>file:/C:/Github/Robot-Maxence-Jamme/Embedded/carte-moteur-Maxence-Jamme.X/IO.c</file>
             <file>file:/C:/Github/Robot-Maxence-Jamme/Embedded/carte-moteur-Maxence-Jamme.X/QEI.c</file>
+            <file>file:/C:/Github/Robot-Maxence-Jamme/Embedded/carte-moteur-Maxence-Jamme.X/nbproject/Makefile-default.mk</file>
             <file>file:/C:/Github/Robot-Maxence-Jamme/Embedded/carte-moteur-Maxence-Jamme.X/Toolbox.h</file>
             <file>file:/C:/Github/Robot-Maxence-Jamme/Embedded/carte-moteur-Maxence-Jamme.X/main.h</file>
             <file>file:/C:/Github/Robot-Maxence-Jamme/Embedded/carte-moteur-Maxence-Jamme.X/Robot.c</file>

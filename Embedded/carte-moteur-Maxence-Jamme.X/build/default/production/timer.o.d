@@ -4,4 +4,5 @@ timer.h  \
 IO.h  \
 PWM.h  \
 ADC.h  \
-main.h 
+main.h  \
+ QEI.h 
