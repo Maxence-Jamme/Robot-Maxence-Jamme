@@ -33,17 +33,65 @@ namespace Robot_Interface_JAMME_JUILLE
     public partial class MainWindow : Window
     {
         ReliableSerialPort serialPort1;
-        AsyncCallback SerialPort1_DataRecived;
+        //AsyncCallback SerialPort1_DataRecived;
         DispatcherTimer timerAffichage;
 
         private readonly KeyboardHookListener m_KeyboardHookManager;
 
         int i;
-        int couleur;
-        int couleur_2 = 1;
+        int couleur_2 = 0;
         bool autoControlActivated = true;
         Robot robot = new Robot();
 
+        public enum StateReception
+        {
+            Waiting,
+            FunctionMSB,
+            FunctionLSB,
+            PayloadLengthMSB,
+            PayloadLengthLSB,
+            Payload,
+            CheckSum
+        }
+
+        public enum FunctionId
+        {
+            text = 0x0080,
+            led = 0x0020,
+            telem = 0x0030,
+            vitesse = 0x0040,
+            etape = 0x0050,
+            state_robot = 0x0051,
+            position_data = 0x0061,
+        }
+
+        public enum StateRobot
+        {
+            STATE_ATTENTE = 0,
+            STATE_ATTENTE_EN_COURS = 1,
+            STATE_AVANCE = 2,
+            STATE_AVANCE_EN_COURS = 3,
+            STATE_TOURNE_GAUCHE = 4,
+            STATE_TOURNE_GAUCHE_EN_COURS = 5,
+            STATE_TOURNE_DROITE = 6,
+            STATE_TOURNE_DROITE_EN_COURS = 7,
+            STATE_TOURNE_SUR_PLACE_GAUCHE = 8,
+            STATE_TOURNE_SUR_PLACE_GAUCHE_EN_COURS = 9,
+            STATE_TOURNE_SUR_PLACE_DROITE = 10,
+            STATE_TOURNE_SUR_PLACE_DROITE_EN_COURS = 11,
+            STATE_ARRET = 12,
+            STATE_ARRET_EN_COURS = 13,
+            STATE_RECULE = 14,
+            STATE_RECULE_EN_COURS = 15,
+            STATE_TOURNE_PETIT_GAUCHE = 16,
+            STATE_TOURNE_PETIT_GAUCHE_EN_COURS = 17,
+            STATE_TOURNE_PETIT_DROITE = 18,
+            STATE_TOURNE_PETIT_DROITE_EN_COURS = 19,
+            STATE_DEMI_TOUR_DROITE = 20,
+            STATE_DEMI_TOUR_DROITE_EN_COURS = 21,
+            STATE_DEMI_TOUR_GAUCHE_EN_COURS = 22,
+            STATE_DEMI_TOUR_GAUCHE = 23
+        }
 
         public MainWindow()
         {
@@ -64,7 +112,7 @@ namespace Robot_Interface_JAMME_JUILLE
         }
 
         private void M_KeyboardHookManager_KeyDown(object sender, System.Windows.Forms.KeyEventArgs e)
-        {           
+        {     
             if(autoControlActivated == false ){
                 switch (e.KeyCode)
                 {
@@ -92,18 +140,13 @@ namespace Robot_Interface_JAMME_JUILLE
                         UartEncodeAndSendMessage(0x0052, 1, new byte[]{ ( byte ) StateRobot.STATE_RECULE });
                         TextBoxetatrobot.Text = "Robot State : Recule";
                         break;
+                }
             }
         }
-    }
 
 
-    private void TimerAffichage_Tick(object sender, EventArgs e)        // peut etre faut à voir
+        private void TimerAffichage_Tick(object sender, EventArgs e)        // peut etre faut à voir
         {
-            /*if (robot.receivedText != "")
-            {
-                TextBoxReception.Text = TextBoxReception.Text + "Reçu=" + robot.receivedText;
-                robot.receivedText = "";
-            }*/
             //while (robot.byteListReceived.Count != 0)
             //{
             //    byte byteReceived = robot.byteListReceived.Dequeue();
@@ -194,43 +237,6 @@ namespace Robot_Interface_JAMME_JUILLE
             TextBoxReception.Text = "";
         }
 
-        private void Button_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
-        {
-            if (couleur_2 == 1)
-            {
-                switch (couleur)
-                {
-                    case 0:
-                        TextBoxReception.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#FF0000");
-                        couleur++;
-                        break;
-                    case 1:
-                        TextBoxReception.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#00FF00");
-                        couleur++;
-                        break;
-                    case 2:
-                        TextBoxReception.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#0000FF");
-                        couleur = 0;
-                        break;
-
-                }
-            }
-
-            //TextBoxReception.Background = Brushes.RoyalBlue;
-        }
-
-        private void Button_MouseLeave(object sender, System.Windows.Input.MouseEventArgs e)
-        {
-            if (couleur_2 == 1)
-            {
-                TextBoxReception.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#150057");
-            }
-            else if (couleur_2 == 0)
-            {
-                TextBoxReception.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#c9c9c9");
-            }
-        }
-
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
             byte[] msgPayload;
@@ -258,16 +264,7 @@ namespace Robot_Interface_JAMME_JUILLE
             }
                 
         }
-        public enum StateReception
-        {
-            Waiting,
-            FunctionMSB,
-            FunctionLSB,
-            PayloadLengthMSB,
-            PayloadLengthLSB,
-            Payload,
-            CheckSum
-        }
+        
 
         StateReception rcvState = StateReception.Waiting;
         int msgDecodedFunction = 0;
@@ -323,13 +320,11 @@ namespace Robot_Interface_JAMME_JUILLE
                     receivedChecksum = c;
                     calculatedChecksum = CalculateChecksum(msgDecodedFunction, msgDecodedPayloadLength, msgDecodedPayload);
                     if (calculatedChecksum == receivedChecksum)
-                    {
-                        // TextBoxReception.Text += "youpi\n";
+                    {                        
                         Dispatcher.Invoke(delegate { ProcessDecodedMessage(msgDecodedFunction, msgDecodedPayloadLength, msgDecodedPayload); });                        
                     }
                     else
-                    {
-                        
+                    {                        
                         nb_snif++;
                         Dispatcher.Invoke(delegate { TextTest.Text = nb_snif.ToString(); });
                         //TextBoxReception.Text += msgDecodedFunction.ToString() + " " + msgDecodedPayloadLength.ToString() +" "+  msgDecodedPayload + "\n";
@@ -340,176 +335,117 @@ namespace Robot_Interface_JAMME_JUILLE
                     rcvState = StateReception.Waiting;
                     break;
             }
-        }
-
-        public enum FunctionId
-        {
-            text = 0x0080,
-            led = 0x0020,
-            telem = 0x0030,
-            vitesse = 0x0040,
-            etape = 0x0050,
-            state_robot = 0x0051,
-            position_data = 0x0061,
-        }
-
-        public enum StateRobot
-        {
-            STATE_ATTENTE = 0,
-            STATE_ATTENTE_EN_COURS = 1,
-            STATE_AVANCE = 2,
-            STATE_AVANCE_EN_COURS = 3,
-            STATE_TOURNE_GAUCHE = 4,
-            STATE_TOURNE_GAUCHE_EN_COURS = 5,
-            STATE_TOURNE_DROITE = 6,
-            STATE_TOURNE_DROITE_EN_COURS = 7,
-            STATE_TOURNE_SUR_PLACE_GAUCHE = 8,
-            STATE_TOURNE_SUR_PLACE_GAUCHE_EN_COURS = 9,
-            STATE_TOURNE_SUR_PLACE_DROITE = 10,
-            STATE_TOURNE_SUR_PLACE_DROITE_EN_COURS = 11,
-            STATE_ARRET = 12,
-            STATE_ARRET_EN_COURS = 13,
-            STATE_RECULE = 14,
-            STATE_RECULE_EN_COURS = 15,
-            STATE_TOURNE_PETIT_GAUCHE = 16,
-            STATE_TOURNE_PETIT_GAUCHE_EN_COURS = 17,
-            STATE_TOURNE_PETIT_DROITE = 18,
-            STATE_TOURNE_PETIT_DROITE_EN_COURS = 19,
-            STATE_DEMI_TOUR_DROITE = 20,
-            STATE_DEMI_TOUR_DROITE_EN_COURS = 21,
-            STATE_DEMI_TOUR_GAUCHE_EN_COURS = 22,
-            STATE_DEMI_TOUR_GAUCHE = 23
-        }
+        }        
 
         void ProcessDecodedMessage(int msgFunction, int msgPayloadLength, byte[] msgPayload)
         {
-            if (msgFunction == (int)FunctionId.text)
+            switch (msgFunction)
             {
-                for (i = 0; i < msgPayloadLength; i++)
-                {
-                    TextBoxReception.Text += Convert.ToChar(msgPayload[i]);
-                }
-                TextBoxReception.Text += "\n";
-            }
-            if (msgFunction == (int)FunctionId.telem)
-            {
-               TBoxD.Text = msgPayload[0] + " cm";
-                TBoxC.Text = msgPayload[1] + " cm";
-                TBoxG.Text = msgPayload[2] + " cm";
-                TBoxExG.Text = msgPayload[3] + " cm";
-                TBoxExD.Text = msgPayload[4] + " cm";
-            }
-            if (msgFunction == (int)FunctionId.vitesse)
-            {
-                TBoxMotG.Text = msgPayload[0] + " %";
-                TBoxMotD.Text = msgPayload[1] + " %";
-            }
-            if (msgFunction == (int)FunctionId.etape)
-            {
-                int instant = (((int)msgPayload[1]) << 24) + (((int)msgPayload[2]) << 16) + (((int)msgPayload[3]) << 8) + ((int)msgPayload[4]);
-                TextBoxetatrobot.Text = "Robot State : " + ((StateRobot)(msgPayload[0])).ToString() + " − " + instant.ToString() + " ms";
-            }
-            if (msgFunction == (int)FunctionId.led)
-            {
-                if (msgPayload[0] == 0x49 && msgPayload[1] == 0x31)
-                {
-                    checkBoxLED1.IsChecked = true;
-                }
-                if (msgPayload[0] == 0x4F && msgPayload[1] == 0x31)
-                {
-                    checkBoxLED1.IsChecked = false;
-                }
-                if (msgPayload[0] == 0x49 && msgPayload[1] == 0x32)
-                {
-                    checkBoxLED2.IsChecked = true;
-                }
-                if (msgPayload[0] == 0x4F && msgPayload[1] == 0x32)
-                {
-                    checkBoxLED2.IsChecked = false;
-                }
-                if (msgPayload[0] == 0x49 && msgPayload[1] == 0x33)
-                {
-                    checkBoxLED3.IsChecked = true;
-                }
-                if (msgPayload[0] == 0x4F && msgPayload[1] == 0x33)
-                {
-                    checkBoxLED3.IsChecked = false;
-                }
-            }
-            if (msgFunction == (int)FunctionId.position_data)
-            {
-                byte[] tab = msgPayload.GetRange(4, 4);
-                robot.positionXOdo = tab.GetFloat();
-                tab = msgPayload.GetRange(8, 4);
-                robot.positionYOdo = tab.GetFloat();
-                tab = msgPayload.GetRange(12, 4);
-                robot.AngleRadOdo = tab.GetFloat();
-                tab = msgPayload.GetRange(16, 4);
-                robot.vLinéaireOdo = tab.GetFloat();
-                tab = msgPayload.GetRange(20, 4);
-                robot.vAngulaireOdo = tab.GetFloat();
-                TBoxPosX.Text = (robot.positionXOdo).ToString();
-                TBoxPosY.Text = (robot.positionYOdo).ToString();
-                TBoxAngle.Text = (robot.AngleRadOdo * (180d / Math.PI)).ToString();
-                TBoxVitLin.Text = robot.vLinéaireOdo.ToString();
-                TBoxVitAng.Text = robot.vAngulaireOdo.ToString();
-            }
-
-
+                case ((int)FunctionId.text):
+                    for (i = 0; i < msgPayloadLength; i++)
+                    {
+                        TextBoxReception.Text += Convert.ToChar(msgPayload[i]);
+                    }
+                    TextBoxReception.Text += "test\n";
+                    break;
+                case ((int)FunctionId.telem):
+                    TBoxD.Text = msgPayload[0] + " cm";
+                    TBoxC.Text = msgPayload[1] + " cm";
+                    TBoxG.Text = msgPayload[2] + " cm";
+                    TBoxExG.Text = msgPayload[3] + " cm";
+                    TBoxExD.Text = msgPayload[4] + " cm";
+                    break;
+                case ((int)FunctionId.vitesse):
+                    TBoxMotG.Text = msgPayload[0] + " %";
+                    TBoxMotD.Text = msgPayload[1] + " %";
+                    break;
+                case ((int)FunctionId.etape):
+                    int instant = (((int)msgPayload[1]) << 24) + (((int)msgPayload[2]) << 16) + (((int)msgPayload[3]) << 8) + ((int)msgPayload[4]);
+                    TextBoxetatrobot.Text = "Robot State : " + ((StateRobot)(msgPayload[0])).ToString() + " − " + instant.ToString() + " ms";
+                    break;
+                case ((int)FunctionId.led):
+                    if (msgPayload[0] == 0x49 && msgPayload[1] == 0x31)
+                    {
+                        checkBoxLED1.IsChecked = true;
+                    }
+                    if (msgPayload[0] == 0x4F && msgPayload[1] == 0x31)
+                    {
+                        checkBoxLED1.IsChecked = false;
+                    }
+                    if (msgPayload[0] == 0x49 && msgPayload[1] == 0x32)
+                    {
+                        checkBoxLED2.IsChecked = true;
+                    }
+                    if (msgPayload[0] == 0x4F && msgPayload[1] == 0x32)
+                    {
+                        checkBoxLED2.IsChecked = false;
+                    }
+                    if (msgPayload[0] == 0x49 && msgPayload[1] == 0x33)
+                    {
+                        checkBoxLED3.IsChecked = true;
+                    }
+                    if (msgPayload[0] == 0x4F && msgPayload[1] == 0x33)
+                    {
+                        checkBoxLED3.IsChecked = false;
+                    }
+                    break;
+                case ((int)FunctionId.position_data):
+                    byte[] tab = msgPayload.GetRange(4, 4);
+                    robot.positionXOdo = tab.GetFloat();
+                    tab = msgPayload.GetRange(8, 4);
+                    robot.positionYOdo = tab.GetFloat();
+                    tab = msgPayload.GetRange(12, 4);
+                    robot.AngleRadOdo = tab.GetFloat();
+                    tab = msgPayload.GetRange(16, 4);
+                    robot.vLinéaireOdo = tab.GetFloat();
+                    tab = msgPayload.GetRange(20, 4);
+                    robot.vAngulaireOdo = tab.GetFloat();
+                    TBoxPosX.Text = (robot.positionXOdo).ToString();
+                    TBoxPosY.Text = (robot.positionYOdo).ToString();
+                    TBoxAngle.Text = (robot.AngleRadOdo * (180d / Math.PI)).ToString();
+                    TBoxVitLin.Text = robot.vLinéaireOdo.ToString();
+                    TBoxVitAng.Text = robot.vAngulaireOdo.ToString();
+                    break;
+            } 
         }
 
         private void checkBox1_Click(object sender, RoutedEventArgs e)      // ORANGE
         {
             byte[] msgPayload;
-            if (checkBoxLED1.IsChecked == true)
-            {
+            if (checkBoxLED1.IsChecked == true){
                 TextTest.Text += "I1";
                 msgPayload = Encoding.ASCII.GetBytes("I1");
-            }
-            else
-            {
+            }else{
                 TextTest.Text += "O1";
                 msgPayload = Encoding.ASCII.GetBytes("O1");
             }
-            int msgFunction = (int)FunctionId.led;
-            int msgPayloadLength = msgPayload.Length;
-            UartEncodeAndSendMessage(msgFunction, msgPayloadLength, msgPayload);
+            UartEncodeAndSendMessage((int)FunctionId.led, msgPayload.Length, msgPayload);
         }
 
         private void checkBox2_Click(object sender, RoutedEventArgs e)      // BLEU
         {
             byte[] msgPayload;
-            if (checkBoxLED2.IsChecked == true)
-            {
+            if (checkBoxLED2.IsChecked == true){
                 TextTest.Text += "I2";
                 msgPayload = Encoding.ASCII.GetBytes("I2");
-            }
-            else
-            {
+            }else{
                 TextTest.Text += "O2";
                 msgPayload = Encoding.ASCII.GetBytes("O2");
             }
-            int msgFunction = (int)FunctionId.led;
-            int msgPayloadLength = msgPayload.Length;
-            UartEncodeAndSendMessage(msgFunction, msgPayloadLength, msgPayload);
+            UartEncodeAndSendMessage((int)FunctionId.led, msgPayload.Length, msgPayload);
         }
 
         private void checkBox3_Click(object sender, RoutedEventArgs e)      // BLANC
         {
             byte[] msgPayload;
-            if (checkBoxLED3.IsChecked == true)
-            {
+            if (checkBoxLED3.IsChecked == true){
                 TextTest.Text += "I3";
                 msgPayload = Encoding.ASCII.GetBytes("I3");
-            }
-            else
-            {
+            }else{
                 TextTest.Text += "O3";
                 msgPayload = Encoding.ASCII.GetBytes("O3");
             }
-            int msgFunction = (int)FunctionId.led;
-            int msgPayloadLength = msgPayload.Length;
-            UartEncodeAndSendMessage(msgFunction, msgPayloadLength, msgPayload);
+            UartEncodeAndSendMessage((int)FunctionId.led, msgPayload.Length, msgPayload);
         }
 
         private void Button_Click_2(object sender, RoutedEventArgs e)
@@ -527,6 +463,7 @@ namespace Robot_Interface_JAMME_JUILLE
         {
             Switch_color();
         }
+
         private void CH_Click(object sender, RoutedEventArgs e)
         {
             if (autoControlActivated == false)
@@ -535,6 +472,7 @@ namespace Robot_Interface_JAMME_JUILLE
                 TextBoxetatrobot.Text = "Robot State : Avance";
             }
         }
+
         private void CG_Click(object sender, RoutedEventArgs e)
         {
             if (autoControlActivated == false)
@@ -575,185 +513,36 @@ namespace Robot_Interface_JAMME_JUILLE
         {
             if (couleur_2 == 0)
             {
-                Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#4CFF37");
-
-                GB1.Foreground = (SolidColorBrush)new BrushConverter().ConvertFromString("#FC37FF");
-                GB1.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#B200FF");
-                TextBoxEmission.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#0B4DB2");
-
-                GB2.Foreground = (SolidColorBrush)new BrushConverter().ConvertFromString("#A20007");
-                GB2.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#FF00AE");
-                TextBoxReception.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#150057");
-
-                GB3.Foreground = (SolidColorBrush)new BrushConverter().ConvertFromString("#B0835D");
-                GB3.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#00E8FF");
-                TextTest.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#0B2747");
-
-                BT1.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#9C88D9");
-                BT2.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#0D8A35");
-                BT3.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#EA6B7D");
-                BT4.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#FCB400");
-                BT5.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#BFFC00");
-                BT1.Foreground = (SolidColorBrush)new BrushConverter().ConvertFromString("#B2A50B");
-                BT2.Foreground = (SolidColorBrush)new BrushConverter().ConvertFromString("#2807BD");
-                BT3.Foreground = (SolidColorBrush)new BrushConverter().ConvertFromString("#079FBD");
-                BT4.Foreground = (SolidColorBrush)new BrushConverter().ConvertFromString("#000C3B");
-                BT5.Foreground = (SolidColorBrush)new BrushConverter().ConvertFromString("#CE0D0D");
-
-                checkBoxLED3.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#43A08B");
-                checkBoxLED1.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#FFC322");
-                checkBoxLED2.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#120754");
-                checkBoxLED3.Foreground = (SolidColorBrush)new BrushConverter().ConvertFromString("#C914A3");
-                checkBoxLED1.Foreground = (SolidColorBrush)new BrushConverter().ConvertFromString("#50CCF4");
-                checkBoxLED2.Foreground = (SolidColorBrush)new BrushConverter().ConvertFromString("#344730");
-
-                TBoxMotD.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#2F4285");
-                TBoxD.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#901C02");
-                TBoxC.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#2BA612");
-                TBoxG.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#6A4D00");
-                TBoxMotG.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#6712A6");
-
+                Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#3E3E42");
+                //#F0F0F0
+                TextBoxetatrobot.Foreground = TextBoxEmission.Foreground = TextBoxReception.Foreground = (SolidColorBrush)new BrushConverter().ConvertFromString("#F0F0F0");
+                //#75757E
+                GB1.Background = TextBoxEmission.Background = GB2.Background = TextBoxReception.Background = TextBoxetatrobot.Background = GB4.Background = TextTest.Background = GB3.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#75757E");
+                //#F1F1F1
+                BT5.Foreground = BT4.Foreground = BT3.Foreground = BT2.Foreground = BT1.Foreground = groupBox2.Foreground = groupBox1.Foreground = groupBox.Foreground = GB4.Foreground = GB3.Foreground = GBC.Foreground = GB1.Foreground = GB2.Foreground = Odometrie.Foreground = TBckVitLin.Foreground = TBckVitAng.Foreground = TBckPosX.Foreground = TBckPosY.Foreground = TBckAngle.Foreground = (SolidColorBrush)new BrushConverter().ConvertFromString("#F1F1F1");
+                //#C8C8C8
+                TBoxMotD.Background = TBoxD.Background = TBoxC.Background = TBoxG.Background = TBoxMotG.Background = TBoxExD.Background = TBoxExG.Background = TBoxVitLin.Background = TBoxVitAng.Background = TBoxPosX.Background = TBoxPosY.Background = TBoxAngle.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#C8C8C8");
+                //#858585
+                BT1.Background = BT2.Background = BT3.Background = BT4.Background = BT5.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#858585");
+                //#FFFFFF
+                checkBoxLED3.Background = checkBoxLED1.Background = checkBoxLED2.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#FFFFFF");
+                //LED
+                checkBoxLED3.Foreground = (SolidColorBrush)new BrushConverter().ConvertFromString("#FFFFFF");//BLANC
+                checkBoxLED1.Foreground = (SolidColorBrush)new BrushConverter().ConvertFromString("#FF9B00");//ORANGE
+                checkBoxLED2.Foreground = (SolidColorBrush)new BrushConverter().ConvertFromString("#367ff5");//BLEU
                 couleur_2 = 1;
             }
             else if (couleur_2 == 1)
             {
-                Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#3E3E42");
-
-                GB1.Foreground = (SolidColorBrush)new BrushConverter().ConvertFromString("#F1F1F1");
-                GB1.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#75757E");
-                TextBoxEmission.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#75757E");
-                TextBoxEmission.Foreground = (SolidColorBrush)new BrushConverter().ConvertFromString("#F0F0F0");
-
-                GB2.Foreground = (SolidColorBrush)new BrushConverter().ConvertFromString("#F1F1F1");
-                GB2.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#75757E");
-                TextBoxReception.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#75757E");
-                TextBoxReception.Foreground = (SolidColorBrush)new BrushConverter().ConvertFromString("#F0F0F0");
-
-                GB4.Foreground = (SolidColorBrush)new BrushConverter().ConvertFromString("#F1F1F1");
-                GB4.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#75757E");
-                TextBoxetatrobot.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#75757E");
-                TextBoxetatrobot.Foreground = (SolidColorBrush)new BrushConverter().ConvertFromString("#F0F0F0");
-
-                GB3.Foreground = (SolidColorBrush)new BrushConverter().ConvertFromString("#F1F1F1");
-                GB3.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#75757E");
-                TextTest.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#75757E");
-
-                GBC.Foreground = (SolidColorBrush)new BrushConverter().ConvertFromString("#F1F1F1");
-
-                Odometrie.Foreground = (SolidColorBrush)new BrushConverter().ConvertFromString("#F1F1F1");
-                TBckVitLin.Foreground = (SolidColorBrush)new BrushConverter().ConvertFromString("#F1F1F1");
-                TBckVitAng.Foreground = (SolidColorBrush)new BrushConverter().ConvertFromString("#F1F1F1");
-                TBckPosX.Foreground = (SolidColorBrush)new BrushConverter().ConvertFromString("#F1F1F1");
-                TBckPosY.Foreground = (SolidColorBrush)new BrushConverter().ConvertFromString("#F1F1F1");
-                TBckAngle.Foreground = (SolidColorBrush)new BrushConverter().ConvertFromString("#F1F1F1");
-
-                TBoxVitLin.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#C8C8C8");
-                TBoxVitAng.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#C8C8C8");
-                TBoxPosX.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#C8C8C8");
-                TBoxPosY.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#C8C8C8");
-                TBoxAngle.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#C8C8C8");
-
-                BT1.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#858585");
-                BT2.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#858585");
-                BT3.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#858585");
-                BT4.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#858585");
-                BT5.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#858585");
-                BT1.Foreground = (SolidColorBrush)new BrushConverter().ConvertFromString("#F1F1F1");
-                BT2.Foreground = (SolidColorBrush)new BrushConverter().ConvertFromString("#F1F1F1");
-                BT3.Foreground = (SolidColorBrush)new BrushConverter().ConvertFromString("#F1F1F1");
-                BT4.Foreground = (SolidColorBrush)new BrushConverter().ConvertFromString("#F1F1F1");
-                BT5.Foreground = (SolidColorBrush)new BrushConverter().ConvertFromString("#F1F1F1");
-
-                groupBox.Foreground = (SolidColorBrush)new BrushConverter().ConvertFromString("#F1F1F1");
-                groupBox1.Foreground = (SolidColorBrush)new BrushConverter().ConvertFromString("#F1F1F1");
-                groupBox2.Foreground = (SolidColorBrush)new BrushConverter().ConvertFromString("#F1F1F1");
-
-                checkBoxLED3.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#FFFFFF");
-                checkBoxLED1.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#FFFFFF");
-                checkBoxLED2.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#FFFFFF");
-                checkBoxLED3.Foreground = (SolidColorBrush)new BrushConverter().ConvertFromString("#FFFFFF");
-                checkBoxLED1.Foreground = (SolidColorBrush)new BrushConverter().ConvertFromString("#FF9B00");
-                checkBoxLED2.Foreground = (SolidColorBrush)new BrushConverter().ConvertFromString("#476AD1");
-
-                TBoxMotD.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#C8C8C8");
-                TBoxD.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#C8C8C8");
-                TBoxC.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#C8C8C8");
-                TBoxG.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#C8C8C8");
-                TBoxMotG.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#C8C8C8");
-                TBoxExD.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#C8C8C8");
-                TBoxExG.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#C8C8C8");
-
-                couleur_2 = 2;
-            }
-            else if (couleur_2 == 2)
-            {
-                Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#FFFFFF");
-
-                GB1.Foreground = (SolidColorBrush)new BrushConverter().ConvertFromString("#000000");
-                GB1.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#c9c9c9");
-                TextBoxEmission.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#c9c9c9");
-                TextBoxEmission.Foreground = (SolidColorBrush)new BrushConverter().ConvertFromString("#000000");
-
-                GB2.Foreground = (SolidColorBrush)new BrushConverter().ConvertFromString("#000000");
-                GB2.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#c9c9c9");
-                TextBoxReception.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#c9c9c9");
-                TextBoxReception.Foreground = (SolidColorBrush)new BrushConverter().ConvertFromString("#000000");
-
-                GB4.Foreground = (SolidColorBrush)new BrushConverter().ConvertFromString("#000000");
-                GB4.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#c9c9c9");
-                TextBoxetatrobot.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#c9c9c9");
-                TextBoxetatrobot.Foreground = (SolidColorBrush)new BrushConverter().ConvertFromString("#000000");
-  
-                GB3.Foreground = (SolidColorBrush)new BrushConverter().ConvertFromString("#000000");
-                GB3.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#c9c9c9");
-                TextTest.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#c9c9c9");
-
-                GBC.Foreground = (SolidColorBrush)new BrushConverter().ConvertFromString("#000000");
-
-                Odometrie.Foreground = (SolidColorBrush)new BrushConverter().ConvertFromString("#000000");
-                TBckVitLin.Foreground = (SolidColorBrush)new BrushConverter().ConvertFromString("#000000");
-                TBckVitAng.Foreground = (SolidColorBrush)new BrushConverter().ConvertFromString("#000000");
-                TBckPosX.Foreground = (SolidColorBrush)new BrushConverter().ConvertFromString("#000000");
-                TBckPosY.Foreground = (SolidColorBrush)new BrushConverter().ConvertFromString("#000000");
-                TBckAngle.Foreground = (SolidColorBrush)new BrushConverter().ConvertFromString("#000000");
-
-                BT1.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#DDDDDD");
-                BT2.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#DDDDDD");
-                BT3.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#DDDDDD");
-                BT4.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#DDDDDD");
-                BT5.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#DDDDDD");
-                BT1.Foreground = (SolidColorBrush)new BrushConverter().ConvertFromString("#000000");
-                BT2.Foreground = (SolidColorBrush)new BrushConverter().ConvertFromString("#000000");
-                BT3.Foreground = (SolidColorBrush)new BrushConverter().ConvertFromString("#000000");
-                BT4.Foreground = (SolidColorBrush)new BrushConverter().ConvertFromString("#000000");
-                BT5.Foreground = (SolidColorBrush)new BrushConverter().ConvertFromString("#000000");
-
-                groupBox.Foreground = (SolidColorBrush)new BrushConverter().ConvertFromString("#000000");
-                groupBox1.Foreground = (SolidColorBrush)new BrushConverter().ConvertFromString("#000000");
-                groupBox2.Foreground = (SolidColorBrush)new BrushConverter().ConvertFromString("#000000");
-
-                checkBoxLED3.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#FFFFFF");
-                checkBoxLED1.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#FFFFFF");
-                checkBoxLED2.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#FFFFFF");
-                checkBoxLED3.Foreground = (SolidColorBrush)new BrushConverter().ConvertFromString("#000000");
-                checkBoxLED1.Foreground = (SolidColorBrush)new BrushConverter().ConvertFromString("#000000");
-                checkBoxLED2.Foreground = (SolidColorBrush)new BrushConverter().ConvertFromString("#000000");
-
-                TBoxMotD.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#FFFFFF");
-                TBoxD.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#FFFFFF");
-                TBoxC.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#FFFFFF");
-                TBoxG.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#FFFFFF");
-                TBoxMotD.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#FFFFFF");
-                TBoxExD.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#FFFFFF");
-                TBoxExG.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#FFFFFF");
-
-                TBoxVitLin.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#FFFFFF");
-                TBoxVitAng.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#FFFFFF");
-                TBoxPosX.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#FFFFFF");
-                TBoxPosY.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#FFFFFF");
-                TBoxAngle.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#FFFFFF");
-
-                couleur_2 = 1;      // ici c'est 0
+                //#000000
+                checkBoxLED2.Foreground = checkBoxLED1.Foreground = checkBoxLED3.Foreground = TextBoxetatrobot.Foreground = TextBoxEmission.Foreground = TextBoxReception.Foreground = BT5.Foreground = BT4.Foreground = BT3.Foreground = BT2.Foreground = BT1.Foreground = groupBox2.Foreground = groupBox1.Foreground = groupBox.Foreground = GB4.Foreground = GB3.Foreground = GBC.Foreground = GB1.Foreground = GB2.Foreground = Odometrie.Foreground = TBckVitLin.Foreground = TBckVitAng.Foreground = TBckPosX.Foreground = TBckPosY.Foreground = TBckAngle.Foreground = (SolidColorBrush)new BrushConverter().ConvertFromString("#000000");
+                //#FFFFFF
+                Background = checkBoxLED3.Background = checkBoxLED1.Background = checkBoxLED2.Background = TBoxMotD.Background = TBoxD.Background = TBoxC.Background = TBoxG.Background = TBoxMotG.Background = TBoxExD.Background = TBoxExG.Background = TBoxVitLin.Background = TBoxVitAng.Background = TBoxPosX.Background = TBoxPosY.Background = TBoxAngle.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#FFFFFF");
+                //#c9c9c9
+                GB1.Background = TextBoxEmission.Background = GB2.Background = TextBoxReception.Background = TextBoxetatrobot.Background = GB4.Background = TextTest.Background = GB3.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#c9c9c9");
+                //#DDDDDD
+                BT1.Background = BT2.Background = BT3.Background = BT4.Background = BT5.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#DDDDDD");                
+                couleur_2 = 0;
             }
         }
     }
