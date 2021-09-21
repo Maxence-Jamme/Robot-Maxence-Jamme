@@ -292,7 +292,7 @@ void SetNextRobotStateInAutomaticMode(){
     if(flag == 0){
         fonce = 0;
     }else{
-        fonce = 20;
+        fonce = 10;
         flag = 0;
     }
     // PATIE ACTION ------------------------------------------------------------

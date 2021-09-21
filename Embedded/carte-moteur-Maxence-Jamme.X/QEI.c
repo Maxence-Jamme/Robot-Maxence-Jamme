@@ -8,17 +8,17 @@
 #include "UART_Protocol.h"
 
 
-#define DISTROUES 0.2812
+#define DISTROUES 281.2
 #define FREQ_ECH_QEI 250
 
-double QeiDroitPosition_T_1;
-double QeiDroitPosition;
-double QeiGauchePosition_T_1;
-double QeiGauchePosition;
-double delta_d;
-double delta_g;
-double delta_theta;
-double dx;
+double QeiDroitPosition_T_1 = 0;
+double QeiDroitPosition = 0;
+double QeiGauchePosition_T_1 = 0;
+double QeiGauchePosition = 0;
+double delta_d = 0;
+double delta_g = 0;
+double delta_theta = 0;
+double dx = 0;
 
 void InitQEI1 (){
     QEI1IOCbits.SWPAB = 1 ; //QEAx and QEBx are swapped

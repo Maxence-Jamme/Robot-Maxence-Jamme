@@ -335,10 +335,10 @@ namespace Robot_Interface_JAMME_JUILLE
                     rcvState = StateReception.Waiting;
                     break;
             }
-        }        
+        }
 
         void ProcessDecodedMessage(int msgFunction, int msgPayloadLength, byte[] msgPayload)
-        {
+        {  
             switch (msgFunction)
             {
                 case ((int)FunctionId.text):
