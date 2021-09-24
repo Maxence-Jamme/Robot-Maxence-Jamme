@@ -38,6 +38,7 @@ namespace Robot_Interface_JAMME_JUILLE
 
         private readonly KeyboardHookListener m_KeyboardHookManager;
 
+
         int i;
         int couleur_2 = 0;
         bool autoControlActivated = true;
