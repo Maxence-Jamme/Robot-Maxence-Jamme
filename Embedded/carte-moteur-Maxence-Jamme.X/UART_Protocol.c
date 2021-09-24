@@ -164,13 +164,11 @@ void SetRobotState (unsigned char c){
 
 void SetRobotAutoControlState (unsigned char c){
     switch(c){
-        case 8:
-            LED_ORANGE = 1;            
+        case 8:                       
             PWMSetSpeedConsigne(-15, MOTEUR_DROIT);
             PWMSetSpeedConsigne(15, MOTEUR_GAUCHE);
         break;
-        case 10:
-            LED_ORANGE = 0;            
+        case 10:          
             PWMSetSpeedConsigne(15, MOTEUR_DROIT);
             PWMSetSpeedConsigne(-15, MOTEUR_GAUCHE);
         break;

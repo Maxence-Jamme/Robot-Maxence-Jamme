@@ -42,6 +42,7 @@ namespace Robot_Interface_JAMME_JUILLE
         int couleur_2 = 0;
         bool autoControlActivated = true;
         Robot robot = new Robot();
+        bool keyloger = false;
 
         public enum StateReception
         {
@@ -113,7 +114,8 @@ namespace Robot_Interface_JAMME_JUILLE
 
         private void M_KeyboardHookManager_KeyDown(object sender, System.Windows.Forms.KeyEventArgs e)
         {     
-            if(autoControlActivated == false ){
+            if(autoControlActivated == false && keyloger)
+            {
                 switch (e.KeyCode)
                 {
                     case Keys.Left:
@@ -400,11 +402,11 @@ namespace Robot_Interface_JAMME_JUILLE
                     robot.vLinéaireOdo = tab.GetFloat();
                     tab = msgPayload.GetRange(20, 4);
                     robot.vAngulaireOdo = tab.GetFloat();
-                    TBoxPosX.Text = (robot.positionXOdo).ToString();
-                    TBoxPosY.Text = (robot.positionYOdo).ToString();
-                    TBoxAngle.Text = (robot.AngleRadOdo * (180d / Math.PI)).ToString();
-                    TBoxVitLin.Text = robot.vLinéaireOdo.ToString();
-                    TBoxVitAng.Text = robot.vAngulaireOdo.ToString();
+                    TBoxPosX.Text = (robot.positionXOdo).ToString("0.00");
+                    TBoxPosY.Text = (robot.positionYOdo).ToString("0.00");
+                    TBoxAngle.Text = (robot.AngleRadOdo * (180 / Math.PI)).ToString("0.00");
+                    TBoxVitLin.Text = robot.vLinéaireOdo.ToString("0.00");
+                    TBoxVitAng.Text = robot.vAngulaireOdo.ToString("0.00");
                     break;
             } 
         }
@@ -450,8 +452,16 @@ namespace Robot_Interface_JAMME_JUILLE
 
         private void Button_Click_2(object sender, RoutedEventArgs e)
         {
-            //textBox3.Text = "100";
-            //checkBox.IsChecked = !checkBox.IsChecked;
+            if (keyloger)
+            {
+                BT4.Content = "Etat keyloger : OFF";
+                keyloger = !keyloger;
+            }else
+            {
+                BT4.Content = "Etat keyloger : ON";
+                keyloger = !keyloger;
+            }
+
         }
 
         private void TextTest_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
