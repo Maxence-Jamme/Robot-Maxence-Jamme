@@ -4,14 +4,16 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Robot_Interface_JAMME_JUILLE"
-        xmlns:oscillo="clr−namespace:WpfOscilloscopeControl;assembly=WpfOscilloscopeControl"
+        xmlns:oscillo1="clr-namespace:WpfOscilloscopeControl; assembly=WpfOscilloscopeControl"
+        xmlns:ext="clr−namespace:WpfWorldMapDisplay; assembly=WpfWorldMapDisplayIUT"
         mc:Ignorable="d"
-        Title="MainWindow" Height="766.8" Width="800">
+        Title="MainWindow" Height="766.8" Width="1550">
     
     <Grid Margin="0,0,0,3">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition/>
-            <ColumnDefinition/>
+            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="1.7*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="250"/>
@@ -28,8 +30,12 @@
         <GroupBox x:Name="GB2" Header="Réception" Background="#FFC9C9C9" Grid.Column="1" Grid.Row="0" Margin="10">
             <TextBox x:Name="TextBoxReception" HorizontalAlignment="Stretch" Width="auto" Height="auto" Margin="0" TextWrapping="Wrap" VerticalAlignment="Stretch" Background="{x:Null}" IsReadOnly="True"/>
         </GroupBox>
+        <!--GRILLE 1 LIGNE 1 et 2 COLONE 3-->
+        <ext:WorldMapDisplay x:Name="worldMapDisplay" Grid.Column="2" Grid.RowSpan="2" Margin="20"/>
+        <!--<oscillo1:WpfOscilloscope x:Name="oscilloSpeed" Grid.Column="2" Grid.RowSpan="2" Margin="20"/>-->
+        
         <!--GRILLE 1 LIGNE 2 COLONE 1-->
-        <Grid Grid.Column="0" Grid.Row ="1" Grid.ColumnSpan="3">
+        <Grid Grid.Column="0" Grid.Row ="1" Grid.ColumnSpan="2">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition/>
                 <ColumnDefinition/>
@@ -51,7 +57,7 @@
             <!--GRILLE 2 LIGNE 1 COLONE 2-->
             <GroupBox x:Name="groupBox1" Grid.Column="1" Header="Télémètres IR" Grid.Row="0" Margin="5">
                 <StackPanel>
-                    <Grid Grid.Column="2" Grid.Row="5">
+                    <Grid Grid.Column="1" Grid.Row="0">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition/>
                             <ColumnDefinition/>
@@ -122,7 +128,6 @@
 
             <!--GRILLE 2 LIGNE 2 COLONE 2-->
             <Button x:Name="BT2" Content="Clear" Grid.Column="1" Margin="10" Grid.Row="1" VerticalAlignment="Top" Height="35" Click="Button_Click" />
-            <oscillo : WpfOscilloscope x:Name="oscilloSpeed" />
 
             <!--GRILLE 2 LIGNE 2 COLONE 3-->
             <Button x:Name="BT3" Content="Etat : Automatique" Grid.Column="2" Margin="10" Grid.Row="1" VerticalAlignment="Top"  Height="35" Click="Button_Click_1"/>

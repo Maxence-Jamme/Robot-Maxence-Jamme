@@ -1,0 +1,18 @@
+{
+  "version": 2,
+  "dgSpecHash": "gTRXD5dnXOC7QnznKy3GybisbXHpqa4f9V72ViiFgbb5s5CKM1PbQPzncPQ23roNBdUVkHv7rQtcsf9PBgDZWg==",
+  "success": true,
+  "projectFilePath": "C:\\Github\\RoboCup2020\\C#\\WpfWorldMapDisplay\\WpfWorldMapDisplay.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\Valentin\\.nuget\\packages\\emgu.cv\\4.4.0.4099\\emgu.cv.4.4.0.4099.nupkg.sha512",
+    "C:\\Users\\Valentin\\.nuget\\packages\\newtonsoft.json\\12.0.3\\newtonsoft.json.12.0.3.nupkg.sha512",
+    "C:\\Users\\Valentin\\.nuget\\packages\\scichart\\6.3.0.13476\\scichart.6.3.0.13476.nupkg.sha512",
+    "C:\\Users\\Valentin\\.nuget\\packages\\sharpziplib\\1.3.1\\sharpziplib.1.3.1.nupkg.sha512",
+    "C:\\Users\\Valentin\\.nuget\\packages\\system.drawing.primitives\\4.3.0\\system.drawing.primitives.4.3.0.nupkg.sha512",
+    "C:\\Users\\Valentin\\.nuget\\packages\\system.runtime\\4.3.1\\system.runtime.4.3.1.nupkg.sha512",
+    "C:\\Users\\Valentin\\.nuget\\packages\\system.runtime.interopservices.runtimeinformation\\4.3.0\\system.runtime.interopservices.runtimeinformation.4.3.0.nupkg.sha512",
+    "C:\\Users\\Valentin\\.nuget\\packages\\zeroformatter\\1.6.4\\zeroformatter.1.6.4.nupkg.sha512",
+    "C:\\Users\\Valentin\\.nuget\\packages\\zeroformatter.interfaces\\1.6.4\\zeroformatter.interfaces.1.6.4.nupkg.sha512"
+  ],
+  "logs": []
+}

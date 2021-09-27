@@ -38,7 +38,6 @@ namespace Robot_Interface_JAMME_JUILLE
 
         private readonly KeyboardHookListener m_KeyboardHookManager;
 
-
         int i;
         int couleur_2 = 0;
         bool autoControlActivated = true;
@@ -111,6 +110,10 @@ namespace Robot_Interface_JAMME_JUILLE
             m_KeyboardHookManager = new KeyboardHookListener( new GlobalHooker() ) ;
             m_KeyboardHookManager.Enabled = true;
             m_KeyboardHookManager.KeyDown += M_KeyboardHookManager_KeyDown;// += HookManager_KeyDown;
+
+            /*oscilloSpeed.AddOrUpdateLine(1, 200, "Ligne1");
+            oscilloSpeed.ChangeLineColor(1, Colors.Blue);
+            oscilloSpeed.AddPointToLine(1, 15, 20);*/
         }
 
         private void M_KeyboardHookManager_KeyDown(object sender, System.Windows.Forms.KeyEventArgs e)
