@@ -1,19 +1,16 @@
-﻿<Window x:Class="Robot_Interface_JAMME_JUILLE.MainWindow"
+﻿ <Window x:Class="Robot_Interface_JAMME_JUILLE.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Robot_Interface_JAMME_JUILLE"
-        xmlns:oscillo1="clr-namespace:WpfOscilloscopeControl; assembly=WpfOscilloscopeControl"
-        xmlns:ext="clr−namespace:WpfWorldMapDisplay; assembly=WpfWorldMapDisplayIUT"
         mc:Ignorable="d"
-        Title="MainWindow" Height="766.8" Width="1550">
+        Title="MainWindow" Height="766.8" Width="800">
     
     <Grid Margin="0,0,0,3">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="1*"/>
             <ColumnDefinition Width="1*"/>
-            <ColumnDefinition Width="1.7*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="250"/>
@@ -30,10 +27,7 @@
         <GroupBox x:Name="GB2" Header="Réception" Background="#FFC9C9C9" Grid.Column="1" Grid.Row="0" Margin="10">
             <TextBox x:Name="TextBoxReception" HorizontalAlignment="Stretch" Width="auto" Height="auto" Margin="0" TextWrapping="Wrap" VerticalAlignment="Stretch" Background="{x:Null}" IsReadOnly="True"/>
         </GroupBox>
-        <!--GRILLE 1 LIGNE 1 et 2 COLONE 3-->
-        <ext:WorldMapDisplay x:Name="worldMapDisplay" Grid.Column="2" Grid.RowSpan="2" Margin="20"/>
-        <!--<oscillo1:WpfOscilloscope x:Name="oscilloSpeed" Grid.Column="2" Grid.RowSpan="2" Margin="20"/>-->
-        
+
         <!--GRILLE 1 LIGNE 2 COLONE 1-->
         <Grid Grid.Column="0" Grid.Row ="1" Grid.ColumnSpan="2">
             <Grid.ColumnDefinitions>
