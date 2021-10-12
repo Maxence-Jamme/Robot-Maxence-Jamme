@@ -4,7 +4,7 @@
 library
 C#
 .cs
-C:\Github\RoboCup2020\C#\WpfAsservissementDisplay\obj\Debug\
+C:\Github\Robot-Maxence-Jamme\Csharp\WpfAsservissementDisplay\obj\Debug\
 WpfAsservissementDisplay
 none
 false
@@ -13,8 +13,8 @@ DEBUG;TRACE
 3-464011272
 
 5-263281087
-15-1623507314
+141395550442
 AsservissementRobot2RouesDisplay.xaml;AsservissementRobot4RouesHoloDisplay.xaml;ResourcesWPF.xaml;
 
-False
+True
 

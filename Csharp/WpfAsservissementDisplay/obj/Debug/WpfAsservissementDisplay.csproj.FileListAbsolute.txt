@@ -23,3 +23,10 @@ C:\Github\RoboCup2020\C#\WpfAsservissementDisplay\obj\Debug\WpfAsservissementDis
 C:\Github\RoboCup2020\C#\WpfAsservissementDisplay\obj\Debug\WpfAsservissementDisplay.dll
 C:\Github\RoboCup2020\C#\WpfAsservissementDisplay\obj\Debug\WpfAsservissementDisplay.pdb
 C:\Github\RoboCup2020\C#\WpfAsservissementDisplay\obj\Debug\ResourcesWPF.baml
+C:\Github\Robot-Maxence-Jamme\Csharp\WpfAsservissementDisplay\obj\Debug\WpfAsservissementDisplay.csprojAssemblyReference.cache
+C:\Github\Robot-Maxence-Jamme\Csharp\WpfAsservissementDisplay\obj\Debug\AsservissementRobot2RouesDisplay.g.cs
+C:\Github\Robot-Maxence-Jamme\Csharp\WpfAsservissementDisplay\obj\Debug\AsservissementRobot4RouesHoloDisplay.g.cs
+C:\Github\Robot-Maxence-Jamme\Csharp\WpfAsservissementDisplay\obj\Debug\WpfAsservissementDisplay_MarkupCompile.cache
+C:\Github\Robot-Maxence-Jamme\Csharp\WpfAsservissementDisplay\obj\Debug\WpfAsservissementDisplay_MarkupCompile.lref
+C:\Github\Robot-Maxence-Jamme\Csharp\WpfAsservissementDisplay\obj\Debug\WpfAsservissementDisplay.dll
+C:\Github\Robot-Maxence-Jamme\Csharp\WpfAsservissementDisplay\obj\Debug\WpfAsservissementDisplay.pdb

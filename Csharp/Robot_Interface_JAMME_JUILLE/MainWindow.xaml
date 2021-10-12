@@ -5,8 +5,9 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Robot_Interface_JAMME_JUILLE"
         xmlns:AsservDisplay="clr−namespace : WpfAsservissementDisplay; assembly=WpfAsservissementDisplay"
+        xmlns:AsservDisplay1="clr-namespace:WpfAsservissementDisplay;assembly=WpfAsservissementDisplay"
         mc:Ignorable="d"
-        Title="MainWindow" Height="850" Width="800">
+        Title="MainWindow" Height="850" Width="799.733">
     
     <Grid Margin="0,0,0,3">
         <Grid.ColumnDefinitions>
@@ -32,9 +33,9 @@
         <!--GRILLE 1 LIGNE 2 COLONE 1-->
         <Grid Grid.Column="0" Grid.Row ="1" Grid.ColumnSpan="2">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition/>
-                <ColumnDefinition/>
-                <ColumnDefinition/>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition Width="1*"/>
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
                 <RowDefinition Height="170"/>
@@ -123,40 +124,8 @@
 
             <!--GRILLE 2 LIGNE 2 COLONE 2-->
             <Button x:Name="BT2" Content="Clear" Grid.Column="1" Margin="10" Grid.Row="1" VerticalAlignment="Top" Height="35" Click="Button_Click" />
-            <GroupBox x:Name="Asservissement" Header="Asservissement" Grid.Column="1" Grid.Row="1" Margin="10,60,10,0" VerticalAlignment="Top">
-                <StackPanel>
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition/>
-                            <ColumnDefinition/>
-                        </Grid.ColumnDefinitions>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="1*"/>
-                            <RowDefinition Height="1*"/>
-                            <RowDefinition Height="1*"/>
-                            <RowDefinition Height="1*"/>
-                            <RowDefinition Height="1*"/>
-                            <RowDefinition Height="1*"/>
-                            <RowDefinition Height="1*"/>
-                        </Grid.RowDefinitions>
-                        <TextBlock x:Name="TB_Ass_PosX_KP" Text="PosX KP :" HorizontalAlignment="Left" Margin="5, 10, 0, 5" Grid.Column="0" Grid.Row="0"/>
-                        <TextBlock x:Name="TB_Ass_PosX_KI" Text="PosX KI :" HorizontalAlignment="Left" Margin="5, 5, 0, 5" Grid.Column="0" Grid.Row="1"/>
-                        <TextBlock x:Name="TB_Ass_PosX_KD" Text="PosX KD :" HorizontalAlignment="Left" Margin="5, 5, 0, 5" Grid.Column="0" Grid.Row="2"/>
-                        <TextBlock x:Name="TB_Ass_Theta_KP" Text="Theta KP :" HorizontalAlignment="Left" Margin="5,5,0,5" Grid.Column="0" Grid.Row="3"/>
-                        <TextBlock x:Name="TB_Ass_Theta_KI" Text="Theta KI :" HorizontalAlignment="Left" Margin="5, 5, 0, 5" Grid.Column="0" Grid.Row="4"/>
-                        <TextBlock x:Name="TB_Ass_Theta_KD" Text="Theta KD :" HorizontalAlignment="Left" Margin="5, 5, 0, 5" Grid.Column="0" Grid.Row="5"/>
-
-                        <TextBox x:Name="TBox_Ass_PosX_KP" Height="16" Margin="5, 10, 15, 5" Grid.Column="1" Grid.Row="0"/>
-                        <TextBox x:Name="TBox_Ass_PosX_KI" Height="16" Margin="5, 10, 15, 5" Grid.Column="1" Grid.Row="1"/>
-                        <TextBox x:Name="TBox_Ass_PosX_KD" Height="16" Margin="5, 10, 15, 5" Grid.Column="1" Grid.Row="2"/>
-                        <TextBox x:Name="TBox_Ass_Theta_KP" Height="16" Margin="5, 10, 15, 5" Grid.Column="1" Grid.Row="3"/>
-                        <TextBox x:Name="TBox_Ass_Theta_KI" Height="16" Margin="5, 10, 15, 5" Grid.Column="1" Grid.Row="4"/>
-                        <TextBox x:Name="TBox_Ass_Theta_KD" Height="16" Margin="5, 10, 15, 5" Grid.Column="1" Grid.Row="5"/>
-
-                        <Button x:Name="BT_Valid_Asserv" Content="Valider" Grid.ColumnSpan="2" Margin="10" Grid.Row="6" VerticalAlignment="Top" Height="30" Width="150" Click="BT_Valid_Asserv_Click"/>
-                    </Grid>
-                </StackPanel>
-            </GroupBox>
+            <AsservDisplay1:AsservissementRobot2RouesDisplayControl x:Name="asservSpeedDisplay" Grid.Column="1" Grid.Row="1"/>
+  
             <!--GRILLE 2 LIGNE 2 COLONE 3-->
             <Button x:Name="BT3" Content="Etat : Automatique" Grid.Column="2" Margin="10" Grid.Row="1" VerticalAlignment="Top"  Height="35" Click="Button_Click_1"/>
             <GroupBox x:Name="GBC" Grid.Column="2" Header="Control" HorizontalAlignment="Left" Height="150" Margin="20,60,0,0" Grid.Row="1" VerticalAlignment="Top" Width="218">
