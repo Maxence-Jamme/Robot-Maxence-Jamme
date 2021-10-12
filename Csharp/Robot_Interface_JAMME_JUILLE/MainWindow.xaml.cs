@@ -97,7 +97,7 @@ namespace Robot_Interface_JAMME_JUILLE
         public MainWindow()
         {
             InitializeComponent();
-            serialPort1 = new ReliableSerialPort("COM10", 115200, Parity.None, 8, StopBits.One);
+            serialPort1 = new ReliableSerialPort("COM3", 115200, Parity.None, 8, StopBits.One);
             serialPort1.DataReceived += SerialPort1_DataReceived;
             serialPort1.Open();
 
@@ -111,9 +111,9 @@ namespace Robot_Interface_JAMME_JUILLE
             m_KeyboardHookManager.Enabled = true;
             m_KeyboardHookManager.KeyDown += M_KeyboardHookManager_KeyDown;// += HookManager_KeyDown;
 
-            /*oscilloSpeed.AddOrUpdateLine(1, 200, "Ligne1");
-            oscilloSpeed.ChangeLineColor(1, Colors.Blue);
-            oscilloSpeed.AddPointToLine(1, 15, 20);*/
+
+
+           
         }
 
         private void M_KeyboardHookManager_KeyDown(object sender, System.Windows.Forms.KeyEventArgs e)
@@ -406,11 +406,11 @@ namespace Robot_Interface_JAMME_JUILLE
                     robot.vLinéaireOdo = tab.GetFloat();
                     tab = msgPayload.GetRange(20, 4);
                     robot.vAngulaireOdo = tab.GetFloat();
-                    TBoxPosX.Text = (robot.positionXOdo).ToString("0.00");
-                    TBoxPosY.Text = (robot.positionYOdo).ToString("0.00");
-                    TBoxAngle.Text = (robot.AngleRadOdo * (180 / Math.PI)).ToString("0.00");
-                    TBoxVitLin.Text = robot.vLinéaireOdo.ToString("0.00");
-                    TBoxVitAng.Text = robot.vAngulaireOdo.ToString("0.00");
+                    TBoxPosX.Text = (robot.positionXOdo).ToString("0.00") + " m";
+                    TBoxPosY.Text = (robot.positionYOdo).ToString("0.00") + " m";
+                    TBoxAngle.Text = (robot.AngleRadOdo * (180 / Math.PI)).ToString("0.00") + "°";
+                    TBoxVitLin.Text = robot.vLinéaireOdo.ToString("0.00") + " m/s";
+                    TBoxVitAng.Text = robot.vAngulaireOdo.ToString("0.00") + " m/s";
                     break;
             } 
         }
@@ -523,6 +523,92 @@ namespace Robot_Interface_JAMME_JUILLE
             }
         }
 
+        private void BT_Valid_Asserv_Click(object sender, RoutedEventArgs e)
+        {
+            float PosX_KP = 0;
+            float PosX_KI = 0;
+            float PosX_KD = 0;
+            float Theta_KP = 0;
+            float Theta_KI = 0;
+            float Theta_KD = 0;
+
+            //PosX_KP
+            if (TBox_Ass_PosX_KP.Text != "") {
+                PosX_KP = float.Parse(TBox_Ass_PosX_KP.Text);
+            }else{
+                PosX_KP = 0;
+                TBox_Ass_PosX_KP.Text = "0";
+            }
+            //PosX_KI
+            if (TBox_Ass_PosX_KI.Text != "")
+            {
+                PosX_KI = float.Parse(TBox_Ass_PosX_KI.Text);
+            }
+            else
+            {
+                PosX_KI = 0;
+                TBox_Ass_PosX_KI.Text = "0";
+            }
+            //PosX_KD
+            if (TBox_Ass_PosX_KD.Text != "")
+            {
+                PosX_KD = float.Parse(TBox_Ass_PosX_KD.Text);
+            }
+            else
+            {
+                PosX_KD = 0;
+                TBox_Ass_PosX_KD.Text = "0";
+            }
+            //Theta_KP
+            if (TBox_Ass_Theta_KP.Text != "")
+            {
+                Theta_KP = float.Parse(TBox_Ass_Theta_KP.Text);
+            }
+            else
+            {
+                Theta_KP = 0;
+                TBox_Ass_Theta_KP.Text = "0";
+            }
+            //Theta_KI
+            if (TBox_Ass_Theta_KI.Text != "")
+            {
+                Theta_KI = float.Parse(TBox_Ass_Theta_KI.Text);
+            }
+            else
+            {
+                Theta_KI = 0;
+                TBox_Ass_Theta_KI.Text = "0";
+            }
+            //Theta_KD
+            if (TBox_Ass_Theta_KD.Text != "")
+            {
+                Theta_KD = float.Parse(TBox_Ass_Theta_KD.Text);
+            }
+            else
+            {
+                Theta_KD = 0;
+                TBox_Ass_Theta_KD.Text = "0";
+            }
+            byte[] trame = new byte[23];
+
+            /*trame[0] = BitConverter.GetBytes(PosX_KP);
+            trame[4] = (byte)Convert.ToByte(PosX_KI);
+            trame[8] = (byte)Convert.ToByte(PosX_KD);
+            trame[12] = (byte)Convert.ToByte(PosX_KP);
+            trame[16] = (byte)Convert.ToByte(PosX_KI);
+            trame[20] = (byte)Convert.ToByte(PosX_KD);*/
+
+            trame.SetValueRange(((float)(PosX_KP)).GetBytes(),0);
+            trame.SetValueRange(((float)(PosX_KP)).GetBytes(), 4);
+            trame.SetValueRange(((float)(PosX_KP)).GetBytes(), 8);
+            trame.SetValueRange(((float)(PosX_KP)).GetBytes(), 12);
+            trame.SetValueRange(((float)(PosX_KP)).GetBytes(), 16);
+            trame.SetValueRange(((float)(PosX_KP)).GetBytes(), 20);
+
+
+            UartEncodeAndSendMessage(0x0070, 24, trame);  
+        }
+
         private void Switch_color()
         {
             if (couleur_2 == 0)
@@ -559,5 +645,6 @@ namespace Robot_Interface_JAMME_JUILLE
                 couleur_2 = 0;
             }
         }
+
     }
 }

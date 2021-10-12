@@ -53,6 +53,7 @@ int main (void) {
             volts = ((float) result[0])*3.3/4096*3.2;
             robotState.distanceTelemetreExtremeGauche= 34/volts-5;
             
+            
             //envoie des valeurs des telemetres
             unsigned char msgPayload [] = { (char)robotState.distanceTelemetreGauche ,  (char)robotState.distanceTelemetreCentre, (char)robotState.distanceTelemetreDroit, (char)robotState.distanceTelemetreExtremeDroit, (char)robotState.distanceTelemetreExtremeGauche } ;
             int msgPayloadLength = sizeof(msgPayload)+1;

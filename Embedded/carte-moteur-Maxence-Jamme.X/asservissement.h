@@ -19,5 +19,7 @@ typedef struct _PidCorrector
     double corrD ;
 } PidCorrector;
 
+void SetupPidAsservissement(volatile PidCorrector* PidCorr, double Kp, double Ki , double Kd, double proportionelleMax, double integralMax, double deriveeMax);
+
 #endif
 

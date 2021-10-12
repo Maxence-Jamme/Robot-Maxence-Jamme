@@ -1,7 +1,6 @@
 #include "robot.h"
-volatile ROBOT_STATE_BITS robotState;
+#include "asservissement.h"
 
-typedef struct _PidCorrector
-{
-    
-} PidCorrector;
+volatile ROBOT_STATE_BITS robotState;
+PidCorrector PidX;
+PidCorrector PidTheta;
