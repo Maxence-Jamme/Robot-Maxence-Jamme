@@ -15,7 +15,7 @@
     </UserControl.Resources>
 
     <!--<Border>-->
-        <Grid  Margin="5">
+        <Grid  Margin="5" >
             <Grid.RowDefinitions>
                 <RowDefinition Height="0.4*"></RowDefinition>
                 <RowDefinition Height="0.4*"></RowDefinition>

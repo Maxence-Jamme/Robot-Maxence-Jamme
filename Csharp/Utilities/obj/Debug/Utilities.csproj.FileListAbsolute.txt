@@ -46,3 +46,4 @@ C:\Github\Robot-Maxence-Jamme\Csharp\Utilities\bin\Debug\Utilities.pdb
 C:\Github\Robot-Maxence-Jamme\Csharp\Utilities\obj\Debug\Utilities.csprojAssemblyReference.cache
 C:\Github\Robot-Maxence-Jamme\Csharp\Utilities\obj\Debug\Utilities.dll
 C:\Github\Robot-Maxence-Jamme\Csharp\Utilities\obj\Debug\Utilities.pdb
+C:\GitHub\Robot-Maxence-Jamme\Csharp\Utilities\obj\Debug\Utilities.csproj.CoreCompileInputs.cache

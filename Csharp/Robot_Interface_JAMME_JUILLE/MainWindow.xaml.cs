@@ -15,13 +15,12 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Threading;
-using System.Threading.Tasks;
 using System.Threading;
 using MouseKeyboardActivityMonitor.WinApi;
 using MouseKeyboardActivityMonitor;
 using System.Windows.Forms;
 using Utilities;
-
+using WpfAsservissementDisplay;
 
 namespace Robot_Interface_JAMME_JUILLE
 {
@@ -35,6 +34,8 @@ namespace Robot_Interface_JAMME_JUILLE
         ReliableSerialPort serialPort1;
         //AsyncCallback SerialPort1_DataRecived;
         DispatcherTimer timerAffichage;
+        // /!\ Ne pas le déclarer, déjà fait dans le xaml
+       // AsservissementRobot2RouesDisplayControl Asserv = new AsservissementRobot2RouesDisplayControl();
 
         private readonly KeyboardHookListener m_KeyboardHookManager;
 
@@ -57,13 +58,14 @@ namespace Robot_Interface_JAMME_JUILLE
 
         public enum FunctionId
         {
-            text = 0x0080,
             led = 0x0020,
             telem = 0x0030,
             vitesse = 0x0040,
             etape = 0x0050,
             state_robot = 0x0051,
             position_data = 0x0061,
+            asservissement = 0x0070,
+            text = 0x0080
         }
 
         public enum StateRobot
@@ -412,6 +414,107 @@ namespace Robot_Interface_JAMME_JUILLE
                     TBoxVitLin.Text = robot.vLinéaireOdo.ToString("0.00") + " m/s";
                     TBoxVitAng.Text = robot.vAngulaireOdo.ToString("0.00") + " m/s";
                     break;
+                case ((int)FunctionId.asservissement):
+                    //asservSpeedDisplay.SetTitle("TEST");
+                    int nb_octet = 4;
+                    //-------------------
+                    double consigneX;
+                    double consigneTheta;                    
+                    double valueX;
+                    double valueTheta;
+                    double errorX;
+                    double errorTheta;
+                    double commandX;
+                    double commandTheta;
+                    //-------------------
+                    double corrPX;
+                    double corrPTheta;
+                    double corrIX;
+                    double corrITheta;
+                    double corrDX;
+                    double corrDTheta;
+                    //-------------------
+                    double KpX;
+                    double KpTheta; 
+                    double KiX; 
+                    double KiTheta; 
+                    double KdX; 
+                    double KdTheta;
+                    //-------------------
+                    double corrLimitPX;
+                    double corrLimitPTheta;
+                    double corrLimitIX;
+                    double corrLimitITheta;
+                    double corrLimitDX;
+                    double corrLimitDTheta;
+                    //-------------------
+                    byte[] tabl = msgPayload.GetRange(nb_octet, 4);nb_octet = nb_octet + 4;
+                    consigneX = tabl.GetFloat();
+                    tabl = msgPayload.GetRange(nb_octet, 4); nb_octet = nb_octet + 4;
+                    consigneTheta = tabl.GetFloat();
+                    tabl = msgPayload.GetRange(nb_octet, 4); nb_octet = nb_octet + 4;                    
+                    valueX = tabl.GetFloat();
+                    tabl = msgPayload.GetRange(nb_octet, 4); nb_octet = nb_octet + 4;
+                    valueTheta = tabl.GetFloat();
+                    tabl = msgPayload.GetRange(nb_octet, 4); nb_octet = nb_octet + 4;
+                    errorX = tabl.GetFloat();
+                    tabl = msgPayload.GetRange(nb_octet, 4); nb_octet = nb_octet + 4;
+                    errorTheta = tabl.GetFloat();
+                    tabl = msgPayload.GetRange(nb_octet, 4); nb_octet = nb_octet + 4;
+                    commandX = tabl.GetFloat();
+                    tabl = msgPayload.GetRange(nb_octet, 4); nb_octet = nb_octet + 4;
+                    commandTheta = tabl.GetFloat();
+                    //------------------- corrPX, corrPTheta, corrIX, corrITheta, corrDX, corrDTheta
+                    tabl = msgPayload.GetRange(nb_octet, 4); nb_octet = nb_octet + 4;
+                    corrPX = tabl.GetFloat();
+                    tabl = msgPayload.GetRange(nb_octet, 4); nb_octet = nb_octet + 4;
+                    corrPTheta = tabl.GetFloat();
+                    tabl = msgPayload.GetRange(nb_octet, 4); nb_octet = nb_octet + 4;
+                    corrIX = tabl.GetFloat();
+                    tabl = msgPayload.GetRange(nb_octet, 4); nb_octet = nb_octet + 4;
+                    corrITheta = tabl.GetFloat();
+                    tabl = msgPayload.GetRange(nb_octet, 4); nb_octet = nb_octet + 4;
+                    corrDX = tabl.GetFloat();
+                    tabl = msgPayload.GetRange(nb_octet, 4); nb_octet = nb_octet + 4;
+                    corrDTheta = tabl.GetFloat();
+                    //------------------- KpX, KpTheta, KiX, KiTheta, KdX, KdTheta
+                    tabl = msgPayload.GetRange(nb_octet, 4); nb_octet = nb_octet + 4;
+                    KpX = tabl.GetFloat();
+                    tabl = msgPayload.GetRange(nb_octet, 4); nb_octet = nb_octet + 4;
+                    KpTheta = tabl.GetFloat();
+                    tabl = msgPayload.GetRange(nb_octet, 4); nb_octet = nb_octet + 4;
+                    KiX = tabl.GetFloat();
+                    tabl = msgPayload.GetRange(nb_octet, 4); nb_octet = nb_octet + 4;
+                    KiTheta = tabl.GetFloat();
+                    tabl = msgPayload.GetRange(nb_octet, 4); nb_octet = nb_octet + 4;
+                    KdX = tabl.GetFloat();
+                    tabl = msgPayload.GetRange(nb_octet, 4); nb_octet = nb_octet + 4;
+                    KdTheta = tabl.GetFloat();
+                    //------------------- corrLimitPX, corrLimitPTheta, corrLimitIX, corrLimitITheta, corrLimitDX, corrLimitDTheta
+                    tabl = msgPayload.GetRange(nb_octet, 4); nb_octet = nb_octet + 4;
+                    corrLimitPX = tabl.GetFloat();
+                    tabl = msgPayload.GetRange(nb_octet, 4); nb_octet = nb_octet + 4;
+                    corrLimitPTheta = tabl.GetFloat();
+                    tabl = msgPayload.GetRange(nb_octet, 4); nb_octet = nb_octet + 4;
+                    corrLimitIX = tabl.GetFloat();
+                    tabl = msgPayload.GetRange(nb_octet, 4); nb_octet = nb_octet + 4;
+                    corrLimitITheta = tabl.GetFloat();
+                    tabl = msgPayload.GetRange(nb_octet, 4); nb_octet = nb_octet + 4;
+                    corrLimitDX = tabl.GetFloat();
+                    tabl = msgPayload.GetRange(nb_octet, 4); nb_octet = nb_octet + 4;
+                    corrLimitDTheta = tabl.GetFloat();
+                    //-------------------
+                    asservSpeedDisplay.UpdatePolarSpeedConsigneValues(consigneX, consigneTheta);
+                    asservSpeedDisplay.UpdatePolarSpeedCommandValues(commandX, commandTheta);
+                    asservSpeedDisplay.UpdatePolarOdometrySpeed(valueX, valueTheta);
+                    asservSpeedDisplay.UpdatePolarSpeedErrorValues(errorX, errorTheta);
+                    //-------------------
+                    asservSpeedDisplay.UpdatePolarSpeedCorrectionValues(corrPX, corrPTheta, corrIX, corrITheta, corrDX, corrDTheta);
+                    asservSpeedDisplay.UpdatePolarSpeedCorrectionGains(KpX, KpTheta, KiX, KiTheta, KdX, KdTheta);
+                    asservSpeedDisplay.UpdatePolarSpeedCorrectionLimits(corrLimitPX, corrLimitPTheta, corrLimitIX, corrLimitITheta, corrLimitDX, corrLimitDTheta);
+
+                    //asservSpeedDisplay.UpdatePolarSpeedConsigneValues(consigneX, consigneTheta);
+                    break;
             } 
         }
 
@@ -468,11 +571,14 @@ namespace Robot_Interface_JAMME_JUILLE
 
         }
 
+        double consigneX = 152;
+        double consigneTheta = 599.2;
+
         private void TextTest_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
         {
-            TextTest.Text = "";
+            TextTest.Text = "";            
         }
-
+        
         private void Button_Click_3(object sender, RoutedEventArgs e)
         {
             Switch_color();

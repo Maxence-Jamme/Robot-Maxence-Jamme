@@ -38,3 +38,8 @@ C:\Github\Robot-Maxence-Jamme\Csharp\Robot_Interface_JAMME_JUILLE\bin\Debug\Mous
 C:\Github\Robot-Maxence-Jamme\Csharp\Robot_Interface_JAMME_JUILLE\bin\Debug\MouseKeyboardActivityMonitor.xml
 C:\Github\Robot-Maxence-Jamme\Csharp\Robot_Interface_JAMME_JUILLE\bin\Debug\Utilities.dll
 C:\Github\Robot-Maxence-Jamme\Csharp\Robot_Interface_JAMME_JUILLE\bin\Debug\Utilities.pdb
+C:\GitHub\Robot-Maxence-Jamme\Csharp\Robot_Interface_JAMME_JUILLE\bin\Debug\Constants.dll
+C:\GitHub\Robot-Maxence-Jamme\Csharp\Robot_Interface_JAMME_JUILLE\bin\Debug\WpfAsservissementDisplay.dll
+C:\GitHub\Robot-Maxence-Jamme\Csharp\Robot_Interface_JAMME_JUILLE\bin\Debug\Constants.pdb
+C:\GitHub\Robot-Maxence-Jamme\Csharp\Robot_Interface_JAMME_JUILLE\bin\Debug\WpfAsservissementDisplay.pdb
+C:\GitHub\Robot-Maxence-Jamme\Csharp\Robot_Interface_JAMME_JUILLE\obj\Debug\Robot_Interface_JAMME_JUILLE.csproj.CoreCompileInputs.cache

@@ -1,23 +1,20 @@
-Microchip Technology Inc, v1.60 (B)
+Microchip Technology Inc, v1.60 (A)
 
 Tool Name:
   c:\program files\microchip\xc16\v1.60\bin\bin\..\bin/elf-ld.exe
 
 Command:
-  -TC:\\Users\\GEII Robot\\AppData\\Local\\Temp\\tmp00001874.00 \
-  -TC:\\Users\\GEII Robot\\AppData\\Local\\Temp\\tmp00001874.01 \
-  -TC:\\Users\\GEII Robot\\AppData\\Local\\Temp\\tmp00001874.02 \
-  -TC:\\Users\\GEII Robot\\AppData\\Local\\Temp\\tmp00001874.03 \
-  -TC:\\Users\\GEII Robot\\AppData\\Local\\Temp\\tmp00001874.04 \
-  -TC:\\Users\\GEII Robot\\AppData\\Local\\Temp\\tmp00001874.05 \
-  -TC:\\Users\\GEII Robot\\AppData\\Local\\Temp\\tmp00001874.06 \
+  -TC:\\Users\\GEII Robot\\AppData\\Local\\Temp\\tmp00019904.00 \
+  -TC:\\Users\\GEII Robot\\AppData\\Local\\Temp\\tmp00019904.01 \
+  -TC:\\Users\\GEII Robot\\AppData\\Local\\Temp\\tmp00019904.02 \
+  -TC:\\Users\\GEII Robot\\AppData\\Local\\Temp\\tmp00019904.03 \
+  -TC:\\Users\\GEII Robot\\AppData\\Local\\Temp\\tmp00019904.04 \
+  -TC:\\Users\\GEII Robot\\AppData\\Local\\Temp\\tmp00019904.05 \
+  -TC:\\Users\\GEII Robot\\AppData\\Local\\Temp\\tmp00019904.06 \
   -p33EP512GM306 \
-  --mdfp=C:/Program Files (x86)/Microchip/MPLABX/v5.40/packs/Microchip/dsPIC33E-GM-GP-MC-GU-MU_DFP/1.2.58/xc16 \
   -o \
   dist/default/debug/carte-moteur-Maxence-Jamme.X.debug.elf \
   -Lc:/program files/microchip/xc16/v1.60/bin/bin/.. \
-  -LC:/Program Files (x86)/Microchip/MPLABX/v5.40/packs/Microchip/dsPIC33E-GM-GP-MC-GU-MU_DFP/1.2.58/xc16/bin/../support/PIC24E/gld \
-  -LC:/Program Files (x86)/Microchip/MPLABX/v5.40/packs/Microchip/dsPIC33E-GM-GP-MC-GU-MU_DFP/1.2.58/xc16/bin/../support/dsPIC33E/gld \
   -Lc:/program files/microchip/xc16/v1.60/bin/bin/../../lib \
   -Lc:/program files/microchip/xc16/v1.60/bin/bin/../../support/PIC24E/gld \
   -Lc:/program files/microchip/xc16/v1.60/bin/bin/../../support/PIC24F/gld \
@@ -44,7 +41,7 @@ Command:
   --defsym=__MPLAB_BUILD=1 \
   --defsym=__MPLAB_DEBUG=1 \
   --defsym=__DEBUG=1 \
-  --defsym=__MPLAB_DEBUGGER_ICD4=1 \
+  --defsym=__MPLAB_DEBUGGER_ICD3=1 \
   -Tp33EP512GM306.gld.07 \
   --stack=16 \
   --check-sections \
@@ -142,7 +139,7 @@ CodeGuard RAM Memory:
   boot    (none)
 
 
-xc16-ld 1.60 (B)
+xc16-ld 1.60 (A)
 
 Default Code Model: Small
 Default Data Model: Large
@@ -558,7 +555,7 @@ LOAD build/default/debug/asservissement.o
                     0x0001                  __MPLAB_BUILD = 0x1
                     0x0001                  __MPLAB_DEBUG = 0x1
                     0x0001                  __DEBUG = 0x1
-                    0x0001                  __MPLAB_DEBUGGER_ICD4 = 0x1
+                    0x0001                  __MPLAB_DEBUGGER_ICD3 = 0x1
 LOAD p33EP512GM306
 LOAD c:/program files/microchip/xc16/v1.60/bin/bin/../../lib\libfx-elf.a
                     0x557f0                  __FICD = 0x557f0
@@ -701,7 +698,7 @@ __FOSCSEL
 
 __FGS             0x0557fa          0x2
  *(__FGS.sec*)
- __FGS.sec        0x0557fa          0x2 /CW/_FGSp7
+ __FGS.sec        0x0557fa          0x2 /CW/_FGS°á7
                   0x0557fa                  __FGS.sec
 
 __FUID0
@@ -754,22 +751,22 @@ __FUID3
  .debug_abbrev    0x000d5f        0x15b build/default/debug/QEI.o
  .debug_abbrev    0x000eba         0x80 build/default/debug/asservissement.o
 
-.debug_line       0x000000       0x1111
+.debug_line       0x000000        0xe9e
  *(.debug_line)
- .debug_line      0x000000        0x282 build/default/debug/main.o
- .debug_line      0x000282        0x124 build/default/debug/ChipConfig.o
- .debug_line      0x0003a6        0x126 build/default/debug/IO.o
- .debug_line      0x0004cc        0x191 build/default/debug/timer.o
- .debug_line      0x00065d         0x44 build/default/debug/Robot.o
- .debug_line      0x0006a1         0x78 build/default/debug/Toolbox.o
- .debug_line      0x000719        0x157 build/default/debug/PWM.o
- .debug_line      0x000870        0x159 build/default/debug/ADC.o
- .debug_line      0x0009c9        0x129 build/default/debug/UART.o
- .debug_line      0x000af2        0x154 build/default/debug/CB_TX1.o
- .debug_line      0x000c46        0x14d build/default/debug/CB_RX1.o
- .debug_line      0x000d93        0x1c1 build/default/debug/UART_Protocol.o
- .debug_line      0x000f54        0x167 build/default/debug/QEI.o
- .debug_line      0x0010bb         0x56 build/default/debug/asservissement.o
+ .debug_line      0x000000        0x249 build/default/debug/main.o
+ .debug_line      0x000249         0xeb build/default/debug/ChipConfig.o
+ .debug_line      0x000334         0xed build/default/debug/IO.o
+ .debug_line      0x000421        0x158 build/default/debug/timer.o
+ .debug_line      0x000579         0x44 build/default/debug/Robot.o
+ .debug_line      0x0005bd         0x78 build/default/debug/Toolbox.o
+ .debug_line      0x000635        0x11e build/default/debug/PWM.o
+ .debug_line      0x000753        0x120 build/default/debug/ADC.o
+ .debug_line      0x000873         0xf0 build/default/debug/UART.o
+ .debug_line      0x000963        0x11b build/default/debug/CB_TX1.o
+ .debug_line      0x000a7e        0x114 build/default/debug/CB_RX1.o
+ .debug_line      0x000b92        0x188 build/default/debug/UART_Protocol.o
+ .debug_line      0x000d1a        0x12e build/default/debug/QEI.o
+ .debug_line      0x000e48         0x56 build/default/debug/asservissement.o
 
 .debug_frame      0x000000        0x84a
  *(.debug_frame)
@@ -2702,7 +2699,7 @@ LOAD c:/program files/microchip/xc16/v1.60/bin/bin/../../lib\libm-elf.a
 LOAD c:/program files/microchip/xc16/v1.60/bin/bin/../../lib\liblega-c-elf.a
 END GROUP
 OUTPUT(dist/default/debug/carte-moteur-Maxence-Jamme.X.debug.elf elf32-pic30)
-LOAD /CW/_FGSp7
+LOAD /CW/_FGS°á7
 LOAD default_isr
 LOAD data_init
 
