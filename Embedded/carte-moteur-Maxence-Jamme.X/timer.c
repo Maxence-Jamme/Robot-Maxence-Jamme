@@ -5,6 +5,7 @@
 #include "ADC.h"
 #include "main.h"
 #include "QEI.h"
+#include "asservissement.h"
 
 
 unsigned long timestamp;
@@ -100,6 +101,7 @@ void __attribute__((interrupt, no_auto_psv)) _T1Interrupt(void){
     QEIUpdateData();
     if (couldown % 10 == 0){
         SendPositionData();
+        AsservissementValeur();
     }
     couldown ++;
 }

@@ -99,7 +99,7 @@ namespace Robot_Interface_JAMME_JUILLE
         public MainWindow()
         {
             InitializeComponent();
-            serialPort1 = new ReliableSerialPort("COM3", 115200, Parity.None, 8, StopBits.One);
+            serialPort1 = new ReliableSerialPort("COM6", 115200, Parity.None, 8, StopBits.One);
             serialPort1.DataReceived += SerialPort1_DataReceived;
             serialPort1.Open();
 
@@ -414,6 +414,7 @@ namespace Robot_Interface_JAMME_JUILLE
                     TBoxVitLin.Text = robot.vLinéaireOdo.ToString("0.00") + " m/s";
                     TBoxVitAng.Text = robot.vAngulaireOdo.ToString("0.00") + " m/s";
                     break;
+
                 case ((int)FunctionId.asservissement):
                     //asservSpeedDisplay.SetTitle("TEST");
                     int nb_octet = 4;
@@ -448,7 +449,7 @@ namespace Robot_Interface_JAMME_JUILLE
                     double corrLimitDX;
                     double corrLimitDTheta;
                     //-------------------
-                    byte[] tabl = msgPayload.GetRange(nb_octet, 4);nb_octet = nb_octet + 4;
+                    byte[] tabl = msgPayload.GetRange(nb_octet, 4); nb_octet = nb_octet + 4;
                     consigneX = tabl.GetFloat();
                     tabl = msgPayload.GetRange(nb_octet, 4); nb_octet = nb_octet + 4;
                     consigneTheta = tabl.GetFloat();

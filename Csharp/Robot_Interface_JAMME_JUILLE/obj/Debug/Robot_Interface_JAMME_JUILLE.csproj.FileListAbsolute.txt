@@ -1,7 +1,6 @@
 C:\GitHub\Robot-Maxence-Jamme\Csharp\Robot_Interface_JAMME_JUILLE\bin\Debug\Robot_Interface_JAMME_JUILLE.exe.config
 C:\GitHub\Robot-Maxence-Jamme\Csharp\Robot_Interface_JAMME_JUILLE\bin\Debug\Robot_Interface_JAMME_JUILLE.exe
 C:\GitHub\Robot-Maxence-Jamme\Csharp\Robot_Interface_JAMME_JUILLE\bin\Debug\Robot_Interface_JAMME_JUILLE.pdb
-C:\GitHub\Robot-Maxence-Jamme\Csharp\Robot_Interface_JAMME_JUILLE\obj\Debug\Robot_Interface_JAMME_JUILLE.csprojAssemblyReference.cache
 C:\GitHub\Robot-Maxence-Jamme\Csharp\Robot_Interface_JAMME_JUILLE\obj\Debug\MainWindow.g.cs
 C:\GitHub\Robot-Maxence-Jamme\Csharp\Robot_Interface_JAMME_JUILLE\obj\Debug\App.g.cs
 C:\GitHub\Robot-Maxence-Jamme\Csharp\Robot_Interface_JAMME_JUILLE\obj\Debug\Robot_Interface_JAMME_JUILLE_MarkupCompile.cache
@@ -43,3 +42,4 @@ C:\GitHub\Robot-Maxence-Jamme\Csharp\Robot_Interface_JAMME_JUILLE\bin\Debug\WpfA
 C:\GitHub\Robot-Maxence-Jamme\Csharp\Robot_Interface_JAMME_JUILLE\bin\Debug\Constants.pdb
 C:\GitHub\Robot-Maxence-Jamme\Csharp\Robot_Interface_JAMME_JUILLE\bin\Debug\WpfAsservissementDisplay.pdb
 C:\GitHub\Robot-Maxence-Jamme\Csharp\Robot_Interface_JAMME_JUILLE\obj\Debug\Robot_Interface_JAMME_JUILLE.csproj.CoreCompileInputs.cache
+C:\GitHub\Robot-Maxence-Jamme\Csharp\Robot_Interface_JAMME_JUILLE\obj\Debug\Robot_Interface_JAMME_JUILLE.csproj.AssemblyReference.cache

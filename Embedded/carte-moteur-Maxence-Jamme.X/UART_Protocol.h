@@ -24,7 +24,7 @@ void UartProcessDecodedMessage(unsigned char function,unsigned char payloadLengt
 #define SET_ROBOT_STATE 0x0051
 #define SET_ROBOT_MANUAL_CONTROL 0x0052
 #define POSITION_DATA 0x0061
-#define Function_Asservissement 0x0070;
+#define Function_Asservissement 0x0070
 #define Function_Text 0x0080
 
 

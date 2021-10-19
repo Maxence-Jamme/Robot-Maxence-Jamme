@@ -43,7 +43,7 @@ D:\qei\E&R_AxelAdrien_300120\lib lidar\Utilities\obj\Debug\Utilities.dll
 D:\qei\E&R_AxelAdrien_300120\lib lidar\Utilities\obj\Debug\Utilities.pdb
 C:\Github\Robot-Maxence-Jamme\Csharp\Utilities\bin\Debug\Utilities.dll
 C:\Github\Robot-Maxence-Jamme\Csharp\Utilities\bin\Debug\Utilities.pdb
-C:\Github\Robot-Maxence-Jamme\Csharp\Utilities\obj\Debug\Utilities.csprojAssemblyReference.cache
 C:\Github\Robot-Maxence-Jamme\Csharp\Utilities\obj\Debug\Utilities.dll
 C:\Github\Robot-Maxence-Jamme\Csharp\Utilities\obj\Debug\Utilities.pdb
 C:\GitHub\Robot-Maxence-Jamme\Csharp\Utilities\obj\Debug\Utilities.csproj.CoreCompileInputs.cache
+C:\GitHub\Robot-Maxence-Jamme\Csharp\Utilities\obj\Debug\Utilities.csproj.AssemblyReference.cache

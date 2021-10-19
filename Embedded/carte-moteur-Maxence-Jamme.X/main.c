@@ -15,6 +15,7 @@
 #include "CB_RX1.h" 
 #include "UART_Protocol.h"
 #include "QEI.h"
+#include "asservissement.h"
 
 
 int boucle_1 = 0;
@@ -84,6 +85,9 @@ int main (void) {
         boucle_1 ++;
         //__delay32(1000);
         //__delay32 (40000000);
+        
+        //Asservissement_valeur();
+        
     }
 }
 
