@@ -1,3 +1,3 @@
-build/default/debug/ADC.o: ADC.c adc.h
-
-adc.h:
+build/default/debug/ADC.o:  \
+ADC.c  \
+adc.h 

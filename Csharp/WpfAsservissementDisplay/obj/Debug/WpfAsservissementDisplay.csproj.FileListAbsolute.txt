@@ -41,6 +41,5 @@ C:\GitHub\Robot-Maxence-Jamme\Csharp\WpfAsservissementDisplay\obj\Debug\Resource
 C:\GitHub\Robot-Maxence-Jamme\Csharp\WpfAsservissementDisplay\obj\Debug\WpfAsservissementDisplay.g.resources
 C:\GitHub\Robot-Maxence-Jamme\Csharp\WpfAsservissementDisplay\obj\Debug\WpfAsservissementDisplay.Properties.Resources.resources
 C:\GitHub\Robot-Maxence-Jamme\Csharp\WpfAsservissementDisplay\obj\Debug\WpfAsservissementDisplay.csproj.GenerateResource.cache
-C:\GitHub\Robot-Maxence-Jamme\Csharp\WpfAsservissementDisplay\obj\Debug\WpfAsservissementDisplay.csproj.CoreCompileInputs.cache
 C:\GitHub\Robot-Maxence-Jamme\Csharp\WpfAsservissementDisplay\obj\Debug\WpfAsservissementDisplay.csproj.CopyComplete
-C:\GitHub\Robot-Maxence-Jamme\Csharp\WpfAsservissementDisplay\obj\Debug\WpfAsservissementDisplay.csproj.AssemblyReference.cache
+C:\GitHub\Robot-Maxence-Jamme\Csharp\WpfAsservissementDisplay\obj\Debug\WpfAsservissementDisplay.csprojAssemblyReference.cache

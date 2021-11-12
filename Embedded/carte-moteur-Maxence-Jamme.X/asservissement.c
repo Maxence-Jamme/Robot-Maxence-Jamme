@@ -16,6 +16,7 @@ void SetupPidAsservissement (volatile PidCorrector* PidCorr, double Kp, double K
     PidCorr->erreurDeriveeMax = deriveeMax;
 }
 
+unsigned char asservissementPayload [104] ;
 void AsservissementValeur(){
     double consigneX = 0.01;
     double consigneTheta = 0.02;                    
@@ -47,37 +48,36 @@ void AsservissementValeur(){
     double corrLimitDX = 0.25;
     double corrLimitDTheta = 0.26;
     //-------------------
-    int nb_octect = 0;
-    unsigned char asservissementPayload [104] ;
-    getBytesFromInt32(asservissementPayload, 0, (float)(consigneX)); nb_octect = nb_octect + 4;
-    getBytesFromInt32(asservissementPayload, 4, (float)(consigneTheta)); nb_octect = nb_octect + 4;
-    getBytesFromInt32(asservissementPayload, 8, (float)(valueX)); nb_octect = nb_octect + 4;
-    getBytesFromInt32(asservissementPayload, 12, (float)(valueTheta)); nb_octect = nb_octect + 4;
-    getBytesFromInt32(asservissementPayload, 16, (float)(errorX)); nb_octect = nb_octect + 4;
-    getBytesFromInt32(asservissementPayload, 20, (float)(errorTheta)); nb_octect = nb_octect + 4;
-    getBytesFromInt32(asservissementPayload, 24, (float)(commandX)); nb_octect = nb_octect + 4;
-    getBytesFromInt32(asservissementPayload, 28, (float)(commandTheta)); nb_octect = nb_octect + 4;
+    int nb_octet = 0;
+    getBytesFromFloat(asservissementPayload, nb_octet, (float)(consigneX)); 
+    getBytesFromFloat(asservissementPayload, nb_octet += 4, (float)(consigneTheta));
+    getBytesFromFloat(asservissementPayload, nb_octet += 4, (float)(valueX)); 
+    getBytesFromFloat(asservissementPayload, nb_octet += 4, (float)(valueTheta)); 
+    getBytesFromFloat(asservissementPayload, nb_octet += 4, (float)(errorX));
+    getBytesFromFloat(asservissementPayload, nb_octet += 4, (float)(errorTheta)); 
+    getBytesFromFloat(asservissementPayload, nb_octet += 4, (float)(commandX));
+    getBytesFromFloat(asservissementPayload, nb_octet += 4, (float)(commandTheta)); 
     //-------------------
-    getBytesFromInt32(asservissementPayload, nb_octect, (float)(corrPX)); nb_octect = nb_octect + 4;
-    getBytesFromInt32(asservissementPayload, nb_octect, (float)(corrPTheta)); nb_octect = nb_octect + 4;
-    getBytesFromInt32(asservissementPayload, nb_octect, (float)(corrIX)); nb_octect = nb_octect + 4;
-    getBytesFromInt32(asservissementPayload, nb_octect, (float)(corrITheta)); nb_octect = nb_octect + 4;
-    getBytesFromInt32(asservissementPayload, nb_octect, (float)(corrDX)); nb_octect = nb_octect + 4;
-    getBytesFromInt32(asservissementPayload, nb_octect, (float)(corrDTheta)); nb_octect = nb_octect + 4;
+    getBytesFromFloat(asservissementPayload, nb_octet += 4, (float)(corrPX)); 
+    getBytesFromFloat(asservissementPayload, nb_octet += 4, (float)(corrPTheta));
+    getBytesFromFloat(asservissementPayload, nb_octet += 4, (float)(corrIX));
+    getBytesFromFloat(asservissementPayload, nb_octet += 4, (float)(corrITheta)); 
+    getBytesFromFloat(asservissementPayload, nb_octet += 4, (float)(corrDX)); 
+    getBytesFromFloat(asservissementPayload, nb_octet += 4, (float)(corrDTheta)); 
     //-------------------
-    getBytesFromInt32(asservissementPayload, nb_octect, (float)(KpX)); nb_octect = nb_octect + 4;
-    getBytesFromInt32(asservissementPayload, nb_octect, (float)(KpTheta)); nb_octect = nb_octect + 4;
-    getBytesFromInt32(asservissementPayload, nb_octect, (float)(KiX)); nb_octect = nb_octect + 4;
-    getBytesFromInt32(asservissementPayload, nb_octect, (float)(KiTheta)); nb_octect = nb_octect + 4;
-    getBytesFromInt32(asservissementPayload, nb_octect, (float)(KdX)); nb_octect = nb_octect + 4;
-    getBytesFromInt32(asservissementPayload, nb_octect, (float)(KdTheta)); nb_octect = nb_octect + 4;
+    getBytesFromFloat(asservissementPayload, nb_octet += 4, (float)(KpX));
+    getBytesFromFloat(asservissementPayload, nb_octet += 4, (float)(KpTheta));
+    getBytesFromFloat(asservissementPayload, nb_octet += 4, (float)(KiX));
+    getBytesFromFloat(asservissementPayload, nb_octet += 4, (float)(KiTheta));
+    getBytesFromFloat(asservissementPayload, nb_octet += 4, (float)(KdX)); 
+    getBytesFromFloat(asservissementPayload, nb_octet += 4, (float)(KdTheta));
     //-------------------
-    getBytesFromInt32(asservissementPayload, nb_octect, (float)(corrLimitPX)); nb_octect = nb_octect + 4;
-    getBytesFromInt32(asservissementPayload, nb_octect, (float)(corrLimitPTheta)); nb_octect = nb_octect + 4;
-    getBytesFromInt32(asservissementPayload, nb_octect, (float)(corrLimitIX)); nb_octect = nb_octect + 4;
-    getBytesFromInt32(asservissementPayload, nb_octect, (float)(corrLimitITheta)); nb_octect = nb_octect + 4;
-    getBytesFromInt32(asservissementPayload, nb_octect, (float)(corrLimitDX)); nb_octect = nb_octect + 4;
-    getBytesFromInt32(asservissementPayload, nb_octect, (float)(corrLimitDTheta)); nb_octect = nb_octect + 4;
+    getBytesFromFloat(asservissementPayload, nb_octet += 4, (float)(corrLimitPX)); 
+    getBytesFromFloat(asservissementPayload, nb_octet += 4, (float)(corrLimitPTheta)); 
+    getBytesFromFloat(asservissementPayload, nb_octet += 4, (float)(corrLimitIX)); 
+    getBytesFromFloat(asservissementPayload, nb_octet += 4, (float)(corrLimitITheta));
+    getBytesFromFloat(asservissementPayload, nb_octet += 4, (float)(corrLimitDX)); 
+    getBytesFromFloat(asservissementPayload, nb_octet += 4, (float)(corrLimitDTheta));
     
-    UartEncodeAndSendMessage(0x0070, 104, asservissementPayload);
+    UartEncodeAndSendMessage(0x0070, nb_octet +=4, asservissementPayload);
 }

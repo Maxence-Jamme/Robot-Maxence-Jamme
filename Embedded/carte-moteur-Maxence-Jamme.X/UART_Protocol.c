@@ -140,6 +140,9 @@ void UartProcessDecodedMessage(unsigned char msgFunction,unsigned char msgpayloa
                 LED_BLANCHE = 0;
             }
         break;
+        case Function_Asservissement:
+            UartEncodeAndSendMessage(Function_Text, msgpayloadLength, msgPayload);
+            break;
         default:
         break;    
     }

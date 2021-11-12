@@ -44,6 +44,7 @@ namespace Robot_Interface_JAMME_JUILLE
         bool autoControlActivated = true;
         Robot robot = new Robot();
         bool keyloger = false;
+        bool LinAng = true;
 
         public enum StateReception
         {
@@ -99,7 +100,7 @@ namespace Robot_Interface_JAMME_JUILLE
         public MainWindow()
         {
             InitializeComponent();
-            serialPort1 = new ReliableSerialPort("COM6", 115200, Parity.None, 8, StopBits.One);
+            serialPort1 = new ReliableSerialPort("COM4", 115200, Parity.None, 8, StopBits.One);
             serialPort1.DataReceived += SerialPort1_DataReceived;
             serialPort1.Open();
 
@@ -417,7 +418,7 @@ namespace Robot_Interface_JAMME_JUILLE
 
                 case ((int)FunctionId.asservissement):
                     //asservSpeedDisplay.SetTitle("TEST");
-                    int nb_octet = 4;
+                    int nb_octet = 0;
                     //-------------------
                     double consigneX;
                     double consigneTheta;                    
@@ -447,7 +448,7 @@ namespace Robot_Interface_JAMME_JUILLE
                     double corrLimitIX;
                     double corrLimitITheta;
                     double corrLimitDX;
-                    double corrLimitDTheta;
+                    double corrLimitDTheta;                    
                     //-------------------
                     byte[] tabl = msgPayload.GetRange(nb_octet, 4); nb_octet = nb_octet + 4;
                     consigneX = tabl.GetFloat();
@@ -630,21 +631,60 @@ namespace Robot_Interface_JAMME_JUILLE
             }
         }
 
+        private void ButAsservEnv_Click(object sender, RoutedEventArgs e)
+        {
+            byte[] msgPayload = Encoding.ASCII.GetBytes(LinAng + TBoxKp.Text + TBoxKi.Text + TBoxKd.Text + TBoxKpmax.Text + TBoxKimax.Text + TBoxKdmax.Text);
+            int msgFunction = 0x0070;
+            int msgPayloadLength = msgPayload.Length;
+            UartEncodeAndSendMessage(msgFunction, msgPayloadLength, msgPayload);
+            TBoxKp.Text = "0";
+            TBoxKi.Text = "0";
+            TBoxKd.Text = "0";
+            TBoxKpmax.Text = "0";
+            TBoxKimax.Text = "0";
+            TBoxKdmax.Text = "0";
+        }
+
+        private void ButAngLin_Click(object sender, RoutedEventArgs e)
+        {
+            if (LinAng)
+            {
+                ButAngLin.Content = "Angulaire";
+                TBoxKp.Text = "0";
+                TBoxKi.Text = "0";
+                TBoxKd.Text = "0";
+                TBoxKpmax.Text = "0";
+                TBoxKimax.Text = "0";
+                TBoxKdmax.Text = "0";
+            }
+            else
+            {
+                ButAngLin.Content = "Linéaire";
+                TBoxKp.Text = "0";
+                TBoxKi.Text = "0";
+                TBoxKd.Text = "0";
+                TBoxKpmax.Text = "0";
+                TBoxKimax.Text = "0";
+                TBoxKdmax.Text = "0";
+            }
+            LinAng = !LinAng;
+        } 
+
         private void Switch_color()
         {
             if (couleur_2 == 0)
             {
                 Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#3E3E42");
                 //#F0F0F0
-                TextBoxetatrobot.Foreground = TextBoxEmission.Foreground = TextBoxReception.Foreground = (SolidColorBrush)new BrushConverter().ConvertFromString("#F0F0F0");
+                TBckKp.Foreground = TBckKpmax.Foreground = TBckKi.Foreground = TBckKimax.Foreground = TBckKd.Foreground = TBckKdmax.Foreground = ParaAsser.Foreground = TextBoxetatrobot.Foreground = TextBoxEmission.Foreground = TextBoxReception.Foreground = (SolidColorBrush)new BrushConverter().ConvertFromString("#F0F0F0");
                 //#75757E
                 GB1.Background = TextBoxEmission.Background = GB2.Background = TextBoxReception.Background = TextBoxetatrobot.Background = GB4.Background = TextTest.Background = GB3.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#75757E");
                 //#F1F1F1
-                BT5.Foreground = BT4.Foreground = BT3.Foreground = BT2.Foreground = BT1.Foreground = groupBox2.Foreground = groupBox1.Foreground = groupBox.Foreground = GB4.Foreground = GB3.Foreground = GBC.Foreground = GB1.Foreground = GB2.Foreground = Odometrie.Foreground = TBckVitLin.Foreground = TBckVitAng.Foreground = TBckPosX.Foreground = TBckPosY.Foreground = TBckAngle.Foreground = (SolidColorBrush)new BrushConverter().ConvertFromString("#F1F1F1");
+                ButAsservEnv.Foreground = ButAngLin.Foreground = BT5.Foreground = BT4.Foreground = BT3.Foreground = BT2.Foreground = BT1.Foreground = groupBox2.Foreground = groupBox1.Foreground = groupBox.Foreground = GB4.Foreground = GB3.Foreground = GBC.Foreground = GB1.Foreground = GB2.Foreground = Odometrie.Foreground = TBckVitLin.Foreground = TBckVitAng.Foreground = TBckPosX.Foreground = TBckPosY.Foreground = TBckAngle.Foreground = (SolidColorBrush)new BrushConverter().ConvertFromString("#F1F1F1");
                 //#C8C8C8
-                TBoxMotD.Background = TBoxD.Background = TBoxC.Background = TBoxG.Background = TBoxMotG.Background = TBoxExD.Background = TBoxExG.Background = TBoxVitLin.Background = TBoxVitAng.Background = TBoxPosX.Background = TBoxPosY.Background = TBoxAngle.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#C8C8C8");
+                TBoxKp.Background = TBoxKi.Background = TBoxKd.Background = TBoxKpmax.Background = TBoxKimax.Background = TBoxKdmax.Background = TBoxMotD.Background = TBoxD.Background = TBoxC.Background = TBoxG.Background = TBoxMotG.Background = TBoxExD.Background = TBoxExG.Background = TBoxVitLin.Background = TBoxVitAng.Background = TBoxPosX.Background = TBoxPosY.Background = TBoxAngle.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#C8C8C8");
                 //#858585
-                BT1.Background = BT2.Background = BT3.Background = BT4.Background = BT5.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#858585");
+                ButAsservEnv.Background = ButAngLin.Background = BT1.Background = BT2.Background = BT3.Background = BT4.Background = BT5.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#858585");
                 //#FFFFFF
                 checkBoxLED3.Background = checkBoxLED1.Background = checkBoxLED2.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#FFFFFF");
                 //LED
@@ -656,16 +696,15 @@ namespace Robot_Interface_JAMME_JUILLE
             else if (couleur_2 == 1)
             {
                 //#000000
-                checkBoxLED2.Foreground = checkBoxLED1.Foreground = checkBoxLED3.Foreground = TextBoxetatrobot.Foreground = TextBoxEmission.Foreground = TextBoxReception.Foreground = BT5.Foreground = BT4.Foreground = BT3.Foreground = BT2.Foreground = BT1.Foreground = groupBox2.Foreground = groupBox1.Foreground = groupBox.Foreground = GB4.Foreground = GB3.Foreground = GBC.Foreground = GB1.Foreground = GB2.Foreground = Odometrie.Foreground = TBckVitLin.Foreground = TBckVitAng.Foreground = TBckPosX.Foreground = TBckPosY.Foreground = TBckAngle.Foreground = (SolidColorBrush)new BrushConverter().ConvertFromString("#000000");
+                ButAsservEnv.Foreground = ButAngLin.Foreground = TBckKp.Foreground = TBckKpmax.Foreground = TBckKi.Foreground = TBckKimax.Foreground = TBckKd.Foreground = TBckKdmax.Foreground = ParaAsser.Foreground = checkBoxLED2.Foreground = checkBoxLED1.Foreground = checkBoxLED3.Foreground = TextBoxetatrobot.Foreground = TextBoxEmission.Foreground = TextBoxReception.Foreground = BT5.Foreground = BT4.Foreground = BT3.Foreground = BT2.Foreground = BT1.Foreground = groupBox2.Foreground = groupBox1.Foreground = groupBox.Foreground = GB4.Foreground = GB3.Foreground = GBC.Foreground = GB1.Foreground = GB2.Foreground = Odometrie.Foreground = TBckVitLin.Foreground = TBckVitAng.Foreground = TBckPosX.Foreground = TBckPosY.Foreground = TBckAngle.Foreground = (SolidColorBrush)new BrushConverter().ConvertFromString("#000000");
                 //#FFFFFF
-                Background = checkBoxLED3.Background = checkBoxLED1.Background = checkBoxLED2.Background = TBoxMotD.Background = TBoxD.Background = TBoxC.Background = TBoxG.Background = TBoxMotG.Background = TBoxExD.Background = TBoxExG.Background = TBoxVitLin.Background = TBoxVitAng.Background = TBoxPosX.Background = TBoxPosY.Background = TBoxAngle.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#FFFFFF");
+                TBoxKp.Background = TBoxKi.Background = TBoxKd.Background = TBoxKpmax.Background = TBoxKimax.Background = TBoxKdmax.Background = Background = checkBoxLED3.Background = checkBoxLED1.Background = checkBoxLED2.Background = TBoxMotD.Background = TBoxD.Background = TBoxC.Background = TBoxG.Background = TBoxMotG.Background = TBoxExD.Background = TBoxExG.Background = TBoxVitLin.Background = TBoxVitAng.Background = TBoxPosX.Background = TBoxPosY.Background = TBoxAngle.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#FFFFFF");
                 //#c9c9c9
                 GB1.Background = TextBoxEmission.Background = GB2.Background = TextBoxReception.Background = TextBoxetatrobot.Background = GB4.Background = TextTest.Background = GB3.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#c9c9c9");
                 //#DDDDDD
-                BT1.Background = BT2.Background = BT3.Background = BT4.Background = BT5.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#DDDDDD");                
+                ButAsservEnv.Background = ButAngLin.Background = BT1.Background = BT2.Background = BT3.Background = BT4.Background = BT5.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#DDDDDD");                
                 couleur_2 = 0;
             }
         }
-
     }
 }

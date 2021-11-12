@@ -21,7 +21,7 @@
 int boucle_1 = 0;
 int autoControlActivated = 1;
 int manuel_var = 0;
-
+int toto = 0;
 int main (void) {
     InitOscillator();
     InitIO();
@@ -33,7 +33,7 @@ int main (void) {
     InitUART();
     InitQEI1();
     InitQEI2();
-    
+    AsservissementValeur();
     //PWMSetSpeed(-15, MOTEUR_DROIT); // 0 = Droite | 1 = Gauche |pourcentage detat bas de PWM 
     //PWMSetSpeed(-15, MOTEUR_GAUCHE);  //  + = avance | - = recule | (batterie face ? nous)
     
@@ -86,6 +86,10 @@ int main (void) {
         //__delay32(1000);
         //__delay32 (40000000);
         
+        if (toto == 0){
+            //AsservissementValeur();
+            toto = 1;
+        }
         //Asservissement_valeur();
         
     }
