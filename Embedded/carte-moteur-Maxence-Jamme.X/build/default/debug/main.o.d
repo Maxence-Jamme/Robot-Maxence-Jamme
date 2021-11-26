@@ -7,10 +7,10 @@ timer.h  \
  PWM.h  \
 ADC.h  \
 Robot.h  \
+asservissement.h  \
 main.h  \
 UART.h  \
 CB_TX1.h  \
 CB_RX1.h  \
-UART_Protocol.h  \
- QEI.h  \
-asservissement.h 
+ UART_Protocol.h  \
+QEI.h 

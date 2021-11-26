@@ -355,7 +355,7 @@ namespace Robot_Interface_JAMME_JUILLE
                     {
                         TextBoxReception.Text += Convert.ToChar(msgPayload[i]);
                     }
-                    TextBoxReception.Text += "test\n";
+                    //TextBoxReception.Text += "test\n";
                     break;
                 case ((int)FunctionId.telem):
                     TBoxD.Text = msgPayload[0] + " cm";
@@ -633,8 +633,22 @@ namespace Robot_Interface_JAMME_JUILLE
 
         private void ButAsservEnv_Click(object sender, RoutedEventArgs e)
         {
-            byte[] msgPayload = Encoding.ASCII.GetBytes(LinAng + TBoxKp.Text + TBoxKi.Text + TBoxKd.Text + TBoxKpmax.Text + TBoxKimax.Text + TBoxKdmax.Text);
-            int msgFunction = 0x0070;
+            int LinAng_valeur = 0;
+            if (LinAng)
+            {
+                LinAng_valeur = 1;
+            }
+            byte[] msgPayload = new byte[28];
+            //byte[] msgPayload = Encoding.ASCII.GetBytes(LinAng_valeur + TBoxKp.Text + TBoxKi.Text + TBoxKd.Text + TBoxKpmax.Text + TBoxKimax.Text + TBoxKdmax.Text);
+            //byte[] msgPayload = Encoding.ASCII.GetBytes(TBoxKp.Text);
+            msgPayload.SetValueRange(((float)(LinAng_valeur)).GetBytes(), 0);
+            msgPayload.SetValueRange(((float)(Convert.ToByte(TBoxKp.Text))).GetBytes(), 4);
+            msgPayload.SetValueRange(((float)(Convert.ToByte(TBoxKi.Text))).GetBytes(), 8);
+            msgPayload.SetValueRange(((float)(Convert.ToByte(TBoxKd.Text))).GetBytes(), 12);
+            msgPayload.SetValueRange(((float)(Convert.ToByte(TBoxKpmax.Text))).GetBytes(), 16);
+            msgPayload.SetValueRange(((float)(Convert.ToByte(TBoxKimax.Text))).GetBytes(), 20);
+            msgPayload.SetValueRange(((float)(Convert.ToByte(TBoxKdmax.Text))).GetBytes(), 24);            
+            int msgFunction = (int)FunctionId.asservissement;
             int msgPayloadLength = msgPayload.Length;
             UartEncodeAndSendMessage(msgFunction, msgPayloadLength, msgPayload);
             TBoxKp.Text = "0";

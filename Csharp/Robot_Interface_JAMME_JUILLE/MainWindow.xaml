@@ -150,7 +150,7 @@
                 </StackPanel>
             </GroupBox>
 
-            <GroupBox  x:Name="ParaAsser" Header="Paramétre Asservissement" Grid.Column="0" Grid.Row="1" Margin="10, 250, 0, 0">
+            <GroupBox  x:Name="ParaAsser" Header="Paramètre Asservissement" Grid.Column="0" Grid.Row="1" Margin="10, 250, 0, 0">
                 <StackPanel>
                     <Grid>
                         <Grid.ColumnDefinitions>
@@ -171,12 +171,12 @@
                         <TextBlock x:Name="TBckKimax" Text="Ki max :" HorizontalAlignment="Left" Margin="5, 7, 0, 2" Grid.Column="1" Grid.Row="1"/>
                         <TextBlock x:Name="TBckKdmax" Text="Kd max :" HorizontalAlignment="Left" Margin="5, 7, 0, 2" Grid.Column="2" Grid.Row="1"/>
 
-                        <TextBox x:Name="TBoxKp" HorizontalAlignment="Right" Height="17" Margin="0, 7, 0, 2" Grid.Column="0" Grid.Row="0" Width="62"/>
-                        <TextBox x:Name="TBoxKi" HorizontalAlignment="Right" Height="17" Margin="0, 7, 0, 2" Grid.Column="1" Grid.Row="0" Width="62"/>
-                        <TextBox x:Name="TBoxKd" HorizontalAlignment="Right" Height="17" Margin="0, 7, 0, 2" Grid.Column="2" Grid.Row="0" Width="62"/>
-                        <TextBox x:Name="TBoxKpmax" HorizontalAlignment="Right" Height="17" Margin="0, 7, 0, 2" Grid.Column="0" Grid.Row="1" Width="37"/>
-                        <TextBox x:Name="TBoxKimax" HorizontalAlignment="Right" Height="17" Margin="0, 7, 0, 2" Grid.Column="1" Grid.Row="1" Width="41"/>
-                        <TextBox x:Name="TBoxKdmax" HorizontalAlignment="Right" Height="17" Margin="0, 7, 0, 2" Grid.Column="2" Grid.Row="1" Width="36"/>
+                        <TextBox x:Name="TBoxKp" HorizontalAlignment="Right" Height="17" Margin="0, 7, 0, 2" Grid.Column="0" Grid.Row="0" Width="62" Text="0"/>
+                        <TextBox x:Name="TBoxKi" HorizontalAlignment="Right" Height="17" Margin="0, 7, 0, 2" Grid.Column="1" Grid.Row="0" Width="62" Text="0"/>
+                        <TextBox x:Name="TBoxKd" HorizontalAlignment="Right" Height="17" Margin="0, 7, 0, 2" Grid.Column="2" Grid.Row="0" Width="62" Text="0"/>
+                        <TextBox x:Name="TBoxKpmax" HorizontalAlignment="Right" Height="17" Margin="0, 7, 0, 2" Grid.Column="0" Grid.Row="1" Width="37" Text="0"/>
+                        <TextBox x:Name="TBoxKimax" HorizontalAlignment="Right" Height="17" Margin="0, 7, 0, 2" Grid.Column="1" Grid.Row="1" Width="41" Text="0"/>
+                        <TextBox x:Name="TBoxKdmax" HorizontalAlignment="Right" Height="17" Margin="0, 7, 0, 2" Grid.Column="2" Grid.Row="1" Width="36" Text="0"/>
 
                         <Button x:Name="ButAngLin" Grid.Column="0" Grid.Row="2" Height="30" Margin="5" Content="Linéaire" Click="ButAngLin_Click" />
                         <Button x:Name="ButAsservEnv" Grid.Column="2" Grid.Row="2" Height="30" Margin="5" Content="Envoyer" Click="ButAsservEnv_Click" />

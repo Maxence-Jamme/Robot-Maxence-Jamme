@@ -4,6 +4,9 @@
 #include "main.h"
 #include "IO.h"
 #include "PWM.h"
+#include "Toolbox.h"
+#include "asservissement.h"
+#include "Robot.h"
 
 unsigned char UartCalculateChecksum(int msgFunction,int msgPayloadLength, unsigned char * msgPayload){
 //Fonction prenant entrée la trame et sa longueur pour calculer le checksum
@@ -106,6 +109,8 @@ void UartDecodeMessage(unsigned char c){
     }
 }
 
+double mode, Kp, Ki, Kd, KpMax, KiMax, KdMax;
+
 void UartProcessDecodedMessage(unsigned char msgFunction,unsigned char msgpayloadLength, unsigned char* msgPayload){
 //Fonction appelée après le décodage pour exécuter l?action
 //correspondant au message reçu
@@ -141,7 +146,22 @@ void UartProcessDecodedMessage(unsigned char msgFunction,unsigned char msgpayloa
             }
         break;
         case Function_Asservissement:
-            UartEncodeAndSendMessage(Function_Text, msgpayloadLength, msgPayload);
+            //UartEncodeAndSendMessage(Function_Text, msgpayloadLength, msgPayload);
+            mode = getDouble(msgPayload, 0);
+            Kp = getDouble(msgPayload, 4);
+            Ki = getDouble(msgPayload, 8);
+            Kd = getDouble(msgPayload, 12);
+            KpMax = getDouble(msgPayload, 16);
+            KiMax = getDouble(msgPayload, 20);
+            KdMax = getDouble(msgPayload, 24);
+            //int kp = getBytesFromDouble(msgPayload, int index, double d);
+            
+            if (mode==1){
+                SetupPidAsservissement(&robotState.PidX, Kp, Ki, Kd, KpMax, KiMax, KdMax);
+            }else if(mode==0){
+                SetupPidAsservissement(&robotState.PidTheta, Kp, Ki, Kd, KpMax, KiMax, KdMax);
+            }
+            
             break;
         default:
         break;    

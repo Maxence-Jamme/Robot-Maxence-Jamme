@@ -13,7 +13,7 @@ typedef struct _PidCorrector
     double epsilon_1;
     double erreur;
     
-    //For Debug onl y
+    //For Debug only
     double corrP;
     double corrI;
     double corrD ;
