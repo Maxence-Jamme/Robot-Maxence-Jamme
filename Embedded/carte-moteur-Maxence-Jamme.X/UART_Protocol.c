@@ -161,7 +161,7 @@ void UartProcessDecodedMessage(unsigned char msgFunction,unsigned char msgpayloa
             }else if(mode==0){
                 SetupPidAsservissement(&robotState.PidTheta, Kp, Ki, Kd, KpMax, KiMax, KdMax);
             }
-            
+            //LED_BLANCHE = 1;
             break;
         default:
         break;    

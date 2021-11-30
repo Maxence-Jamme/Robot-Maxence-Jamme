@@ -8,9 +8,7 @@
 #include "UART_Protocol.h"
 
 
-#define DISTROUES 0.217
-#define FREQ_ECH_QEI 250
-#define point_meter 0.0000163
+
 //float point_meter = (0.0426 * PI)/8192;
 
 

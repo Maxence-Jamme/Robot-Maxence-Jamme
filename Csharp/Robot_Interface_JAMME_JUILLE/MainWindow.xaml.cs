@@ -642,12 +642,12 @@ namespace Robot_Interface_JAMME_JUILLE
             //byte[] msgPayload = Encoding.ASCII.GetBytes(LinAng_valeur + TBoxKp.Text + TBoxKi.Text + TBoxKd.Text + TBoxKpmax.Text + TBoxKimax.Text + TBoxKdmax.Text);
             //byte[] msgPayload = Encoding.ASCII.GetBytes(TBoxKp.Text);
             msgPayload.SetValueRange(((float)(LinAng_valeur)).GetBytes(), 0);
-            msgPayload.SetValueRange(((float)(Convert.ToByte(TBoxKp.Text))).GetBytes(), 4);
-            msgPayload.SetValueRange(((float)(Convert.ToByte(TBoxKi.Text))).GetBytes(), 8);
-            msgPayload.SetValueRange(((float)(Convert.ToByte(TBoxKd.Text))).GetBytes(), 12);
-            msgPayload.SetValueRange(((float)(Convert.ToByte(TBoxKpmax.Text))).GetBytes(), 16);
-            msgPayload.SetValueRange(((float)(Convert.ToByte(TBoxKimax.Text))).GetBytes(), 20);
-            msgPayload.SetValueRange(((float)(Convert.ToByte(TBoxKdmax.Text))).GetBytes(), 24);            
+            msgPayload.SetValueRange(((float)(Convert.ToDecimal(TBoxKp.Text))).GetBytes(), 4);
+            msgPayload.SetValueRange(((float)(Convert.ToDecimal(TBoxKi.Text))).GetBytes(), 8);
+            msgPayload.SetValueRange(((float)(Convert.ToDecimal(TBoxKd.Text))).GetBytes(), 12);
+            msgPayload.SetValueRange(((float)(Convert.ToDecimal(TBoxKpmax.Text))).GetBytes(), 16);
+            msgPayload.SetValueRange(((float)(Convert.ToDecimal(TBoxKimax.Text))).GetBytes(), 20);
+            msgPayload.SetValueRange(((float)(Convert.ToDecimal(TBoxKdmax.Text))).GetBytes(), 24);            
             int msgFunction = (int)FunctionId.asservissement;
             int msgPayloadLength = msgPayload.Length;
             UartEncodeAndSendMessage(msgFunction, msgPayloadLength, msgPayload);

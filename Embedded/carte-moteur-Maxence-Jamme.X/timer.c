@@ -102,6 +102,7 @@ void __attribute__((interrupt, no_auto_psv)) _T1Interrupt(void){
     if (couldown % 10 == 0){
         SendPositionData();
         AsservissementValeur();
+        PWMSetSpeedConsignePolaire();
     }
     couldown ++;
 }
