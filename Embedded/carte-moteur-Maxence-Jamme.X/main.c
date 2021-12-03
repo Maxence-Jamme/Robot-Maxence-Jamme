@@ -58,7 +58,7 @@ int main (void) {
             //envoie des valeurs des telemetres
             unsigned char msgPayload [] = { (char)robotState.distanceTelemetreGauche ,  (char)robotState.distanceTelemetreCentre, (char)robotState.distanceTelemetreDroit, (char)robotState.distanceTelemetreExtremeDroit, (char)robotState.distanceTelemetreExtremeGauche } ;
             int msgPayloadLength = sizeof(msgPayload)+1;
-            UartEncodeAndSendMessage(0x0030, msgPayloadLength, msgPayload);
+            //UartEncodeAndSendMessage(0x0030, msgPayloadLength, msgPayload);
             
             //envoie des vitesses des moteurs
             unsigned char msgPayloadV [] = {(char)Abs(robotState.vitesseDroiteConsigne), (char)Abs(robotState.vitesseGaucheConsigne)};

@@ -85,7 +85,7 @@ T1CONbits.TCS = 0; //clock source = internal clock
 //float f = 346;  //100HZ
 //PR1 = 40000000/(T1CONbits.TCKPS*f);
 ////PR1 = 0x1388; 
-SetFreqTimer1(50);
+SetFreqTimer1(250);
 
 IFS0bits.T1IF = 0; // Clear Timer Interrupt Flag
 IEC0bits.T1IE = 1; // Enable Timer interrupt
@@ -100,7 +100,7 @@ void __attribute__((interrupt, no_auto_psv)) _T1Interrupt(void){
     ADC1StartConversionSequence();
     QEIUpdateData();
     PWMSetSpeedConsignePolaire();
-    if (couldown % 10 == 0){
+    if (couldown % 20 == 0){
         SendPositionData();
         AsservissementValeur();
     }
