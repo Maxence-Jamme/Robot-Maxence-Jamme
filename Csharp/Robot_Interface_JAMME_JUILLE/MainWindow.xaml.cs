@@ -66,6 +66,7 @@ namespace Robot_Interface_JAMME_JUILLE
             state_robot = 0x0051,
             position_data = 0x0061,
             asservissement = 0x0070,
+            consigne = 0x0071,
             text = 0x0080
         }
 
@@ -412,8 +413,10 @@ namespace Robot_Interface_JAMME_JUILLE
                     TBoxPosX.Text = (robot.positionXOdo).ToString("0.00") + " m";
                     TBoxPosY.Text = (robot.positionYOdo).ToString("0.00") + " m";
                     TBoxAngle.Text = (robot.AngleRadOdo * (180 / Math.PI)).ToString("0.00") + "°";
-                    TBoxVitLin.Text = robot.vLinéaireOdo.ToString("0.00") + " m/s";
-                    TBoxVitAng.Text = robot.vAngulaireOdo.ToString("0.00") + " m/s";
+                    TBoxVitLin.Text = (robot.vLinéaireOdo).ToString("0.00") + " m/s";
+                    TBoxVitAng.Text = robot.vAngulaireOdo.ToString("0.00") + " rad/s";
+
+                    asservSpeedDisplay.UpdatePolarOdometrySpeed(robot.vLinéaireOdo, robot.vAngulaireOdo);
                     break;
 
                 case ((int)FunctionId.asservissement):
@@ -508,7 +511,7 @@ namespace Robot_Interface_JAMME_JUILLE
                     //-------------------
                     asservSpeedDisplay.UpdatePolarSpeedConsigneValues(consigneX, consigneTheta);
                     asservSpeedDisplay.UpdatePolarSpeedCommandValues(commandX, commandTheta);
-                    asservSpeedDisplay.UpdatePolarOdometrySpeed(valueX, valueTheta);
+                    //asservSpeedDisplay.UpdatePolarOdometrySpeed(valueX, valueTheta);
                     asservSpeedDisplay.UpdatePolarSpeedErrorValues(errorX, errorTheta);
                     //-------------------
                     asservSpeedDisplay.UpdatePolarSpeedCorrectionValues(corrPX, corrPTheta, corrIX, corrITheta, corrDX, corrDTheta);
@@ -682,7 +685,18 @@ namespace Robot_Interface_JAMME_JUILLE
                 TBoxKdmax.Text = "0";
             }
             LinAng = !LinAng;
-        } 
+        }
+        int test = 0; 
+        private void ButCons_Click(object sender, RoutedEventArgs e)
+        {
+            byte[] msgPayload = new byte[8];
+            msgPayload.SetValueRange(((float)(Convert.ToDecimal(TboxConsLin.Text))).GetBytes(), 0);
+            msgPayload.SetValueRange(((float)(Convert.ToDecimal(TboxConsAng.Text))).GetBytes(), 4);
+            int msgPayloadLenght = msgPayload.Length;
+            UartEncodeAndSendMessage((int)FunctionId.consigne, msgPayloadLenght, msgPayload);
+            Console.WriteLine(test);
+            test++;
+        }
 
         private void Switch_color()
         {
@@ -720,5 +734,21 @@ namespace Robot_Interface_JAMME_JUILLE
                 couleur_2 = 0;
             }
         }
+
+        
     }
 }
+
+/*
+ * Consigne -> l'objectif fixé  C#   10cm/s
+ * ODOMETRIE
+ * Difference entre consigne et mesure fait en embarqué
+ * Commande Ce qui est envoyé au moteur sortie du correcteur
+ * 
+ * Corr P =
+ * 
+ * 
+ * 
+ * 
+ * 
+ */

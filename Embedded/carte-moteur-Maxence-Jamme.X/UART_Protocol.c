@@ -51,6 +51,7 @@ unsigned char msgDecodedPayload[128];
 int msgDecodedPayloadIndex = 0;
 int rcvState = 0;
 unsigned char calculatedChecksum = 0;
+
 void UartDecodeMessage(unsigned char c){
 //Fonction prenant en entrée un octet et servant à reconstituer les trames
     switch (rcvState)
@@ -109,7 +110,7 @@ void UartDecodeMessage(unsigned char c){
     }
 }
 
-double mode, Kp, Ki, Kd, KpMax, KiMax, KdMax;
+double mode, Kp, Ki, Kd, KpMax, KiMax, KdMax, VL, VA;
 
 void UartProcessDecodedMessage(unsigned char msgFunction,unsigned char msgpayloadLength, unsigned char* msgPayload){
 //Fonction appelée après le décodage pour exécuter l?action
@@ -119,12 +120,15 @@ void UartProcessDecodedMessage(unsigned char msgFunction,unsigned char msgpayloa
         case SET_ROBOT_STATE:
             SetRobotState(msgPayload[0]);
         break;
+        
         case SET_ROBOT_MANUAL_CONTROL:
             SetRobotAutoControlState(msgPayload[0]);
-        break;        
+        break;   
+        
         case Function_Text:
             UartEncodeAndSendMessage(Function_Text, msgpayloadLength, msgPayload);
         break;
+        
         case Function_Led:
             if(msgPayload[0]==0x49 && msgPayload[1]==0x31){ // 0x49=I 0x31=1
                 LED_ORANGE = 1;
@@ -145,6 +149,7 @@ void UartProcessDecodedMessage(unsigned char msgFunction,unsigned char msgpayloa
                 LED_BLANCHE = 0;
             }
         break;
+        
         case Function_Asservissement:
             //UartEncodeAndSendMessage(Function_Text, msgpayloadLength, msgPayload);
             mode = getDouble(msgPayload, 0);
@@ -162,7 +167,13 @@ void UartProcessDecodedMessage(unsigned char msgFunction,unsigned char msgpayloa
                 SetupPidAsservissement(&robotState.PidTheta, Kp, Ki, Kd, KpMax, KiMax, KdMax);
             }
             //LED_BLANCHE = 1;
-            break;
+        break;
+        
+        case Function_Consigne:
+            //UartEncodeAndSendMessage(Function_Text, msgpayloadLength, msgPayload);
+            robotState.PidX.consigne = getDouble(msgPayload, 0);
+            robotState.PidTheta.consigne = getDouble(msgPayload, 4);
+        break;
         default:
         break;    
     }
@@ -212,3 +223,4 @@ void SetRobotAutoControlState (unsigned char c){
 //*************************************************************************/
 //Fonctions correspondant aux messages
 //*************************************************************************/
+

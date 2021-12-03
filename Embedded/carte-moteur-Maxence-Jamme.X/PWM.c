@@ -8,6 +8,9 @@
 
 #define PWMPER 40.0
 
+#define sens -1  //sebs pour avoir les roues en avant ou en arriere
+
+
 unsigned char acceleration = 1;
 
 void InitPWM(void)
@@ -33,10 +36,10 @@ PTCONbits.PTEN = 1;
 
 void PWMSetSpeedConsigne(float vitesseEnPourcents, char moteur){
     if(moteur == MOTEUR_DROIT){
-        robotState.vitesseDroiteConsigne = vitesseEnPourcents;
+        robotState.vitesseDroiteConsigne = sens*vitesseEnPourcents;
     }
     else if(moteur == MOTEUR_GAUCHE){
-        robotState.vitesseGaucheConsigne = vitesseEnPourcents;
+        robotState.vitesseGaucheConsigne = sens*vitesseEnPourcents;
     }
 }
 
@@ -81,8 +84,6 @@ void PWMUpdateSpeed(){
 
 
 void PWMSetSpeedConsignePolaire() {
-    robotState.PidTheta.consigne = 0;
-    robotState.PidX.consigne = 0.3;
     /********************** Correction Angulaire **********************/
     //robotState.vitesseAngulairePourcent = robotState.thetaCorrectionVitesseCommande * COEFF_VITESSE_ANGULAIRE_PERCENT;
     robotState.vitesseAngulairePourcent = robotState.PidTheta.consigne * COEFF_VITESSE_ANGULAIRE_PERCENT;
@@ -92,9 +93,9 @@ void PWMSetSpeedConsignePolaire() {
     robotState.vitesseLineairePourcent = robotState.PidX.consigne * COEFF_VITESSE_LINEAIRE_PERCENT;
 
     /************* Génération des consignes droites et gauches ******************/
-    robotState.vitesseDroiteConsigne = (robotState.vitesseLineairePourcent + robotState.vitesseAngulairePourcent * DISTROUES / 2);
+    robotState.vitesseDroiteConsigne = sens*(robotState.vitesseLineairePourcent + robotState.vitesseAngulairePourcent * DISTROUES / 2);
     robotState.vitesseDroiteConsigne = LimitToInterval(robotState.vitesseDroiteConsigne, -100, 100);
-    robotState.vitesseGaucheConsigne = (robotState.vitesseLineairePourcent - robotState.vitesseAngulairePourcent * DISTROUES / 2);
+    robotState.vitesseGaucheConsigne = sens*(robotState.vitesseLineairePourcent - robotState.vitesseAngulairePourcent * DISTROUES / 2);
     robotState.vitesseGaucheConsigne = LimitToInterval(robotState.vitesseGaucheConsigne, -100, 100);
 }
 
