@@ -82,15 +82,22 @@ void PWMUpdateSpeed(){
 }
 
 
+void UpdateAsservissement(){
+    robotState.PidX.erreur = robotState.vitesseLineaireConsigne - robotState.vitesseLineaireFromOdometry;
+    robotState.PidTheta.erreur = robotState.vitesseAngulaireConsigne - robotState.vitesseAngulaireFromOdometry;
+    
+    robotState.xCorrectionVitessePourcent = Correcteur(&robotState.PidX, robotState.PidX.erreur);
+    robotState.thetaCorrectionVitessePourcent = Correcteur(&robotState.PidTheta, robotState.PidTheta.erreur);  
+}
 
 void PWMSetSpeedConsignePolaire() {
     /********************** Correction Angulaire **********************/
-    //robotState.vitesseAngulairePourcent = robotState.thetaCorrectionVitesseCommande * COEFF_VITESSE_ANGULAIRE_PERCENT;
-    robotState.vitesseAngulairePourcent = robotState.PidTheta.consigne * COEFF_VITESSE_ANGULAIRE_PERCENT;
+    robotState.vitesseAngulairePourcent = robotState.thetaCorrectionVitesseCommande * COEFF_VITESSE_ANGULAIRE_PERCENT;
+    //robotState.vitesseAngulairePourcent = robotState.PidTheta.consigne * COEFF_VITESSE_ANGULAIRE_PERCENT;
 
     /********************** Correction Lineaire *****************************/
-    //robotState.vitesseLineairePourcent = robotState.xCorrectionVitesseCommande * COEFF_VITESSE_LINEAIRE_PERCENT;
-    robotState.vitesseLineairePourcent = robotState.PidX.consigne * COEFF_VITESSE_LINEAIRE_PERCENT;
+    robotState.vitesseLineairePourcent = robotState.xCorrectionVitesseCommande * COEFF_VITESSE_LINEAIRE_PERCENT;
+    //robotState.vitesseLineairePourcent = robotState.PidX.consigne * COEFF_VITESSE_LINEAIRE_PERCENT;
 
     /************* Génération des consignes droites et gauches ******************/
     robotState.vitesseDroiteConsigne = sens*(robotState.vitesseLineairePourcent + robotState.vitesseAngulairePourcent * DISTROUES / 2);

@@ -4,5 +4,6 @@ main.h  \
 Toolbox.h  \
 QEI.h  \
 Robot.h  \
- timer.h  \
+ asservissement.h  \
+timer.h  \
 UART_Protocol.h 

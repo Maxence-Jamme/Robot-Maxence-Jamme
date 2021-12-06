@@ -4,4 +4,7 @@ UART_Protocol.h  \
  CB_TX1.h  \
 main.h  \
 IO.h  \
-PWM.h 
+PWM.h  \
+Toolbox.h  \
+asservissement.h  \
+Robot.h 

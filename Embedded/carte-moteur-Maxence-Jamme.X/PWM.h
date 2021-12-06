@@ -3,8 +3,8 @@
 
 #define MOTEUR_DROIT 0
 #define MOTEUR_GAUCHE 1
-#define COEFF_VITESSE_LINEAIRE_PERCENT 70
-#define COEFF_VITESSE_ANGULAIRE_PERCENT 10
+#define COEFF_VITESSE_LINEAIRE_PERCENT 90
+#define COEFF_VITESSE_ANGULAIRE_PERCENT 77
 
 //void PWMSetSpeed(float vitesseEnPourcents, float moteur);
 void InitPWM(void);

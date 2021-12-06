@@ -43,7 +43,9 @@ typedef struct robotStateBITS {
             double xCorrectionVitesseCommande;
             double vitesseLineaireConsigne;
             double vitesseAngulaireConsigne;
-            
+            double xCorrectionVitessePourcent;
+            double thetaCorrectionVitessePourcent;
+           
         }
         ;
     }

@@ -5,7 +5,7 @@ typedef struct _PidCorrector
 {
     double consigne;
     double value;
-    double error;
+    double erreur;
     double command;
     
     double Kp;
@@ -27,5 +27,6 @@ typedef struct _PidCorrector
 
 void SetupPidAsservissement(volatile PidCorrector* PidCorr, double Kp, double Ki , double Kd, double proportionelleMax, double integralMax, double deriveeMax);
 void AsservissementValeur();
+double Correcteur(volatile PidCorrector* PidCorr, double erreur);
 #endif
 
