@@ -654,12 +654,6 @@ namespace Robot_Interface_JAMME_JUILLE
             int msgFunction = (int)FunctionId.asservissement;
             int msgPayloadLength = msgPayload.Length;
             UartEncodeAndSendMessage(msgFunction, msgPayloadLength, msgPayload);
-            TBoxKp.Text = "0";
-            TBoxKi.Text = "0";
-            TBoxKd.Text = "0";
-            TBoxKpmax.Text = "0";
-            TBoxKimax.Text = "0";
-            TBoxKdmax.Text = "0";
         }
 
         private void ButAngLin_Click(object sender, RoutedEventArgs e)

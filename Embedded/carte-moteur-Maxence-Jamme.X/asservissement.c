@@ -75,8 +75,8 @@ void AsservissementValeur(){
     getBytesFromFloat(asservissementPayload, nb_octet += 4, (float)(robotState.PidTheta.value)); 
     getBytesFromFloat(asservissementPayload, nb_octet += 4, (float)(robotState.PidX.erreur));
     getBytesFromFloat(asservissementPayload, nb_octet += 4, (float)(robotState.PidTheta.erreur)); 
-    getBytesFromFloat(asservissementPayload, nb_octet += 4, (float)(robotState.PidX.command));
-    getBytesFromFloat(asservissementPayload, nb_octet += 4, (float)(robotState.PidTheta.command)); 
+    getBytesFromFloat(asservissementPayload, nb_octet += 4, (float)(robotState.xCorrectionVitesseCommande));
+    getBytesFromFloat(asservissementPayload, nb_octet += 4, (float)(robotState.thetaCorrectionVitesseCommande)); 
     //-------------------   
     getBytesFromFloat(asservissementPayload, nb_octet += 4, (float)(robotState.PidX.corrP));
     getBytesFromFloat(asservissementPayload, nb_octet += 4, (float)(robotState.PidTheta.corrP));
