@@ -84,6 +84,7 @@ void PWMUpdateSpeed(){
 
 void UpdateAsservissement(){
     robotState.PidX.erreur = robotState.PidX.consigne - robotState.vitesseLineaireFromOdometry;
+    //robotState.PidX.erreur = 0; //seulement pour le réglage de l'asservissesement en angulaire
     robotState.PidTheta.erreur = robotState.PidTheta.consigne - robotState.vitesseAngulaireFromOdometry;
     
     robotState.xCorrectionVitesseCommande = Correcteur(&robotState.PidX, robotState.PidX.erreur);

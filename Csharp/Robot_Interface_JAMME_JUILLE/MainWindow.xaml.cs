@@ -680,7 +680,9 @@ namespace Robot_Interface_JAMME_JUILLE
             }
             LinAng = !LinAng;
         }
+
         int test = 0; 
+
         private void ButCons_Click(object sender, RoutedEventArgs e)
         {
             byte[] msgPayload = new byte[8];
@@ -741,8 +743,12 @@ namespace Robot_Interface_JAMME_JUILLE
  * 
  * Corr P =
  * 
+ *    X          T            Max
+ * Kp = 10    Kp = 20     Kpmax = 10
+ * Ki = 50    Ki = 50     Kimax = 10
  * 
- * 
- * 
- * 
+ *    X          T            Max
+ * Kp = 8    Kp = 4     Kpmax = 10
+ * Ki = 100    Ki = 50     Kimax = 10
+ * Kd = 100    Ki = 0     Kimax = 10
  */

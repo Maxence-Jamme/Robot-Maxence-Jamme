@@ -103,7 +103,7 @@ void __attribute__((interrupt, no_auto_psv)) _T1Interrupt(void) {
     UpdateAsservissement();
     PWMSetSpeedConsignePolaire();
     PWMUpdateSpeed();
-    if (couldown % 50 == 0) {
+    if (couldown % 25 == 0) {
         SendPositionData();
         AsservissementValeur();
     }

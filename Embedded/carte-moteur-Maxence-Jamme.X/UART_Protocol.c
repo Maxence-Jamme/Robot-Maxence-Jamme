@@ -62,28 +62,32 @@ void UartDecodeMessage(unsigned char c) {
             }
             break;
         case StateReceptionFunctionMSB:
-            msgDecodedFunction = (c << 8);
+            msgDecodedFunction = ((int)c << 8);
             rcvState = StateReceptionFunctionLSB;
             break;
         case StateReceptionFunctionLSB:
-            msgDecodedFunction += c;
+            msgDecodedFunction += (int)c;
             rcvState = StateReceptionPayloadLengthMSB;
             break;
         case StateReceptionPayloadLengthMSB:
-            msgDecodedPayloadLength = (c << 8);
+            msgDecodedPayloadLength = ((int)c << 8);
             rcvState = StateReceptionPayloadLengthLSB;
             break;
         case StateReceptionPayloadLengthLSB:
-            msgDecodedPayloadLength += c;
-            if (msgDecodedPayloadLength > 1500) {
+            msgDecodedPayloadLength += (int)c;
+            if(msgDecodedPayloadLength == 0)
+                rcvState = StateReceptionCheckSum;
+            else if (msgDecodedPayloadLength > 128)
                 rcvState = StateReceptionWaiting;
+            else
+            {                
+                msgDecodedPayloadIndex = 0;
+                rcvState = StateReceptionPayload;
             }
-            rcvState = StateReceptionPayload;
             break;
         case StateReceptionPayload:
-            msgDecodedPayload[msgDecodedPayloadIndex] = c;
-            msgDecodedPayloadIndex++;
-            if (msgDecodedPayloadIndex == msgDecodedPayloadLength) {
+            msgDecodedPayload[msgDecodedPayloadIndex++] = c;
+            if (msgDecodedPayloadIndex >= msgDecodedPayloadLength) {
                 rcvState = StateReceptionCheckSum;
             }
             break;
@@ -92,6 +96,8 @@ void UartDecodeMessage(unsigned char c) {
             if (calculatedChecksum == c) {
                 UartProcessDecodedMessage(msgDecodedFunction, msgDecodedPayloadLength, msgDecodedPayload);
             } else {
+                int toto=0;
+                toto++;
                 //SendMessage( (unsigned char *) "7654321" , 7 ) ;
             }
             rcvState = StateReceptionWaiting;
