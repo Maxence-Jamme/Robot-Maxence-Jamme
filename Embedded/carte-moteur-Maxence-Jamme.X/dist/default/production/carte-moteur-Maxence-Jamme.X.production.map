@@ -1,16 +1,13 @@
-Microchip Technology Inc, v1.60 (B)
+Microchip Technology Inc, v1.60 (A)
 
 Tool Name:
   c:\program files\microchip\xc16\v1.60\bin\bin\..\bin/elf-ld.exe
 
 Command:
   -p33EP512GM306 \
-  --mdfp=C:/Program Files (x86)/Microchip/MPLABX/v5.40/packs/Microchip/dsPIC33E-GM-GP-MC-GU-MU_DFP/1.2.58/xc16 \
   -o \
   dist/default/production/carte-moteur-Maxence-Jamme.X.production.elf \
   -Lc:/program files/microchip/xc16/v1.60/bin/bin/.. \
-  -LC:/Program Files (x86)/Microchip/MPLABX/v5.40/packs/Microchip/dsPIC33E-GM-GP-MC-GU-MU_DFP/1.2.58/xc16/bin/../support/PIC24E/gld \
-  -LC:/Program Files (x86)/Microchip/MPLABX/v5.40/packs/Microchip/dsPIC33E-GM-GP-MC-GU-MU_DFP/1.2.58/xc16/bin/../support/dsPIC33E/gld \
   -Lc:/program files/microchip/xc16/v1.60/bin/bin/../../lib \
   -Lc:/program files/microchip/xc16/v1.60/bin/bin/../../support/PIC24E/gld \
   -Lc:/program files/microchip/xc16/v1.60/bin/bin/../../support/PIC24F/gld \
@@ -132,7 +129,7 @@ CodeGuard RAM Memory:
   boot    (none)
 
 
-xc16-ld 1.60 (B)
+xc16-ld 1.60 (A)
 
 Default Code Model: Small
 Default Data Model: Large
@@ -674,7 +671,7 @@ __FOSCSEL
 
 __FGS             0x0557fa          0x2
  *(__FGS.sec*)
- __FGS.sec        0x0557fa          0x2 /CW/_FGS0E/
+ __FGS.sec        0x0557fa          0x2 /CW/_FGS`ü;
                   0x0557fa                  __FGS.sec
 
 __FUID0
@@ -727,22 +724,22 @@ __FUID3
  .debug_abbrev    0x000dfa        0x15b build/default/production/QEI.o
  .debug_abbrev    0x000f55        0x11b build/default/production/asservissement.o
 
-.debug_line       0x000000       0x11fd
+.debug_line       0x000000        0xf8a
  *(.debug_line)
- .debug_line      0x000000        0x29b build/default/production/main.o
- .debug_line      0x00029b        0x124 build/default/production/ChipConfig.o
- .debug_line      0x0003bf        0x126 build/default/production/IO.o
- .debug_line      0x0004e5        0x192 build/default/production/timer.o
- .debug_line      0x000677         0x44 build/default/production/Robot.o
- .debug_line      0x0006bb         0x78 build/default/production/Toolbox.o
- .debug_line      0x000733        0x17f build/default/production/PWM.o
- .debug_line      0x0008b2        0x159 build/default/production/ADC.o
- .debug_line      0x000a0b        0x12b build/default/production/UART.o
- .debug_line      0x000b36        0x154 build/default/production/CB_TX1.o
- .debug_line      0x000c8a        0x14f build/default/production/CB_RX1.o
- .debug_line      0x000dd9        0x209 build/default/production/UART_Protocol.o
- .debug_line      0x000fe2        0x17f build/default/production/QEI.o
- .debug_line      0x001161         0x9c build/default/production/asservissement.o
+ .debug_line      0x000000        0x262 build/default/production/main.o
+ .debug_line      0x000262         0xeb build/default/production/ChipConfig.o
+ .debug_line      0x00034d         0xed build/default/production/IO.o
+ .debug_line      0x00043a        0x159 build/default/production/timer.o
+ .debug_line      0x000593         0x44 build/default/production/Robot.o
+ .debug_line      0x0005d7         0x78 build/default/production/Toolbox.o
+ .debug_line      0x00064f        0x146 build/default/production/PWM.o
+ .debug_line      0x000795        0x120 build/default/production/ADC.o
+ .debug_line      0x0008b5         0xf2 build/default/production/UART.o
+ .debug_line      0x0009a7        0x11b build/default/production/CB_TX1.o
+ .debug_line      0x000ac2        0x116 build/default/production/CB_RX1.o
+ .debug_line      0x000bd8        0x1d0 build/default/production/UART_Protocol.o
+ .debug_line      0x000da8        0x146 build/default/production/QEI.o
+ .debug_line      0x000eee         0x9c build/default/production/asservissement.o
 
 .debug_frame      0x000000        0x8cc
  *(.debug_frame)
@@ -2676,7 +2673,7 @@ LOAD c:/program files/microchip/xc16/v1.60/bin/bin/../../lib\libm-elf.a
 LOAD c:/program files/microchip/xc16/v1.60/bin/bin/../../lib\liblega-c-elf.a
 END GROUP
 OUTPUT(dist/default/production/carte-moteur-Maxence-Jamme.X.production.elf elf32-pic30)
-LOAD /CW/_FGS0E/
+LOAD /CW/_FGS`ü;
 LOAD default_isr
 LOAD data_init
 
